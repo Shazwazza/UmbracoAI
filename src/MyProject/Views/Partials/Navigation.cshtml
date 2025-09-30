@@ -32,18 +32,18 @@
             </li>
 
             <!-- Top-level pages -->
-            @foreach (var page in topLevelPages)
+            @foreach (var navPage in topLevelPages)
             {
-                var isActive = currentPage.Id == page.Id || currentPage.AncestorOrSelf(page.Level)?.Id == page.Id;
-                var hasChildren = page.Children.Any(x => x.IsVisible());
+                var isActive = currentPage.Id == navPage.Id || currentPage.AncestorOrSelf(navPage.Level)?.Id == navPage.Id;
+                var hasChildren = navPage.Children.Any(x => x.IsVisible());
                 
                 <li class="nav-item @(isActive ? "active" : "") @(hasChildren ? "has-children" : "")">
-                    <a href="@page.Url()" class="nav-link">@page.Name</a>
+                    <a href="@navPage.Url()" class="nav-link">@navPage.Name</a>
                     
                     @if (hasChildren)
                     {
                         <ul class="nav-submenu">
-                            @foreach (var child in page.Children().Where(x => x.IsVisible()).OrderBy(x => x.SortOrder))
+                            @foreach (var child in navPage.Children().Where(x => x.IsVisible()).OrderBy(x => x.SortOrder))
                             {
                                 var isChildActive = currentPage.Id == child.Id;
                                 <li class="nav-subitem @(isChildActive ? "active" : "")">
