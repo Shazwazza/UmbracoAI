@@ -1,0 +1,77 @@
+﻿@inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage
+@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@Model.Value("pageTitle")</title>
+    <link rel="stylesheet" href="/css/site.css">
+</head>
+<body>
+    <div class="page-wrapper">
+        <!-- Blog Post Header -->
+        <article class="blog-post">
+            <header class="blog-post-header">
+                <div class="container">
+                    <h1>@Model.Value("pageTitle")</h1>
+                    <div class="blog-post-meta">
+                        @if (Model.HasValue("publishDate"))
+                        {
+                            <span class="post-date">@Model.Value<DateTime>("publishDate").ToString("MMMM dd, yyyy")</span>
+                        }
+                        @if (Model.HasValue("author"))
+                        {
+                            <span class="post-author">by @Model.Value("author")</span>
+                        }
+                    </div>
+                    @if (Model.HasValue("tags"))
+                    {
+                        var tags = Model.Value<string[]>("tags");
+                        if (tags != null && tags.Any())
+                        {
+                            <div class="post-tags">
+                                @foreach (var tag in tags)
+                                {
+                                    <span class="tag">@tag</span>
+                                }
+                            </div>
+                        }
+                    }
+                </div>
+            </header>
+
+            @if (Model.HasValue("featuredImage"))
+            {
+                var image = Model.Value<IPublishedContent>("featuredImage");
+                if (image != null)
+                {
+                    <div class="blog-post-featured-image">
+                        <img src="@image.Url()" alt="@Model.Value("pageTitle")" />
+                    </div>
+                }
+            }
+
+            <div class="blog-post-content">
+                <div class="container">
+                    @if (Model.HasValue("content"))
+                    {
+                        @Html.Raw(Model.Value("content"))
+                    }
+                </div>
+            </div>
+
+            <footer class="blog-post-footer">
+                <div class="container">
+                    @if (Model.Parent != null)
+                    {
+                        <a href="@Model.Parent.Url()" class="back-to-blog">← Back to Blog</a>
+                    }
+                </div>
+            </footer>
+        </article>
+    </div>
+</body>
+</html>
