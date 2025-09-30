@@ -6,8 +6,8 @@
 }
 
 :root {
-    --primary-color: #6366f1;
-    --primary-dark: #4f46e5;
+    --primary-color: #4f46e5;
+    --primary-dark: #4338ca;
     --secondary-color: #ec4899;
     --text-dark: #1f2937;
     --text-light: #6b7280;
@@ -228,6 +228,17 @@ footer {
 
 footer p {
     opacity: 0.8;
+}
+
+footer a,
+footer .back-to-blog {
+    color: #a5b4fc;
+}
+
+footer a:hover,
+footer .back-to-blog:hover {
+    color: #c7d2fe;
+    opacity: 1;
 }
 
 /* Responsive Design */
