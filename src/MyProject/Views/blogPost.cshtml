@@ -1,4 +1,5 @@
 ﻿@inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage
+@using Umbraco.Cms.Core.Models.PublishedContent
 @{
     Layout = null;
 }
@@ -11,6 +12,7 @@
     <link rel="stylesheet" href="/css/site.css">
 </head>
 <body>
+    @Html.Partial("~/Views/Partials/Navigation.cshtml")
     <div class="page-wrapper">
         <!-- Blog Post Header -->
         <article class="blog-post">
@@ -20,7 +22,7 @@
                     <div class="blog-post-meta">
                         @if (Model.HasValue("publishDate"))
                         {
-                            <span class="post-date">@Model.Value<DateTime>("publishDate").ToString("MMMM dd, yyyy")</span>
+                            <span class="post-date">@(Model.Value<DateTime>("publishDate").ToString("MMMM dd, yyyy"))</span>
                         }
                         @if (Model.HasValue("author"))
                         {
