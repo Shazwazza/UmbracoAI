@@ -19,20 +19,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/5.5.0/github-markdown-light.min.css" />
 </head>
 <body>
-    <header>
-        <nav class="navbar">
-            <div class="container">
-                <a href="/" class="logo">AI Blog</a>
-                <div class="nav-links">
-                    <a href="/">Home</a>
-                    @if (blogList != null)
-                    {
-                        <a href="@blogList.Url()">Blog</a>
-                    }
-                </div>
-            </div>
-        </nav>
-    </header>
+    @await Html.PartialAsync("~/Views/Partials/Navigation.cshtml")
     
     <main>
         <article class="blog-post">
