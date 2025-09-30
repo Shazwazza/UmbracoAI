@@ -1,0 +1,64 @@
+﻿@inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage
+@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@Model.Value("pageTitle")</title>
+    <link rel="stylesheet" href="/css/site.css">
+</head>
+<body>
+    <div class="page-wrapper">
+        <!-- Hero Section -->
+        <section class="hero">
+            @if (Model.HasValue("heroImage"))
+            {
+                var heroImage = Model.Value<IPublishedContent>("heroImage");
+                if (heroImage != null)
+                {
+                    <div class="hero-image">
+                        <img src="@heroImage.Url()" alt="@Model.Value("heroHeading")" />
+                    </div>
+                }
+            }
+            <div class="hero-content">
+                <h1>@Model.Value("heroHeading")</h1>
+                @if (Model.HasValue("heroSubheading"))
+                {
+                    <p class="hero-subheading">@Model.Value("heroSubheading")</p>
+                }
+            </div>
+        </section>
+
+        <!-- Main Content Section -->
+        @if (Model.HasValue("mainContent"))
+        {
+            <section class="main-content">
+                <div class="container">
+                    @Html.Raw(Model.Value("mainContent"))
+                </div>
+            </section>
+        }
+
+        <!-- Featured Section -->
+        @if (Model.HasValue("featuredSectionHeading") || Model.HasValue("featuredSectionContent"))
+        {
+            <section class="featured-section">
+                <div class="container">
+                    @if (Model.HasValue("featuredSectionHeading"))
+                    {
+                        <h2>@Model.Value("featuredSectionHeading")</h2>
+                    }
+                    @if (Model.HasValue("featuredSectionContent"))
+                    {
+                        @Html.Raw(Model.Value("featuredSectionContent"))
+                    }
+                </div>
+            </section>
+        }
+    </div>
+</body>
+</html>
