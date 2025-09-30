@@ -13,17 +13,7 @@
     <link rel="stylesheet" href="/css/site.css" />
 </head>
 <body>
-    <header>
-        <nav class="navbar">
-            <div class="container">
-                <a href="/" class="logo">AI Blog</a>
-                <div class="nav-links">
-                    <a href="/">Home</a>
-                    <a href="@Model.Url()" class="active">Blog</a>
-                </div>
-            </div>
-        </nav>
-    </header>
+    @await Html.PartialAsync("~/Views/Partials/Navigation.cshtml")
     
     <main>
         <section class="page-header">
