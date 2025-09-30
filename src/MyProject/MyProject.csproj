@@ -9,7 +9,6 @@
   <ItemGroup>
     <PackageReference Include="Umbraco.Cms" Version="16.2.0" />
     <PackageReference Include="uSync" Version="16.0.5" />
-    <PackageReference Include="Markdig" Version="0.37.0" />
   </ItemGroup>
 
   <ItemGroup>
