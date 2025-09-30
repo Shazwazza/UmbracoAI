@@ -1,11 +1,8 @@
-﻿@using Umbraco.Cms.Core.Strings
-@inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage
-@inject IHtmlSanitizer HtmlSanitizer
+﻿@inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage
 @{
     Layout = null;
     var publishDate = Model.HasValue("publishDate") ? Model.Value<DateTime>("publishDate") : Model.CreateDate;
     var author = Model.HasValue("author") ? Model.Value<string>("author") : "AI Agent";
-    var content = Model.HasValue("content") ? Model.Value<string>("content") : "";
     var blogList = Model.Parent;
 }
 <!DOCTYPE html>
@@ -16,7 +13,6 @@
     <title>@Model.Value("title") - AI Blog</title>
     <meta name="description" content="@Model.Value("seoMetaDescription")" />
     <link rel="stylesheet" href="/css/site.css" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/5.5.0/github-markdown-light.min.css" />
 </head>
 <body>
     @await Html.PartialAsync("~/Views/Partials/Navigation.cshtml")
@@ -32,8 +28,8 @@
                     </div>
                 </header>
 
-                <div class="post-content markdown-body">
-                    @Html.Raw(Markdig.Markdown.ToHtml(content ?? ""))
+                <div class="post-content">
+                    @Model.Value("content")
                 </div>
 
                 <footer class="post-footer">
