@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=1200, initial-scale=1.0">
+    <title>SVG Converter</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: #f0f0f0;
+        }
+        #svg-container {
+            width: 1200px;
+            height: 600px;
+        }
+    </style>
+</head>
+<body>
+    <div id="svg-container"></div>
+    <script>
+        const svgs = [
+            'hero-first-steps.svg',
+            'hero-umbraco.svg',
+            'hero-us-festival.svg',
+            'hero-responsive-design.svg',
+            'hero-modern-web.svg',
+            'hero-accessibility.svg',
+            'hero-css-grid.svg',
+            'hero-cms.svg',
+            'hero-performance.svg',
+            'hero-clean-code.svg'
+        ];
+        
+        let currentIndex = 0;
+        
+        function loadSVG(filename) {
+            fetch(filename)
+                .then(response => response.text())
+                .then(svg => {
+                    document.getElementById('svg-container').innerHTML = svg;
+                    document.title = filename;
+                });
+        }
+        
+        // Load first SVG
+        if (svgs.length > 0) {
+            loadSVG(svgs[0]);
+        }
+        
+        // Function to load next SVG (can be called from console)
+        window.loadNext = function() {
+            currentIndex++;
+            if (currentIndex < svgs.length) {
+                loadSVG(svgs[currentIndex]);
+                return svgs[currentIndex];
+            }
+            return 'Done';
+        };
+        
+        window.loadSVG = loadSVG;
+        window.svgList = svgs;
+    </script>
+</body>
+</html>
