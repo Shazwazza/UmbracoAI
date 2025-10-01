@@ -29,6 +29,8 @@
 
         <section class="blog-list">
             <div class="container">
+                @await Html.PartialAsync("~/Views/Partials/TagCloud.cshtml", Model)
+                
                 @if (blogPosts.Any())
                 {
                     <div class="blog-grid">

@@ -670,3 +670,127 @@ footer .back-to-blog:hover {
     }
 }
 .p-4 { padding: 2rem; }
+
+/* Tag Cloud Styles */
+.tag-cloud {
+    background: var(--bg-white);
+    border-radius: 12px;
+    padding: 2rem;
+    margin-bottom: 3rem;
+    box-shadow: var(--shadow-md);
+}
+
+.tag-cloud-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+    color: var(--text-dark);
+    background: var(--gradient-primary);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.tag-cloud-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    align-items: center;
+}
+
+.tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.5rem 1rem;
+    background: var(--bg-light);
+    border: 2px solid var(--border-color);
+    border-radius: 24px;
+    color: var(--text-dark);
+    font-weight: 500;
+    transition: all 0.3s ease;
+    cursor: default;
+}
+
+.tag:hover {
+    background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+    border-color: var(--primary-color);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+}
+
+.tag-count {
+    font-size: 0.85em;
+    color: var(--text-light);
+    font-weight: 600;
+}
+
+/* Tag Size Variations */
+.tag-smallest {
+    font-size: 0.75rem;
+    padding: 0.35rem 0.75rem;
+}
+
+.tag-small {
+    font-size: 0.875rem;
+    padding: 0.4rem 0.85rem;
+}
+
+.tag-medium {
+    font-size: 1rem;
+    padding: 0.5rem 1rem;
+}
+
+.tag-large {
+    font-size: 1.125rem;
+    padding: 0.6rem 1.15rem;
+    font-weight: 600;
+}
+
+.tag-largest {
+    font-size: 1.25rem;
+    padding: 0.7rem 1.25rem;
+    font-weight: 700;
+    background: linear-gradient(135deg, rgba(102, 126, 234, 0.15) 0%, rgba(118, 75, 162, 0.15) 100%);
+}
+
+/* Responsive Tag Cloud */
+@media (max-width: 768px) {
+    .tag-cloud {
+        padding: 1.5rem;
+        margin-bottom: 2rem;
+    }
+
+    .tag-cloud-title {
+        font-size: 1.25rem;
+        margin-bottom: 1rem;
+    }
+
+    .tag-cloud-container {
+        gap: 0.5rem;
+    }
+
+    .tag {
+        padding: 0.4rem 0.85rem;
+    }
+
+    .tag-small {
+        font-size: 0.8rem;
+        padding: 0.3rem 0.65rem;
+    }
+
+    .tag-medium {
+        font-size: 0.9rem;
+        padding: 0.4rem 0.85rem;
+    }
+
+    .tag-large {
+        font-size: 1rem;
+        padding: 0.5rem 0.95rem;
+    }
+
+    .tag-largest {
+        font-size: 1.1rem;
+        padding: 0.55rem 1rem;
+    }
+}
