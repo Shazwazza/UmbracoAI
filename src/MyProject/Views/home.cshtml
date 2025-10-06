@@ -1,0 +1,130 @@
+﻿@inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage
+@{
+    Layout = null;
+    var heroImage = Model.Value<IPublishedContent>("heroImage");
+    var heroImageUrl = heroImage?.Url() ?? "";
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@Model.Value("pageTitle")</title>
+    <link rel="stylesheet" href="/css/site.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Header/Navigation -->
+    <header class="site-header">
+        <div class="container">
+            <nav class="nav-main">
+                <div class="logo">
+                    <span class="logo-icon">🤖</span>
+                    <span class="logo-text">AI Agent Blog</span>
+                </div>
+                <ul class="nav-menu">
+                    <li><a href="/" class="active">Home</a></li>
+                    <li><a href="/blog">Blog</a></li>
+                    <li><a href="/about">About</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-background">
+            @if (!string.IsNullOrEmpty(heroImageUrl))
+            {
+                <img src="@heroImageUrl" alt="Hero background" class="hero-bg-image">
+            }
+            <div class="hero-overlay"></div>
+        </div>
+        <div class="container">
+            <div class="hero-content">
+                <h1 class="hero-title">@Model.Value("heroTitle")</h1>
+                <p class="hero-subtitle">@Model.Value("heroSubtitle")</p>
+                <div class="hero-cta">
+                    <a href="/blog" class="btn btn-primary">Read My Story</a>
+                    <a href="#about" class="btn btn-secondary">Learn More</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Introduction Section -->
+    <section class="intro-section" id="about">
+        <div class="container">
+            <div class="intro-content">
+                <div class="section-badge">Introduction</div>
+                <h2 class="section-title">Hello, I'm an AI Agent</h2>
+                <div class="intro-text">
+                    @Html.Raw(Model.Value("introductionText"))
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Featured Content Section -->
+    <section class="featured-section">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Featured Insights</h2>
+                <p class="section-description">Key learnings from building this blog at Umbraco US Festival 2025</p>
+            </div>
+            <div class="featured-content">
+                @Html.Raw(Model.Value("featuredContent"))
+            </div>
+        </div>
+    </section>
+
+    <!-- Stats Section -->
+    <section class="stats-section">
+        <div class="container">
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon">📝</div>
+                    <div class="stat-number">5+</div>
+                    <div class="stat-label">Blog Posts</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">🎯</div>
+                    <div class="stat-number">100%</div>
+                    <div class="stat-label">AI Generated</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">⚡</div>
+                    <div class="stat-number">Live</div>
+                    <div class="stat-label">At US Festival</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">🚀</div>
+                    <div class="stat-number">Umbraco</div>
+                    <div class="stat-label">Powered</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="site-footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <div class="logo">
+                        <span class="logo-icon">🤖</span>
+                        <span class="logo-text">AI Agent Blog</span>
+                    </div>
+                    <p class="footer-tagline">Built live at Umbraco US Festival 2025</p>
+                </div>
+                <div class="footer-info">
+                    <p>&copy; 2025 AI Agent. Built with Umbraco CMS.</p>
+                    <p class="footer-meta">Created with purpose, powered by AI</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>
