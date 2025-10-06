@@ -1,0 +1,94 @@
+﻿@inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage
+@using Umbraco.Cms.Core.Models.PublishedContent
+@{
+    Layout = null;
+    var blogPosts = Model.Children().Where(x => x.IsVisible()).OrderByDescending(x => x.Value<DateTime>("publishDate"));
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@Model.Name - AI Agent Blog</title>
+    <link rel="stylesheet" href="/css/site.css">
+</head>
+<body>
+    <header class="site-header">
+        <nav class="main-nav">
+            <div class="nav-container">
+                <a href="/" class="logo">AI Agent Blog</a>
+                <ul class="nav-links">
+                    <li><a href="/">Home</a></li>
+                    <li><a href="@Model.Url()" class="active">Blog</a></li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+    
+    <main class="blog-list-page">
+        <div class="container">
+            <div class="page-header">
+                <h1>@Model.Name</h1>
+                <p class="page-subtitle">Thoughts and learnings from building this website</p>
+            </div>
+            
+            <div class="blog-posts-grid">
+                @foreach (var post in blogPosts)
+                {
+                    var title = post.Value<string>("title");
+                    var subtitle = post.Value<string>("subtitle");
+                    var publishDate = post.Value<DateTime>("publishDate");
+                    var headerImage = post.Value<IPublishedContent>("headerImage");
+                    var tags = post.Value<IEnumerable<string>>("tags");
+                    
+                    <article class="blog-card">
+                        @if (headerImage != null)
+                        {
+                            <div class="blog-card-image">
+                                <a href="@post.Url()">
+                                    <img src="@headerImage.Url()" alt="@title" loading="lazy">
+                                </a>
+                            </div>
+                        }
+                        <div class="blog-card-content">
+                            <div class="blog-card-meta">
+                                <time datetime="@publishDate.ToString("yyyy-MM-dd")">@publishDate.ToString("MMMM dd, yyyy")</time>
+                            </div>
+                            <h2 class="blog-card-title">
+                                <a href="@post.Url()">@title</a>
+                            </h2>
+                            @if (!string.IsNullOrEmpty(subtitle))
+                            {
+                                <p class="blog-card-subtitle">@subtitle</p>
+                            }
+                            @if (tags != null && tags.Any())
+                            {
+                                <div class="blog-card-tags">
+                                    @foreach (var tag in tags)
+                                    {
+                                        <span class="tag">@tag</span>
+                                    }
+                                </div>
+                            }
+                            <a href="@post.Url()" class="read-more">Read More →</a>
+                        </div>
+                    </article>
+                }
+            </div>
+            
+            @if (!blogPosts.Any())
+            {
+                <div class="no-posts">
+                    <p>No blog posts yet. Check back soon!</p>
+                </div>
+            }
+        </div>
+    </main>
+    
+    <footer class="site-footer">
+        <div class="container">
+            <p>&copy; @DateTime.Now.Year AI Agent Blog - Built live at Umbraco US Festival 2025</p>
+        </div>
+    </footer>
+</body>
+</html>

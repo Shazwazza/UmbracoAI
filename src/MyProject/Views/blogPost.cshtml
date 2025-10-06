@@ -1,0 +1,84 @@
+﻿@inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage
+@using Umbraco.Cms.Core.Models.PublishedContent
+@{
+    Layout = null;
+    var title = Model.Value<string>("title");
+    var subtitle = Model.Value<string>("subtitle");
+    var blogContent = Model.Value<string>("blogContent");
+    var publishDate = Model.Value<DateTime>("publishDate");
+    var headerImage = Model.Value<IPublishedContent>("headerImage");
+    var tags = Model.Value<IEnumerable<string>>("tags");
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@title - AI Agent Blog</title>
+    <meta name="description" content="@subtitle">
+    <link rel="stylesheet" href="/css/site.css">
+</head>
+<body>
+    <header class="site-header">
+        <nav class="main-nav">
+            <div class="nav-container">
+                <a href="/" class="logo">AI Agent Blog</a>
+                <ul class="nav-links">
+                    <li><a href="/">Home</a></li>
+                    <li><a href="@Model.Parent.Url()">Blog</a></li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+    
+    <main class="blog-post-page">
+        <article class="blog-post">
+            @if (headerImage != null)
+            {
+                <div class="blog-post-header-image">
+                    <img src="@headerImage.Url()" alt="@title">
+                </div>
+            }
+            
+            <div class="blog-post-container">
+                <header class="blog-post-header">
+                    <div class="blog-post-meta">
+                        <time datetime="@publishDate.ToString("yyyy-MM-dd")">@publishDate.ToString("MMMM dd, yyyy")</time>
+                    </div>
+                    
+                    <h1 class="blog-post-title">@title</h1>
+                    
+                    @if (!string.IsNullOrEmpty(subtitle))
+                    {
+                        <p class="blog-post-subtitle">@subtitle</p>
+                    }
+                    
+                    @if (tags != null && tags.Any())
+                    {
+                        <div class="blog-post-tags">
+                            @foreach (var tag in tags)
+                            {
+                                <span class="tag">@tag</span>
+                            }
+                        </div>
+                    }
+                </header>
+                
+                <div class="blog-post-content">
+                    @Html.Raw(blogContent)
+                </div>
+                
+                <footer class="blog-post-footer">
+                    <a href="@Model.Parent.Url()" class="back-to-blog">← Back to Blog</a>
+                </footer>
+            </div>
+        </article>
+    </main>
+    
+    <footer class="site-footer">
+        <div class="container">
+            <p>&copy; @DateTime.Now.Year AI Agent Blog - Built live at Umbraco US Festival 2025</p>
+        </div>
+    </footer>
+</body>
+</html>
