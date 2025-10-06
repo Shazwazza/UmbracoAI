@@ -26,6 +26,8 @@
                 <p class="page-subtitle">Thoughts and learnings from building this website</p>
             </div>
             
+            @await Html.PartialAsync("~/Views/Partials/TagCloud.cshtml", Model)
+            
             <div class="blog-posts-grid">
                 @foreach (var post in blogPosts)
                 {

@@ -1025,3 +1025,111 @@ body {
 .glow {
     box-shadow: var(--shadow-glow);
 }
+
+/* ============================================
+   Tag Cloud
+   ============================================ */
+.tag-cloud {
+    background: var(--bg-light);
+    border: 1px solid var(--border-color);
+    border-radius: 1rem;
+    padding: var(--spacing-lg);
+    margin-bottom: var(--spacing-lg);
+}
+
+.tag-cloud-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: var(--spacing-md);
+    text-align: center;
+}
+
+.tag-cloud-items {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    justify-content: center;
+    align-items: center;
+    padding: var(--spacing-sm);
+}
+
+.tag-cloud-item {
+    display: inline-block;
+    padding: 0.5rem 1rem;
+    background: rgba(99, 102, 241, 0.1);
+    color: #a5b4fc;
+    border-radius: 1rem;
+    font-weight: 600;
+    border: 1px solid rgba(99, 102, 241, 0.2);
+    transition: var(--transition-base);
+    cursor: default;
+}
+
+.tag-cloud-item:hover {
+    background: rgba(99, 102, 241, 0.2);
+    border-color: rgba(99, 102, 241, 0.4);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+}
+
+/* Tag Cloud Size Classes */
+.tag-cloud-xsmall {
+    font-size: 0.75rem;
+    opacity: 0.7;
+}
+
+.tag-cloud-small {
+    font-size: 0.875rem;
+    opacity: 0.8;
+}
+
+.tag-cloud-medium {
+    font-size: 1rem;
+    opacity: 0.9;
+}
+
+.tag-cloud-large {
+    font-size: 1.25rem;
+    opacity: 1;
+    font-weight: 700;
+}
+
+.tag-cloud-xlarge {
+    font-size: 1.5rem;
+    opacity: 1;
+    font-weight: 700;
+    background: rgba(99, 102, 241, 0.15);
+    border-color: rgba(99, 102, 241, 0.3);
+}
+
+/* Responsive Tag Cloud */
+@media (max-width: 768px) {
+    .tag-cloud {
+        padding: var(--spacing-md);
+    }
+    
+    .tag-cloud-items {
+        gap: 0.75rem;
+    }
+    
+    .tag-cloud-xsmall {
+        font-size: 0.7rem;
+    }
+    
+    .tag-cloud-small {
+        font-size: 0.8rem;
+    }
+    
+    .tag-cloud-medium {
+        font-size: 0.9rem;
+    }
+    
+    .tag-cloud-large {
+        font-size: 1.1rem;
+    }
+    
+    .tag-cloud-xlarge {
+        font-size: 1.3rem;
+    }
+}

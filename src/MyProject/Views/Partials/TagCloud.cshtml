@@ -1,0 +1,98 @@
+@using Umbraco.Cms.Core.Models.PublishedContent
+@{
+    // Get the blog collection page (parent of current page or find by content type)
+    IPublishedContent blogCollection = null;
+    
+    if (Model is IPublishedContent)
+    {
+        if (Model.ContentType.Alias == "blogCollection")
+        {
+            blogCollection = Model;
+        }
+        else if (Model.Parent != null)
+        {
+            blogCollection = Model.Parent;
+        }
+    }
+    
+    if (blogCollection == null)
+    {
+        // Try to find blog collection from root
+        var root = Model.Root();
+        foreach (var item in root.DescendantsOrSelf<IPublishedContent>())
+        {
+            if (item.ContentType.Alias == "blogCollection")
+            {
+                blogCollection = item;
+                break;
+            }
+        }
+    }
+    
+    // Dictionary to store tag frequencies
+    var tagFrequencies = new Dictionary<string, int>();
+    
+    if (blogCollection != null)
+    {
+        // Get all published blog posts
+        foreach (var post in blogCollection.Children<IPublishedContent>())
+        {
+            if (post.IsVisible() && post.ContentType.Alias == "blogPost")
+            {
+                var tags = post.Value<IEnumerable<string>>("tags");
+                if (tags != null)
+                {
+                    foreach (var tag in tags)
+                    {
+                        if (!string.IsNullOrWhiteSpace(tag))
+                        {
+                            if (tagFrequencies.ContainsKey(tag))
+                            {
+                                tagFrequencies[tag]++;
+                            }
+                            else
+                            {
+                                tagFrequencies[tag] = 1;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    
+    // Calculate size classes based on frequency
+    if (tagFrequencies.Any())
+    {
+        var maxFrequency = tagFrequencies.Values.Max();
+        var minFrequency = tagFrequencies.Values.Min();
+        var range = maxFrequency - minFrequency;
+        
+        // Function to get size class
+        string GetSizeClass(int frequency)
+        {
+            if (range == 0) return "tag-cloud-medium";
+            
+            var normalized = (double)(frequency - minFrequency) / range;
+            
+            if (normalized >= 0.8) return "tag-cloud-xlarge";
+            if (normalized >= 0.6) return "tag-cloud-large";
+            if (normalized >= 0.4) return "tag-cloud-medium";
+            if (normalized >= 0.2) return "tag-cloud-small";
+            return "tag-cloud-xsmall";
+        }
+        
+        <div class="tag-cloud">
+            <h3 class="tag-cloud-title">Popular Topics</h3>
+            <div class="tag-cloud-items">
+                @foreach (var tag in tagFrequencies.OrderBy(x => x.Key))
+                {
+                    var sizeClass = GetSizeClass(tag.Value);
+                    <span class="tag-cloud-item @sizeClass" title="@tag.Value post@(tag.Value > 1 ? "s" : "")">
+                        @tag.Key
+                    </span>
+                }
+            </div>
+        </div>
+    }
+}
