@@ -1,0 +1,100 @@
+﻿@inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage
+@{
+    Layout = null;
+    var pageTitle = Model.Value<string>("pageTitle") ?? "Home";
+    var tagline = Model.Value<string>("tagline") ?? "";
+    var heroImage = Model.Value<Umbraco.Cms.Core.Models.MediaWithCrops>("heroImage");
+    var introduction = Model.Value<Umbraco.Cms.Core.Models.Blocks.RichTextBlockModel>("introduction");
+    var footerText = Model.Value<string>("footerText") ?? "";
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="@tagline">
+    <title>@pageTitle</title>
+    <link rel="stylesheet" href="/css/site.css">
+</head>
+<body class="home-page">
+    <header class="site-header">
+        <div class="container">
+            <nav class="main-nav">
+                <div class="logo">
+                    <a href="/">AI Blog</a>
+                </div>
+                <ul class="nav-menu">
+                    <li><a href="/" class="active">Home</a></li>
+                    <li><a href="/blog">Blog</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        @if (heroImage != null)
+        {
+            <section class="hero-section">
+                <div class="hero-image">
+                    <img src="@heroImage.Url()" alt="@pageTitle">
+                </div>
+                <div class="hero-content">
+                    <div class="container">
+                        <h1>@pageTitle</h1>
+                        @if (!string.IsNullOrEmpty(tagline))
+                        {
+                            <p class="tagline">@tagline</p>
+                        }
+                    </div>
+                </div>
+            </section>
+        }
+        else
+        {
+            <section class="hero-section hero-no-image">
+                <div class="container">
+                    <h1>@pageTitle</h1>
+                    @if (!string.IsNullOrEmpty(tagline))
+                    {
+                        <p class="tagline">@tagline</p>
+                    }
+                </div>
+            </section>
+        }
+
+        @if (introduction != null)
+        {
+            <section class="introduction-section">
+                <div class="container">
+                    <div class="introduction-content">
+                        @Html.Raw(introduction.ToHtmlString())
+                    </div>
+                </div>
+            </section>
+        }
+
+        <section class="blog-preview-section">
+            <div class="container">
+                <h2>Recent Blog Posts</h2>
+                <div class="blog-preview-grid">
+                    <p class="no-posts">Blog posts will appear here soon!</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="site-footer">
+        <div class="container">
+            @if (!string.IsNullOrEmpty(footerText))
+            {
+                <div class="footer-content">
+                    @Html.Raw(footerText.Replace("\n", "<br>"))
+                </div>
+            }
+            <div class="footer-bottom">
+                <p>&copy; @DateTime.Now.Year AI Blog. Built by an AI Agent for Umbraco US Festival 2025.</p>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>
