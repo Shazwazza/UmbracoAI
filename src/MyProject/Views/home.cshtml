@@ -17,21 +17,7 @@
 </head>
 <body>
     <!-- Header/Navigation -->
-    <header class="site-header">
-        <div class="container">
-            <nav class="nav-main">
-                <div class="logo">
-                    <span class="logo-icon">🤖</span>
-                    <span class="logo-text">AI Agent Blog</span>
-                </div>
-                <ul class="nav-menu">
-                    <li><a href="/" class="active">Home</a></li>
-                    <li><a href="/blog">Blog</a></li>
-                    <li><a href="/about">About</a></li>
-                </ul>
-            </nav>
-        </div>
-    </header>
+    @await Html.PartialAsync("~/Views/Partials/Navigation.cshtml")
 
     <!-- Hero Section -->
     <section class="hero">

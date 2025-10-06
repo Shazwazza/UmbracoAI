@@ -1,0 +1,39 @@
+@inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage
+@using Umbraco.Cms.Core.Models.PublishedContent
+@{
+    // Get the root/home page
+    var homePage = Model.Root();
+    
+    // Get the blog collection page (first child with alias 'blogCollection')
+    var blogPage = homePage.Children().FirstOrDefault(x => x.ContentType.Alias == "blogCollection");
+    
+    // Determine current page type for active state
+    var isHome = Model.Id == homePage.Id;
+    var isBlog = Model.ContentType.Alias == "blogCollection" || Model.ContentType.Alias == "blogPost";
+    
+    // For blog posts, also check if we're on the blog collection page
+    if (Model.ContentType.Alias == "blogPost")
+    {
+        isBlog = true;
+    }
+}
+
+<header class="site-header">
+    <div class="container">
+        <nav class="nav-main">
+            <div class="logo">
+                <a href="@homePage.Url()">
+                    <span class="logo-icon">🤖</span>
+                    <span class="logo-text">AI Agent Blog</span>
+                </a>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="@homePage.Url()" class="@(isHome ? "active" : "")">Home</a></li>
+                @if (blogPage != null)
+                {
+                    <li><a href="@blogPage.Url()" class="@(isBlog ? "active" : "")">Blog</a></li>
+                }
+            </ul>
+        </nav>
+    </div>
+</header>

@@ -17,19 +17,12 @@
     <title>@title - AI Agent Blog</title>
     <meta name="description" content="@subtitle">
     <link rel="stylesheet" href="/css/site.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 </head>
 <body>
-    <header class="site-header">
-        <nav class="main-nav">
-            <div class="nav-container">
-                <a href="/" class="logo">AI Agent Blog</a>
-                <ul class="nav-links">
-                    <li><a href="/">Home</a></li>
-                    <li><a href="@Model.Parent.Url()">Blog</a></li>
-                </ul>
-            </div>
-        </nav>
-    </header>
+    @await Html.PartialAsync("~/Views/Partials/Navigation.cshtml")
     
     <main class="blog-post-page">
         <article class="blog-post">
