@@ -13,11 +13,6 @@ targets: ["*"]
   * Save images to src/MyProject/wwwroot/media/downloaded_images.
   * PNG, JPG image formats are supported.
   * No svg files.
-* Adding images to media items in Umbraco normally requires using the umbraco mcp server's temporary files tool... DO NOT USE THIS it is broken right now.
-  * Create media items for all the images, use the files from src/MyProject/wwwroot/media/downloaded_images folder.
-  * Use the files directly instead of creating temporary files.
-  * Umbraco has access to these files so use the relative path for the umbracoFile property.
-  * The relative path that Umbraco has access too use will be /media/downloaded_images.
 * Update the blog post template to render the hero image.
 * Update the blog list template to show a thumbnail of the hero image.
 * DO NOT try to log into the Umbraco backoffice to manually upload images.
