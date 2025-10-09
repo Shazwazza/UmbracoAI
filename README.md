@@ -108,3 +108,5 @@ Pro tip: You can always ask the AI Agent to update the rules in a way that it wo
 * Maybe this could be changed to a GitHub Template Repository?
 * Wonder if we can as a community come up with some great shared rulesets for Umbraco that can be confidently re-used?
 * Perhaps there can be some common Umbraco slash commands that can be re-used for majority of Umbraco tasks? Slash commands for many AI tools also support command parameters which could be leveraged for added flexibility.
+* Convert this to a SDD (Spec Driven Development) toolset?
+* Setup a single npx command to both configure everything and potentially execute commands?
