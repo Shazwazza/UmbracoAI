@@ -32,15 +32,7 @@ In this demo, the premise is to have an AI Agent automatically create an Umbraco
 
 All coding and interaction that was done with this repo was done with VSCode and Roo Code. Using VS and/or other AI tools like Claude might work, but I've never tested these scenarios.
 
-### "YOLO mode"
-
-Part of the presentation was to showcase that an AI Agent can autonomously do all of the work without user interaction once the rules and commands are setup. As such, several MCP tools are pre-installed in the file /.rulesync/.mcp.json that have 'always allow' configured.
-
-![YOLO Tools](image-3.png)
-
-For this demo, other cmd line tools have been auto-allowed:
-
-![YOLO cmd line](image.png)
+The premise of this repo is to have re-usable commands to perform repeated operations within Umbraco (see commands below).
 
 ### Umbraco website & Umbraco MCP
 
@@ -69,6 +61,16 @@ With Rulesync configured, you can use any of your favorite AI tools, but they wi
 There's also a custom Roo Mode configured in this workspace: /.roomodes called "Umbraco Expert". This is specific to Roo Code and will allow you to choose this mode for nicer integration in running these rule/command sets.
 
 ![alt text](image-1.png)
+
+### "YOLO mode"
+
+Part of the presentation was to showcase that an AI Agent can autonomously do all of the work without user interaction once the rules and commands are setup. As such, several MCP tools are pre-installed in the file /.rulesync/.mcp.json that have 'always allow' configured.
+
+![YOLO Tools](image-3.png)
+
+For this demo, other cmd line tools have been auto-allowed:
+
+![YOLO cmd line](image.png)
 
 ### USync
 
