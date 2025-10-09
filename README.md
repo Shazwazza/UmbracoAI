@@ -36,9 +36,11 @@ All coding and interaction that was done with this repo was done with VSCode and
 
 Part of the presentation was to showcase that an AI Agent can autonomously do all of the work without user interaction once the rules and commands are setup. As such, several MCP tools are pre-installed in the file /.rulesync/.mcp.json that have 'always allow' configured.
 
+![YOLO Tools](image-3.png)
+
 For this demo, other cmd line tools have been auto-allowed:
 
-![alt text](image.png)
+![YOLO cmd line](image.png)
 
 ### Umbraco website & Umbraco MCP
 
