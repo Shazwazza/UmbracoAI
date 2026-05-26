@@ -61,7 +61,7 @@ USync has been installed to this website in order to track schema and content ch
 
 Reusable prompts are found in `/.github/prompts`.
 
-The prompts are numbered in order so that its easier to know which sequence they can be executed. Its not entirely criticial that they are executed in this sequence depending on the prompt being run.
+The prompts are numbered in order so that its easier to know which sequence they can be executed. Its not entirely critical that they are executed in this sequence depending on the prompt being run.
 
 To understand what each prompt does, open the file and read the instructions. You can then iterate and adjust the prompts and instructions as needed.
 

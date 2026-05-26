@@ -1,5 +1,5 @@
 ---
-description: Content authoring and wordingrules
+description: Content authoring and wording rules
 applyTo: '**/*'
 ---
 # Content authoring and wording rules
