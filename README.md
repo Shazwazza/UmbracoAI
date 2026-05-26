@@ -45,7 +45,7 @@ This repository is configured for GitHub Copilot only:
 
 ### "YOLO mode"
 
-Part of the presentation was to showcase that an AI Agent can autonomously do all of the work without user interaction once the rules and commands are setup. As such, several MCP tools are pre-installed in the file /.rulesync/.mcp.json that have 'always allow' configured.
+Part of the presentation was to showcase that an AI Agent can autonomously do all of the work without user interaction once the rules and prompts are setup. As such, several MCP tools are pre-installed in `/.copilot/mcp-config.json` with 'always allow' configured.
 
 ![YOLO Tools](image-3.png)
 
