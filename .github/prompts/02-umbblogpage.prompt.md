@@ -1,8 +1,6 @@
 ---
-description: 'Create Umbraco blog pages'
-targets: ["*"]
+description: Create Umbraco blog pages
 ---
-
 # Create a Blog pages in Umbraco
 
 * Ensure the Document Type structure to support a Blog List page that can exist under the Home page.

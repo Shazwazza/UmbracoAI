@@ -1,8 +1,6 @@
 ---
-description: 'Check website accessibility'
-targets: ["*"]
+description: Check website accessibility
 ---
-
 # Website accessibility
 
 * Use the a11y-accessibility MCP tool to validate the accessibility of the website.

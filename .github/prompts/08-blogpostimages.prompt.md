@@ -1,8 +1,6 @@
 ---
-description: 'Add images to blog posts'
-targets: ["*"]
+description: Add images to blog posts
 ---
-
 # Add images to blog posts
 
 * Each blog post should have a hero image.

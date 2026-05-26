@@ -1,4 +1,4 @@
-# Umbraco and AI Agents
+# Umbraco and GitHub Copilot
 
 Prompting, rules and instructions for facilitating Umbraco management via MCP and AI Agents.
 
@@ -13,12 +13,11 @@ In this demo, the premise is to have an AI Agent automatically create an Umbraco
 `TLDR;`
 
 1. Install Playwright as admin with `npx playwright install`
-1. Clone/Fork this repo and open in VS Code.
+1. Clone/Fork this repo and open in your Copilot-enabled editor.
 1. The Umbraco website needs to be running/installed: `dotnet run --project src/MyProject/MyProject.csproj`
-1. Ensure Umbraco MCP config is correct in the file: `/.rulesync/.mcp.json`
-1. [Create an Umbraco API User](https://docs.umbraco.com/umbraco-cms/fundamentals/data/users/api-users), with credentials matching your `/.rulesync/.mcp.json` file
-1. Run Rulesync: `npx rulesync generate --targets "*" --features "*"`
-1. Run a slash command like: `/01-umbhomepage` to get AI to do some work.
+1. Configure MCP servers in `/.copilot/mcp-config.json`
+1. [Create an Umbraco API User](https://docs.umbraco.com/umbraco-cms/fundamentals/data/users/api-users), with credentials matching `/.copilot/mcp-config.json`
+1. Use one of the prompt files in `/.github/prompts`, for example `01-umbhomepage.prompt.md`
 
 ![Demo](Step01.gif)
 
@@ -28,39 +27,21 @@ In this demo, the premise is to have an AI Agent automatically create an Umbraco
 
 ## Using this repo
 
-### VSCode
+### GitHub Copilot
 
-All coding and interaction that was done with this repo was done with VSCode and Roo Code. Using VS and/or other AI tools like Claude might work, but I've never tested these scenarios.
+This repository is configured for GitHub Copilot only:
 
-The premise of this repo is to have re-usable commands to perform repeated operations within Umbraco (see commands below).
+* Shared instructions: `/.github/copilot-instructions.md`
+* Modular instructions: `/.github/instructions/*.instructions.md`
+* Reusable prompts: `/.github/prompts/*.prompt.md`
+* MCP servers for Copilot: `/.copilot/mcp-config.json`
 
 ### Umbraco website & Umbraco MCP
 
 1. The Umbraco website will need to be run/installed first: `dotnet run --project src/MyProject/MyProject.csproj`
-1. The tool is already installed in this workspace MCP settings file: /.rulesync/.mcp.json
 1. Read and configure Umbraco MCP: https://github.com/umbraco/Umbraco-CMS-MCP-Dev including the user information.
-1. Edit /.rulesync/.mcp.json to update your Umbraco settings.
+1. Edit `/.copilot/mcp-config.json` to update your Umbraco settings.
 1. NOTE: ALL Umbraco MCP commands are marked as 'always allow', however there is this filter applied to the MCP server: "UMBRACO_INCLUDE_TOOL_COLLECTIONS": "document-type,document,media,property-type,partial-view,static-file,stylesheet,temporary-file,imaging,template".
-
-### Rulesync
-
-See: https://github.com/dyoshikawa/rulesync
-
-> A Node.js CLI tool that automatically generates configuration files for various AI development tools from unified AI rule files.
-
-All rules, commands and MCP tool configurations are stored in /.rulesync/*. To generate the configurations for all AI tools (simplest), you can run:
-
-`npx rulesync generate --targets "*" --features "*"`
-
-Anytime you change a file in /.rulesync/* you will need to re-run that above command to copy the configurations to your AI tools.
-
-### Roo Code
-
-With Rulesync configured, you can use any of your favorite AI tools, but they will need to [support slash commands](https://github.com/dyoshikawa/rulesync?tab=readme-ov-file#supported-tools-and-features) to work properly. [Roo Code](https://docs.roocode.com/) is my tool of choice.
-
-There's also a custom Roo Mode configured in this workspace: /.roomodes called "Umbraco Expert". This is specific to Roo Code and will allow you to choose this mode for nicer integration in running these rule/command sets.
-
-![alt text](image-1.png)
 
 ### "YOLO mode"
 
@@ -78,11 +59,11 @@ USync has been installed to this website in order to track schema and content ch
 
 ## Commands
 
-Commands are found in `/.rulesync/commands`.
+Reusable prompts are found in `/.github/prompts`.
 
-The commands are numbered in order so that its easier to know which sequence they can be executed. Its not entirely criticial that they are executed in this sequence depending on the commmand being run.
+The prompts are numbered in order so that its easier to know which sequence they can be executed. Its not entirely criticial that they are executed in this sequence depending on the prompt being run.
 
-To understand what each command does, just open the command file and read the instructions. You can then iterate and adjust the commands to be more specific to your needs and/or adjust the rules sets as well in case the AI Agent doesn't do exactly what you want.
+To understand what each prompt does, open the file and read the instructions. You can then iterate and adjust the prompts and instructions as needed.
 
 1. `/01-umbhomepage`
 1. `/02-umbblogpage`
@@ -93,13 +74,16 @@ To understand what each command does, just open the command file and read the in
 1. `/07-umbtagcloud`
 1. `/08-blogpostimages` - Currently configured to use the unsplash-mcp-server
 
-There's another command to reset everything: `/00-umbreset` which will essentially delete anything that it has already done.
+There's another prompt to reset everything: `00-umbreset.prompt.md` which will essentially delete anything that it has already done.
 
 ## Rules
 
-Rules are found in `/.rulesync/rules`.
+Rules are found in:
 
-These are the rules to help keep the AI Agent doing what it is supposed to. These rules are currently in their infancy and although they work most of the time when running the above commands, sometimes an Agent will get something wrong. In that case, the rules need to be adjusted.
+* `/.github/copilot-instructions.md`
+* `/.github/instructions/*.instructions.md`
+
+These are the rules to help keep the AI Agent doing what it is supposed to. These rules are currently in their infancy and although they work most of the time when running the above prompts, sometimes an Agent will get something wrong. In that case, the rules need to be adjusted.
 
 Pro tip: You can always ask the AI Agent to update the rules in a way that it won't get something wrong again :)
 

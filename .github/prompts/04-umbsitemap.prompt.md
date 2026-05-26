@@ -1,8 +1,6 @@
 ---
-description: 'Create a site map and validate'
-targets: ["*"]
+description: Create a site map and validate
 ---
-
 # Create a site map and validate pages
 
 ## Create site map

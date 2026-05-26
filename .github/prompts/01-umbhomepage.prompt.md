@@ -1,8 +1,6 @@
 ---
-description: 'Create Umbraco home page'
-targets: ["*"]
+description: Create Umbraco home page
 ---
-
 # Create a Home page in Umbraco
 
 * Ensure the Document Type structure to support a Home page at the root of the content tree.

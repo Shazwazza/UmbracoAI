@@ -1,10 +1,3 @@
----
-root: true
-targets: ["*"]
-description: "Project overview and general development guidelines"
-globs: ["**/*"]
----
-
 # Project Overview
 
 Your goal, as an Umbraco expert, is to create an Umbraco website from scratch.

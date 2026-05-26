@@ -1,10 +1,7 @@
 ---
-root: false
-targets: ["*"]
-description: "Rules for working git"
-globs: ["**/*"]
+description: Rules for working git
+applyTo: '**/*'
 ---
-
 # Git
 
 * Use the 'git' mcp server for git operations, try to avoid the command line if possible.

@@ -1,10 +1,7 @@
 ---
-root: false
-targets: ["*"]
-description: "Umbraco best practices"
-globs: ["**/*"]
+description: Umbraco best practices
+applyTo: '**/*'
 ---
-
 # Umbraco best practices & rules
 
 ## When working with Umbraco

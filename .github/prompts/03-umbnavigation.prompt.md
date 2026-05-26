@@ -1,8 +1,6 @@
 ---
-description: 'Create page navigation'
-targets: ["*"]
+description: Create page navigation
 ---
-
 # Create page navigation
 
 * There must be a menu applied to all pages.
