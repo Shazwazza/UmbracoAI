@@ -35,8 +35,7 @@ This repository is configured for **Copilot CLI**:
 * Shared instructions: `/.github/copilot-instructions.md`
 * Modular instructions: `/.github/instructions/*.instructions.md`
 * Reusable skills: `/.github/skills/*/SKILL.md`
-* Project agents: `/.github/agents/*.agent.md`
-* Agent templates: `/.copilot/agents/*.agent.md`
+* Agents: `/.github/agents/*.agent.md`
 * MCP servers: `/.copilot/mcp-config.json`
 
 ### Umbraco website & Umbraco MCP
@@ -97,16 +96,11 @@ There's also a reset skill to wipe everything back to defaults: `/umb-reset`
 
 ## Custom agents
 
-Project-level agents (auto-discovered by Copilot CLI) are in `/.github/agents`:
+All agents are in `/.github/agents` and are auto-discovered by Copilot CLI:
 
 * `umbraco-demo.agent.md` — end-to-end demo orchestrator
-
-Agent templates that can be copied to `~/.copilot/agents/` for personal use are in `/.copilot/agents`:
-
-* `umbraco-site-builder.agent.md`
-* `umbraco-site-validator.agent.md`
-
-See `/.copilot/agents/README.md` for copy instructions.
+* `umbraco-site-builder.agent.md` — Umbraco implementation specialist
+* `umbraco-site-validator.agent.md` — site quality and accessibility specialist
 
 ## Instructions
 
