@@ -1,6 +1,8 @@
 ---
-description: Create Umbraco home page
+name: umb-homepage
+description: Create the Umbraco home page structure, template, styling, and published root content. Use when asked to scaffold or build the home page.
 ---
+
 # Create a Home page in Umbraco
 
 * Ensure the Document Type structure to support a Home page at the root of the content tree.

@@ -17,7 +17,8 @@ In this demo, the premise is to have an AI Agent automatically create an Umbraco
 1. The Umbraco website needs to be running/installed: `dotnet run --project src/MyProject/MyProject.csproj`
 1. Configure MCP servers in `/.copilot/mcp-config.json`
 1. [Create an Umbraco API User](https://docs.umbraco.com/umbraco-cms/fundamentals/data/users/api-users), with credentials matching `/.copilot/mcp-config.json`
-1. Use one of the prompt files in `/.github/prompts`, for example `01-umbhomepage.prompt.md`
+1. Start Copilot CLI and list available skills with `/skills list`
+1. Use skills such as `/umb-homepage`, `/umb-blog-pages`, and `/umb-navigation`
 
 ![Demo](Step01.gif)
 
@@ -33,7 +34,8 @@ This repository is configured for GitHub Copilot only:
 
 * Shared instructions: `/.github/copilot-instructions.md`
 * Modular instructions: `/.github/instructions/*.instructions.md`
-* Reusable prompts: `/.github/prompts/*.prompt.md`
+* Reusable skills: `/.github/skills/*/SKILL.md`
+* Custom agent templates: `/.copilot/agents/*.agent.md`
 * MCP servers for Copilot: `/.copilot/mcp-config.json`
 
 ### Umbraco website & Umbraco MCP
@@ -45,7 +47,7 @@ This repository is configured for GitHub Copilot only:
 
 ### "YOLO mode"
 
-Part of the presentation was to showcase that an AI Agent can autonomously do all of the work without user interaction once the rules and prompts are setup. As such, several MCP tools are pre-installed in `/.copilot/mcp-config.json` with 'always allow' configured.
+Part of the presentation was to showcase that an AI Agent can autonomously do all of the work without user interaction once the rules and skills are setup. As such, several MCP tools are pre-installed in `/.copilot/mcp-config.json` with 'always allow' configured.
 
 ![YOLO Tools](image-3.png)
 
@@ -57,33 +59,41 @@ For this demo, other cmd line tools have been auto-allowed:
 
 USync has been installed to this website in order to track schema and content changes in Git. This allows you to rollback/forward any changes that the Agent makes.
 
-## Commands
+## Skills
 
-Reusable prompts are found in `/.github/prompts`.
+Reusable skills are found in `/.github/skills`.
 
-The prompts are numbered in order so that its easier to know which sequence they can be executed. Its not entirely critical that they are executed in this sequence depending on the prompt being run.
+To see available skills in Copilot CLI, run `/skills list`. Copilot can invoke these automatically, or you can explicitly call them with `/skill-name`.
 
-To understand what each prompt does, open the file and read the instructions. You can then iterate and adjust the prompts and instructions as needed.
+Current skills:
 
-1. `/01-umbhomepage`
-1. `/02-umbblogpage`
-1. `/03-umbnavigation`
-1. `/04-umbsitemap`
-1. `/05-umbaccessibility`
-1. `/06-umbblogposts`
-1. `/07-umbtagcloud`
-1. `/08-blogpostimages` - Currently configured to use the unsplash-mcp-server
+1. `/umb-homepage`
+1. `/umb-blog-pages`
+1. `/umb-navigation`
+1. `/umb-sitemap`
+1. `/umb-accessibility`
+1. `/umb-blogposts`
+1. `/umb-tagcloud`
+1. `/umb-blogpost-images`
+1. `/umb-reset`
 
-There's another prompt to reset everything: `00-umbreset.prompt.md` which will essentially delete anything that it has already done.
+## Custom agents
 
-## Rules
+Copilot CLI custom agent templates are in `/.copilot/agents`:
 
-Rules are found in:
+* `umbraco-site-builder.agent.md`
+* `umbraco-site-validator.agent.md`
+
+To use these as personal Copilot CLI agents, copy them to `~/.copilot/agents/` and restart Copilot CLI.
+
+## Instructions
+
+Instructions are found in:
 
 * `/.github/copilot-instructions.md`
 * `/.github/instructions/*.instructions.md`
 
-These are the rules to help keep the AI Agent doing what it is supposed to. These rules are currently in their infancy and although they work most of the time when running the above prompts, sometimes an Agent will get something wrong. In that case, the rules need to be adjusted.
+These are the rules to help keep the AI Agent doing what it is supposed to. These rules are currently in their infancy and although they work most of the time when running the above skills, sometimes an Agent will get something wrong. In that case, the rules need to be adjusted.
 
 Pro tip: You can always ask the AI Agent to update the rules in a way that it won't get something wrong again :)
 

@@ -1,7 +1,9 @@
 ---
-description: Create Umbraco blog pages
+name: umb-blog-pages
+description: Create Blog List and Blog page document types, templates, and starter content. Use when asked to set up blog pages in Umbraco.
 ---
-# Create a Blog pages in Umbraco
+
+# Create Blog pages in Umbraco
 
 * Ensure the Document Type structure to support a Blog List page that can exist under the Home page.
   * Ensure there is a Template assigned for this Document Type.
