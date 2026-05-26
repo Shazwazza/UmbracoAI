@@ -1,6 +1,6 @@
-# Umbraco and GitHub Copilot
+# Umbraco and Copilot CLI
 
-Prompting, rules and instructions for facilitating Umbraco management via MCP and AI Agents.
+Prompting, rules and instructions for facilitating Umbraco management via Copilot CLI, MCP, and AI Agents.
 
 ## Umbraco US Festival 2025 - Chicago
 
@@ -17,8 +17,8 @@ In this demo, the premise is to have an AI Agent automatically create an Umbraco
 1. The Umbraco website needs to be running/installed: `dotnet run --project src/MyProject/MyProject.csproj`
 1. Configure MCP servers in `/.copilot/mcp-config.json`
 1. [Create an Umbraco API User](https://docs.umbraco.com/umbraco-cms/fundamentals/data/users/api-users), with credentials matching `/.copilot/mcp-config.json`
-1. Start Copilot CLI and list available skills with `/skills list`
-1. Use skills such as `/umb-homepage`, `/umb-blog-pages`, and `/umb-navigation`
+1. Start Copilot CLI and run the end-to-end demo with `Use the umbraco-demo agent`
+1. Or run individual skills such as `/umb-homepage`, `/umb-blog-pages`, and `/umb-navigation`
 
 ![Demo](Step01.gif)
 
@@ -28,15 +28,16 @@ In this demo, the premise is to have an AI Agent automatically create an Umbraco
 
 ## Using this repo
 
-### GitHub Copilot
+### Copilot CLI
 
-This repository is configured for GitHub Copilot only:
+This repository is configured for **Copilot CLI**:
 
 * Shared instructions: `/.github/copilot-instructions.md`
 * Modular instructions: `/.github/instructions/*.instructions.md`
 * Reusable skills: `/.github/skills/*/SKILL.md`
-* Custom agent templates: `/.copilot/agents/*.agent.md`
-* MCP servers for Copilot: `/.copilot/mcp-config.json`
+* Project agents: `/.github/agents/*.agent.md`
+* Agent templates: `/.copilot/agents/*.agent.md`
+* MCP servers: `/.copilot/mcp-config.json`
 
 ### Umbraco website & Umbraco MCP
 
@@ -59,13 +60,29 @@ For this demo, other cmd line tools have been auto-allowed:
 
 USync has been installed to this website in order to track schema and content changes in Git. This allows you to rollback/forward any changes that the Agent makes.
 
+## End-to-end demo agent
+
+For a single-command, fully automated demo run the `umbraco-demo` agent:
+
+```
+Use the umbraco-demo agent to build the full Umbraco blogging site
+```
+
+The agent will:
+1. Ask whether to reset the site first
+2. Run each skill below in sequence
+3. Validate each step with Playwright before moving on
+4. Summarise what was built when complete
+
+The `umbraco-demo` agent profile lives at `/.github/agents/umbraco-demo.agent.md` and is auto-discovered by Copilot CLI.
+
 ## Skills
 
-Reusable skills are found in `/.github/skills`.
+Reusable skills are found in `/.github/skills` and are auto-discovered by Copilot CLI.
 
-To see available skills in Copilot CLI, run `/skills list`. Copilot can invoke these automatically, or you can explicitly call them with `/skill-name`.
+To see available skills, run `/skills list`. Copilot can invoke these automatically, or you can call them explicitly with `/skill-name`.
 
-Current skills:
+Demo build order:
 
 1. `/umb-homepage`
 1. `/umb-blog-pages`
@@ -75,16 +92,21 @@ Current skills:
 1. `/umb-blogposts`
 1. `/umb-tagcloud`
 1. `/umb-blogpost-images`
-1. `/umb-reset`
+
+There's also a reset skill to wipe everything back to defaults: `/umb-reset`
 
 ## Custom agents
 
-Copilot CLI custom agent templates are in `/.copilot/agents`:
+Project-level agents (auto-discovered by Copilot CLI) are in `/.github/agents`:
+
+* `umbraco-demo.agent.md` — end-to-end demo orchestrator
+
+Agent templates that can be copied to `~/.copilot/agents/` for personal use are in `/.copilot/agents`:
 
 * `umbraco-site-builder.agent.md`
 * `umbraco-site-validator.agent.md`
 
-To use these as personal Copilot CLI agents, copy them to `~/.copilot/agents/` and restart Copilot CLI.
+See `/.copilot/agents/README.md` for copy instructions.
 
 ## Instructions
 
@@ -93,7 +115,7 @@ Instructions are found in:
 * `/.github/copilot-instructions.md`
 * `/.github/instructions/*.instructions.md`
 
-These are the rules to help keep the AI Agent doing what it is supposed to. These rules are currently in their infancy and although they work most of the time when running the above skills, sometimes an Agent will get something wrong. In that case, the rules need to be adjusted.
+These are the instructions to help keep the AI Agent doing what it is supposed to. These are currently in their infancy and although they work most of the time when running the above skills, sometimes an Agent will get something wrong. In that case, the instructions need to be adjusted.
 
 Pro tip: You can always ask the AI Agent to update the rules in a way that it won't get something wrong again :)
 
