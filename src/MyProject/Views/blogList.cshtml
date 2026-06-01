@@ -1,4 +1,5 @@
 @using Umbraco.Cms.Web.Common.PublishedModels;
+@using Umbraco.Cms.Core.Models.PublishedContent;
 @inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage
 @{
     Layout = null;
@@ -65,7 +66,15 @@
                         var postTitle = post.Value<string>("title") ?? post.Name;
                         var excerpt = post.Value<string>("excerpt") ?? "";
                         var tags = post.Value<IEnumerable<string>>("tags") ?? Enumerable.Empty<string>();
+                        var postHeroImage = post.Value<Umbraco.Cms.Core.Models.PublishedContent.IPublishedContent>("heroImage");
+                        var postHeroUrl = postHeroImage?.Url();
                         <article class="blog-card">
+                            @if (!string.IsNullOrEmpty(postHeroUrl))
+                            {
+                                <a href="@post.Url()" class="blog-card__img-link">
+                                    <img src="@(postHeroUrl)?width=600&height=300&mode=crop" alt="@postTitle" class="blog-card__img" loading="lazy" />
+                                </a>
+                            }
                             <div class="blog-card__body">
                                 <div class="blog-card__meta">@post.CreateDate.ToString("MMMM d, yyyy")</div>
                                 <h2 class="blog-card__title">

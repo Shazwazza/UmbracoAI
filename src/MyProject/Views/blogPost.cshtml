@@ -1,4 +1,5 @@
 @using Umbraco.Cms.Web.Common.PublishedModels;
+@using Umbraco.Cms.Core.Models.PublishedContent;
 @inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage
 @{
     Layout = null;
@@ -6,6 +7,8 @@
     var subtitle = Model.Value<string>("subtitle") ?? "";
     var markdownContent = Model.Value<string>("content") ?? "";
     var tags = Model.Value<IEnumerable<string>>("tags") ?? Enumerable.Empty<string>();
+    var heroImage = Model.Value<Umbraco.Cms.Core.Models.PublishedContent.IPublishedContent>("heroImage");
+    var heroImageUrl = heroImage?.Url();
 }
 <!DOCTYPE html>
 <html lang="en">
@@ -30,6 +33,13 @@
                     }
                     <p class="blog-post__meta">Published @Model.CreateDate.ToString("MMMM d, yyyy")</p>
                 </header>
+
+                @if (!string.IsNullOrEmpty(heroImageUrl))
+                {
+                    <div class="blog-post__hero">
+                        <img src="@heroImageUrl?width=1200&height=500&mode=crop" alt="@title" class="blog-post__hero-img" />
+                    </div>
+                }
 
                 <div class="content-section__body">
                     @Html.Raw(markdownContent)
