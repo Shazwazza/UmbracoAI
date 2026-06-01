@@ -22,7 +22,7 @@ applyTo: '**/*'
 
 ## Database backup
 
-* Before performing any bulk or destructive operations via the Umbraco MCP tools (e.g., deleting content, resetting the site, creating many items), run the `/umb-backup` skill to back up the SQLite database.
+* Before performing any bulk or destructive operations via the Umbraco MCP tools (e.g., deleting content, resetting the site, creating many items), run the `/umb-backup` skill to back up the LocalDB database.
 * Backups are stored at `src/MyProject/umbraco/Data/backups/` and are git-ignored.
 
 ## Umbraco backoffice and schema

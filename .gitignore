@@ -491,6 +491,6 @@ FodyWeavers.xsd
 
 **/.clinerules/
 
-# Umbraco SQLite database backups
+# Umbraco database backups
 src/MyProject/umbraco/Data/backups/
 **/.playwright-mcp/*
