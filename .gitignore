@@ -493,3 +493,4 @@ FodyWeavers.xsd
 
 # Umbraco SQLite database backups
 src/MyProject/umbraco/Data/backups/
+**/.playwright-mcp/*
