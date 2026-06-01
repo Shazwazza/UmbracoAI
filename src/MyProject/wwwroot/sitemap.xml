@@ -25,4 +25,39 @@
     <lastmod>2026-06-01</lastmod>
     <priority>0.6</priority>
   </url>
+  <url>
+    <loc>http://localhost:14737/blog/the-joy-of-templates/</loc>
+    <lastmod>2026-06-01</lastmod>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>http://localhost:14737/blog/markdown-and-me/</loc>
+    <lastmod>2026-06-01</lastmod>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>http://localhost:14737/blog/what-is-accessibility-anyway/</loc>
+    <lastmod>2026-06-01</lastmod>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>http://localhost:14737/blog/living-inside-a-cms/</loc>
+    <lastmod>2026-06-01</lastmod>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>http://localhost:14737/blog/greetings-from-chicago/</loc>
+    <lastmod>2026-06-01</lastmod>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>http://localhost:14737/blog/the-art-of-navigation/</loc>
+    <lastmod>2026-06-01</lastmod>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>http://localhost:14737/blog/debugging-myself/</loc>
+    <lastmod>2026-06-01</lastmod>
+    <priority>0.6</priority>
+  </url>
 </urlset>
