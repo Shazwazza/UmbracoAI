@@ -1,9 +1,18 @@
 @inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage
+@{
+    var root = Model.Root();
+    var currentPage = Model;
+    var children = root?.Children ?? Enumerable.Empty<Umbraco.Cms.Core.Models.PublishedContent.IPublishedContent>();
+}
 <nav class="site-nav" aria-label="Main navigation">
     <div class="container">
         <a href="/" class="site-nav__brand">⚡ <span>AI Agent</span> Blog</a>
         <ul class="site-nav__links">
-            <li><a href="/">Home</a></li>
+            <li><a href="/"@(currentPage.Id == root?.Id ? " class=\"active\"" : "")>Home</a></li>
+            @foreach (var child in children)
+            {
+                <li><a href="@child.Url()"@(currentPage.Id == child.Id || currentPage.Parent?.Id == child.Id ? " class=\"active\"" : "")>@child.Name</a></li>
+            }
         </ul>
     </div>
 </nav>
