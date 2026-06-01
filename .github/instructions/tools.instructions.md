@@ -13,6 +13,12 @@ applyTo: '**/*'
 * If the Umbraco MCP tool is not running, DO NOT attempt to modify Umbraco content.
 * The Umbraco MCP tool may not work if the website is not running. If you determine the website is not running, you can proceed to start it and try again.
 * If, the website is running and the MCP tool fails, notify the user, DO NOT attempt to complete ANY commands without it operating.
+* NEVER use `curl`, `Invoke-RestMethod`, `Invoke-WebRequest`, or any other direct HTTP/API calls to access Umbraco. All Umbraco operations MUST go through the Umbraco MCP tools exclusively. Do NOT attempt to work around MCP failures by calling the Umbraco API directly.
+
+## Server process management
+
+* When the Umbraco web server is started with `dotnet run` using `detach: true`, the server process continues running independently even after the shell reports completion. A "detached shell completed" notification does NOT mean the server has stopped.
+* Do NOT restart the server when you receive a shell completion notification. Check if the server is actually responsive first (e.g., try navigating with Playwright or check for the dotnet process).
 
 ## Browser commands
 
