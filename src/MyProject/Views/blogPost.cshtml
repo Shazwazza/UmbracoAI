@@ -19,32 +19,34 @@
 <body>
     @await Html.PartialAsync("_Navigation")
 
-    <article class="blog-post">
-        <div class="container">
-            <header class="blog-post__header">
-                <h1 class="blog-post__title">@title</h1>
-                @if (!string.IsNullOrEmpty(subtitle))
-                {
-                    <p class="blog-post__meta">@subtitle</p>
-                }
-                <p class="blog-post__meta">Published @Model.CreateDate.ToString("MMMM d, yyyy")</p>
-            </header>
-
-            <div class="content-section__body">
-                @Html.Raw(markdownContent)
-            </div>
-
-            @if (tags.Any())
-            {
-                <div class="blog-card__tags" style="max-width:780px; margin: 2rem auto 0;">
-                    @foreach (var tag in tags)
+    <main>
+        <article class="blog-post">
+            <div class="container">
+                <header class="blog-post__header">
+                    <h1 class="blog-post__title">@title</h1>
+                    @if (!string.IsNullOrEmpty(subtitle))
                     {
-                        <span class="tag">@tag</span>
+                        <p class="blog-post__meta">@subtitle</p>
                     }
+                    <p class="blog-post__meta">Published @Model.CreateDate.ToString("MMMM d, yyyy")</p>
+                </header>
+
+                <div class="content-section__body">
+                    @Html.Raw(markdownContent)
                 </div>
-            }
-        </div>
-    </article>
+
+                @if (tags.Any())
+                {
+                    <div class="blog-card__tags" style="max-width:780px; margin: 2rem auto 0;">
+                        @foreach (var tag in tags)
+                        {
+                            <span class="tag">@tag</span>
+                        }
+                    </div>
+                }
+            </div>
+        </article>
+    </main>
 
     @await Html.PartialAsync("_Footer")
 </body>

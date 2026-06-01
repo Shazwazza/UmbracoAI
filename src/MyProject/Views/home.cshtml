@@ -19,9 +19,10 @@
 <body>
     @await Html.PartialAsync("_Navigation")
 
-    <section class="hero">
-        <div class="container">
-            <h1 class="hero__title">@Html.Raw(title)</h1>
+    <main>
+        <section class="hero">
+            <div class="container">
+                <h1 class="hero__title">@Html.Raw(title)</h1>
             @if (!string.IsNullOrEmpty(subtitle))
             {
                 <p class="hero__subtitle">@subtitle</p>
@@ -33,12 +34,13 @@
         </div>
     </section>
 
-    <main class="content-section">
+    <section class="content-section">
         <div class="container">
             <div class="content-section__body">
                 @Html.Raw(mainContent)
             </div>
         </div>
+    </section>
     </main>
 
     @await Html.PartialAsync("_Footer")
