@@ -1,3 +1,11 @@
+# Project Configuration
+
+| Variable | Value |
+|----------|-------|
+| `SITE_BASE_URL` | `http://localhost:14737` |
+
+> **Note:** If `SITE_BASE_URL` changes, also update the `UMBRACO_BASE_URL` env var in `.mcp.json` and the `applicationUrl` entries in `src/MyProject/Properties/launchSettings.json`.
+
 # Project Overview
 
 Your goal, as an Umbraco expert, is to create an Umbraco website from scratch.

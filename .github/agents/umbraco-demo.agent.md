@@ -17,7 +17,7 @@ Ask the user: "Would you like to reset the Umbraco site to a clean state before 
 
 ## Demo sequence
 
-Work through each step in order. After completing each step, use the Playwright MCP tool to navigate to `http://localhost:14737` (or the relevant page URL) and confirm the page renders without errors. A page has an error if a `div` with id `stackpage` is present. Fix any rendering errors before proceeding to the next step.
+Work through each step in order. After completing each step, use the Playwright MCP tool to navigate to `SITE_BASE_URL` (see Project Configuration in copilot-instructions.md) or the relevant page URL, and confirm the page renders without errors. A page has an error if a `div` with id `stackpage` is present. Fix any rendering errors before proceeding to the next step.
 
 ### Step 1 — Home page (`/umb-homepage`)
 
@@ -25,7 +25,7 @@ Use the `umb-homepage` skill to:
 - Create the Home page document type, template, and published content.
 - Produce the HTML, Razor, and CSS to render the Home page.
 
-**Validate:** Open `http://localhost:14737` in Playwright. Confirm the home page loads and has no error div.
+**Validate:** Open `SITE_BASE_URL` in Playwright. Confirm the home page loads and has no error div.
 
 ---
 
@@ -34,7 +34,7 @@ Use the `umb-homepage` skill to:
 Use the `umb-blog-pages` skill to:
 - Create the Blog List and Blog Post document types, templates, and a few starter blog posts.
 
-**Validate:** Open `http://localhost:14737` in Playwright. Navigate to the Blog List page. Confirm it loads and lists at least one blog post without errors.
+**Validate:** Open `SITE_BASE_URL` in Playwright. Navigate to the Blog List page. Confirm it loads and lists at least one blog post without errors.
 
 ---
 
@@ -44,7 +44,7 @@ Use the `umb-navigation` skill to:
 - Add a shared navigation menu to all pages.
 - Ensure the home page links to the blog list and other pages.
 
-**Validate:** Use Playwright to browse `http://localhost:14737` and click through the navigation links. Confirm all links resolve and no errors appear.
+**Validate:** Use Playwright to browse `SITE_BASE_URL` and click through the navigation links. Confirm all links resolve and no errors appear.
 
 ---
 
@@ -54,7 +54,7 @@ Use the `umb-sitemap` skill to:
 - Generate `/sitemap.xml` from published content.
 - Crawl each URL in the sitemap with Playwright to verify pages render without errors.
 
-**Validate:** Playwright — open `http://localhost:14737/sitemap.xml`. Confirm it contains entries for all published pages.
+**Validate:** Playwright — open `SITE_BASE_URL/sitemap.xml`. Confirm it contains entries for all published pages.
 
 ---
 
@@ -101,6 +101,6 @@ Use the `umb-blogpost-images` skill to:
 
 ## After all steps complete
 
-- Run a final Playwright check on `http://localhost:14737` and navigate through the entire site.
+- Run a final Playwright check on `SITE_BASE_URL` and navigate through the entire site.
 - Summarise what was built: pages created, blog posts authored, skills run, and any issues fixed along the way.
 - Announce the demo is complete.

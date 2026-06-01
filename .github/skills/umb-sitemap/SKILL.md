@@ -8,7 +8,7 @@ description: Generate sitemap.xml and validate all site links and navigation pat
 ## Create site map
 
 * Based on the content in the tree, create and save an XML sitemap. The file can be stored in `src/MyProject/wwwroot` and should be available at `/sitemap.xml`.
-* The absolute URL for a page is `http://localhost:14737` plus the relative URL of the published document.
+* The absolute URL for a page is `SITE_BASE_URL` (see Project Configuration in copilot-instructions.md) plus the relative URL of the published document.
 * Ensure Umbraco HTML Templates include a reference to this sitemap.
 
 ## Validate page rendering
