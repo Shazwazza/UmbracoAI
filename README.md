@@ -2,9 +2,9 @@
 
 Prompting, rules and instructions for facilitating Umbraco management via Copilot CLI, MCP, and AI Agents.
 
-## Umbraco US Festival 2025 - Chicago
+## Umbraco Codegarden 2026
 
-This project was put together as a presentation for the Umbraco US Festival 2025 in Chicago to showcase how custom rules and commands can be stored in a git repository so they can be re-used for Umbraco management.
+This project was put together as a presentation for the Umbraco Codegarden 2026 conference to showcase how custom rules and commands can be stored in a git repository so they can be re-used for Umbraco management.
 
 In this demo, the premise is to have an AI Agent automatically create an Umbraco Blogging website from scratch.
 
