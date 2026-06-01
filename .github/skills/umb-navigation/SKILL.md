@@ -5,6 +5,8 @@ description: Implement shared site navigation and validate rendering with Playwr
 
 # Create page navigation
 
+> **Git:** Before making changes, verify you are on a `develop/*` branch (see `git.instructions.md`).
+
 * There must be a menu applied to all pages.
 * The Home page must link to relevant pages in the site.
 * Other pages must have a way to get back home.
@@ -17,3 +19,7 @@ description: Implement shared site navigation and validate rendering with Playwr
 ## Testing
 
 * Once the navigation has been created or updated, test that it renders correctly using the Playwright MCP tool.
+* Navigate to `SITE_BASE_URL` and verify:
+  1. Navigation links are visible on all pages (Home, Blog List, Blog Post).
+  2. Clicking each nav link loads the correct page without errors.
+  3. Each page has a way to return to the Home page.

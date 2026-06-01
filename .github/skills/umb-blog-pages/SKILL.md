@@ -5,6 +5,8 @@ description: Create Blog List and Blog page document types, templates, and start
 
 # Create Blog pages in Umbraco
 
+> **Git:** Before making changes, verify you are on a `develop/*` branch (see `git.instructions.md`).
+
 * Ensure the Document Type structure to support a Blog List page that can exist under the Home page.
   * Ensure there is a Template assigned for this Document Type.
   * Produce the HTML, Razor and CSS to render the Blog List page with links to the latest Blog posts.
@@ -15,3 +17,10 @@ description: Create Blog List and Blog page document types, templates, and start
   * Ensure there is a Template assigned for this Document Type.
   * Produce the HTML, Razor and CSS to render the Blog page.
   * Ensure there are a few Blog pages created and published.
+
+## Validation
+
+Use Playwright to:
+1. Navigate to the Blog List page URL. Confirm it loads without errors (no `div#stackpage`).
+2. Confirm at least one blog post card is visible with title, date, and excerpt.
+3. Click through to a blog post. Confirm it renders without errors.

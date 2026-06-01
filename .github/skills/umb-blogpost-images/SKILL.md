@@ -5,6 +5,8 @@ description: Add hero images to blog posts and render image previews on list and
 
 # Add images to blog posts
 
+> **Git:** Before making changes, verify you are on a `develop/*` branch (see `git.instructions.md`).
+
 * Each blog post should have a hero image.
 * Ensure the Blog Post document type has a `heroImage` property using the Image Media Picker data type.
 
@@ -38,3 +40,9 @@ description: Add hero images to blog posts and render image previews on list and
 * DO NOT try to log into the Umbraco backoffice to manually upload images.
 * DO NOT use `sourceType: "filePath"` for media uploads (it is disabled).
 * DO NOT use `MediaWithCrops` type in Razor — use `IPublishedContent` instead.
+
+## Validation
+
+Use Playwright to:
+1. Navigate to the Blog List page. Confirm each blog card shows a thumbnail image.
+2. Navigate to at least one Blog Post page. Confirm the hero image renders below the header.

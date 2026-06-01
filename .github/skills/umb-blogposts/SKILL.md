@@ -5,6 +5,8 @@ description: Ensure sufficient authored blog entries for the demo. Use when aske
 
 # Ensure there are 10 blog posts written
 
+> **Git:** Before making changes, verify you are on a `develop/*` branch (see `git.instructions.md`).
+
 Check how many blog posts currently exist under the Blog List page. Create additional posts to reach at least 10 total.
 
 ## Content guidelines
@@ -34,3 +36,9 @@ Check how many blog posts currently exist under the Blog List page. Create addit
 
 * Update `src/MyProject/wwwroot/sitemap.xml` to include all new blog post URLs.
 * Get URLs for new posts using `get-document-urls`.
+
+## Validation
+
+Use Playwright to navigate to the Blog List page. Confirm:
+1. At least 10 blog post cards are visible.
+2. Each card shows a title, date, and excerpt.
