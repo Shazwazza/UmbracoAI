@@ -207,17 +207,29 @@ img { max-width: 100%; height: auto; display: block; }
 
 /* --- Tag Cloud --- */
 .tag-cloud { padding: 2rem 0; }
-.tag-cloud__container {
+.tag-cloud__list {
     display: flex;
     flex-wrap: wrap;
     gap: 0.6rem;
     justify-content: center;
+    align-items: baseline;
     padding: 1.5rem;
     background: var(--color-surface);
     border: 1px solid var(--color-border);
     border-radius: var(--radius);
 }
 .tag-cloud__title { text-align: center; font-size: 1.4rem; color: #fff; margin-bottom: 1rem; font-weight: 700; }
+.tag-cloud__tag {
+    color: var(--color-accent);
+    background: rgba(0, 224, 255, 0.08);
+    padding: 0.3rem 0.7rem;
+    border-radius: 4px;
+    transition: background 0.2s;
+    cursor: default;
+    white-space: nowrap;
+}
+.tag-cloud__tag:hover { background: rgba(0, 224, 255, 0.18); }
+.tag-cloud__tag sup { font-size: 0.6em; margin-left: 0.2em; opacity: 0.7; }
 
 /* --- Footer --- */
 .site-footer {

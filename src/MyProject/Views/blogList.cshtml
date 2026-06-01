@@ -5,6 +5,20 @@
     var title = Model.Value<string>("title") ?? "Blog";
     var description = Model.Value<string>("description") ?? "";
     var posts = Model.Children?.OrderByDescending(x => x.CreateDate) ?? Enumerable.Empty<Umbraco.Cms.Core.Models.PublishedContent.IPublishedContent>();
+
+    // Build tag frequency map for the tag cloud
+    var tagCounts = new Dictionary<string, int>();
+    foreach (var p in posts)
+    {
+        var t = p.Value<IEnumerable<string>>("tags") ?? Enumerable.Empty<string>();
+        foreach (var tag in t)
+        {
+            if (tagCounts.ContainsKey(tag)) tagCounts[tag]++;
+            else tagCounts[tag] = 1;
+        }
+    }
+    var maxCount = tagCounts.Any() ? tagCounts.Values.Max() : 1;
+    var minCount = tagCounts.Any() ? tagCounts.Values.Min() : 1;
 }
 <!DOCTYPE html>
 <html lang="en">
@@ -28,6 +42,22 @@
                         <p>@description</p>
                     }
                 </header>
+
+                @if (tagCounts.Any())
+                {
+                    <div class="tag-cloud">
+                        <h2 class="tag-cloud__title">Tags</h2>
+                        <div class="tag-cloud__list">
+                            @foreach (var entry in tagCounts.OrderBy(kv => kv.Key))
+                            {
+                                var range = maxCount - minCount;
+                                var scale = range > 0 ? (double)(entry.Value - minCount) / range : 0.5;
+                                var fontSize = 0.8 + (scale * 1.4);
+                                <span class="tag-cloud__tag" style="font-size: @(fontSize.ToString("0.00", System.Globalization.CultureInfo.InvariantCulture))rem;">@entry.Key<sup>@entry.Value</sup></span>
+                            }
+                        </div>
+                    </div>
+                }
 
                 <div class="blog-list__grid">
                     @foreach (var post in posts)
