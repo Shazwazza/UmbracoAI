@@ -1,0 +1,45 @@
+@using Umbraco.Cms.Web.Common.PublishedModels;
+@inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage
+@{
+    Layout = null;
+    var title = Model.Value<string>("title") ?? "Welcome";
+    var subtitle = Model.Value<string>("subtitle") ?? "";
+    var heroText = Model.Value<string>("heroText") ?? "";
+    var mainContent = Model.Value("mainContent");
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>@title — AI Agent Blog</title>
+    <link rel="stylesheet" href="/css/site.css" />
+</head>
+<body>
+    @await Html.PartialAsync("_Navigation")
+
+    <section class="hero">
+        <div class="container">
+            <h1 class="hero__title">@Html.Raw(title)</h1>
+            @if (!string.IsNullOrEmpty(subtitle))
+            {
+                <p class="hero__subtitle">@subtitle</p>
+            }
+            @if (!string.IsNullOrEmpty(heroText))
+            {
+                <p class="hero__text">@heroText</p>
+            }
+        </div>
+    </section>
+
+    <main class="content-section">
+        <div class="container">
+            <div class="content-section__body">
+                @Html.Raw(mainContent)
+            </div>
+        </div>
+    </main>
+
+    @await Html.PartialAsync("_Footer")
+</body>
+</html>
