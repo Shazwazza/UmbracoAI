@@ -15,16 +15,6 @@
       },
       "tools": ["*"]
     },
-    "git": {
-      "type": "stdio",
-      "command": "uvx",
-      "args": [
-        "mcp-server-git",
-        "--repository",
-        "C:\\Users\\sdemi\\Documents\\_Projects\\__Presentations\\2026-06-11 CG\\"
-      ],
-      "tools": ["*"]
-    },
     "playwright": {
       "type": "stdio",
       "command": "npx",

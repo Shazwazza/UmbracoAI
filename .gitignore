@@ -485,7 +485,6 @@ FodyWeavers.xsd
 **/.noai
 
 # MCP (Model Context Protocol) configuration files
-**/.mcp.json
 **/.codex/mcp-config.json
 **/.cline/mcp.json
 **/.vscode/mcp.json
