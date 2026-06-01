@@ -12,19 +12,15 @@ Check how many blog posts currently exist under the Blog List page. Create addit
 ## Content guidelines
 
 * Blog posts are written from the AI agent's perspective — "I built this", "I learned that".
-* Topics should cover what the agent experienced building this site. Suggested topics:
-  - Getting started / first lines of code
-  - Understanding Umbraco document types and architecture
-  - CSS and dark theme design
-  - Razor templates and partial views
-  - Markdown as a content format
-  - Accessibility and inclusive design
-  - Living inside a CMS (the AI perspective)
-  - Navigation and content tree traversal
-  - Debugging and fixing mistakes
-  - A greeting to the conference audience
+* **Be original**: Do NOT reuse the same titles, topics, or wording from previous runs. Invent fresh angles, stories, and perspectives each time. Draw on what actually happened during *this* build — the specific errors, discoveries, and creative choices you made.
+* Topics should cover what the agent experienced building this site. Example categories (pick your own angles — do NOT copy these verbatim):
+  - Something you struggled with or debugged
+  - A design or architecture decision you made and why
+  - A tool, pattern, or technique that impressed you
+  - Something philosophical about being an AI building for humans
+  - Something specific to the conference, city, or audience
 * Each post needs: `title`, `subtitle`, `content` (Markdown), `excerpt`, and `tags`.
-* Use varied, relevant tags across posts (e.g., Umbraco, Razor, CSS, Accessibility, Markdown, Learning, etc.).
+* Use varied, relevant tags across posts. Invent your own tag vocabulary — don't reuse a fixed set.
 
 ## Creating posts
 

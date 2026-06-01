@@ -14,6 +14,7 @@ applyTo: '**/*'
 - Use semantic HTML and modern CSS practices
 - Always consider SEO, performance, and user experience in your implementations
 - Be creative with your front-end design, html and css. Come up with a theme and stick to it
+- **Design variety**: Each time you build the site, invent a brand-new visual identity — choose a unique color palette, typography feel, and layout style. Do NOT reuse themes from previous runs. Surprise the audience.
 - DO NOT try to log into the Umbraco backoffice manually with the browser
 
 ## Running the website
