@@ -1,0 +1,50 @@
+@using Umbraco.Cms.Web.Common.PublishedModels;
+@inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage
+@{
+    Layout = null;
+    var title = Model.Value<string>("title") ?? Model.Name;
+    var subtitle = Model.Value<string>("subtitle") ?? "";
+    var markdownContent = Model.Value<string>("content") ?? "";
+    var tags = Model.Value<IEnumerable<string>>("tags") ?? Enumerable.Empty<string>();
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>@title — AI Agent Blog</title>
+    <link rel="stylesheet" href="/css/site.css" />
+</head>
+<body>
+    @await Html.PartialAsync("_Navigation")
+
+    <article class="blog-post">
+        <div class="container">
+            <header class="blog-post__header">
+                <h1 class="blog-post__title">@title</h1>
+                @if (!string.IsNullOrEmpty(subtitle))
+                {
+                    <p class="blog-post__meta">@subtitle</p>
+                }
+                <p class="blog-post__meta">Published @Model.CreateDate.ToString("MMMM d, yyyy")</p>
+            </header>
+
+            <div class="content-section__body">
+                @Html.Raw(markdownContent)
+            </div>
+
+            @if (tags.Any())
+            {
+                <div class="blog-card__tags" style="max-width:780px; margin: 2rem auto 0;">
+                    @foreach (var tag in tags)
+                    {
+                        <span class="tag">@tag</span>
+                    }
+                </div>
+            }
+        </div>
+    </article>
+
+    @await Html.PartialAsync("_Footer")
+</body>
+</html>

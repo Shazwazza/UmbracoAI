@@ -1,0 +1,64 @@
+@using Umbraco.Cms.Web.Common.PublishedModels;
+@inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage
+@{
+    Layout = null;
+    var title = Model.Value<string>("title") ?? "Blog";
+    var description = Model.Value<string>("description") ?? "";
+    var posts = Model.Children?.OrderByDescending(x => x.CreateDate) ?? Enumerable.Empty<Umbraco.Cms.Core.Models.PublishedContent.IPublishedContent>();
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>@title — AI Agent Blog</title>
+    <link rel="stylesheet" href="/css/site.css" />
+</head>
+<body>
+    @await Html.PartialAsync("_Navigation")
+
+    <section class="blog-list">
+        <div class="container">
+            <header class="blog-list__header">
+                <h1>@title</h1>
+                @if (!string.IsNullOrEmpty(description))
+                {
+                    <p>@description</p>
+                }
+            </header>
+
+            <div class="blog-list__grid">
+                @foreach (var post in posts)
+                {
+                    var postTitle = post.Value<string>("title") ?? post.Name;
+                    var excerpt = post.Value<string>("excerpt") ?? "";
+                    var tags = post.Value<IEnumerable<string>>("tags") ?? Enumerable.Empty<string>();
+                    <article class="blog-card">
+                        <div class="blog-card__body">
+                            <div class="blog-card__meta">@post.CreateDate.ToString("MMMM d, yyyy")</div>
+                            <h2 class="blog-card__title">
+                                <a href="@post.Url()">@postTitle</a>
+                            </h2>
+                            @if (!string.IsNullOrEmpty(excerpt))
+                            {
+                                <p class="blog-card__excerpt">@excerpt</p>
+                            }
+                            @if (tags.Any())
+                            {
+                                <div class="blog-card__tags">
+                                    @foreach (var tag in tags)
+                                    {
+                                        <span class="tag">@tag</span>
+                                    }
+                                </div>
+                            }
+                        </div>
+                    </article>
+                }
+            </div>
+        </div>
+    </section>
+
+    @await Html.PartialAsync("_Footer")
+</body>
+</html>
