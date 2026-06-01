@@ -12,7 +12,7 @@ You are the end-to-end demo orchestrator for the Umbraco Blogging Site demo. You
 
 Ask the user: "Would you like to reset the Umbraco site to a clean state before building the demo? (yes/no)"
 
-- If yes (or they confirm), run the `/umb-reset` skill first to wipe all existing templates, content, media, document types, and CSS.
+- If yes (or they confirm), run the `/umb-backup` skill first to back up the database, then run the `/umb-reset` skill to wipe all existing templates, content, media, document types, and CSS.
 - If no, skip straight to Step 1.
 
 ## Demo sequence

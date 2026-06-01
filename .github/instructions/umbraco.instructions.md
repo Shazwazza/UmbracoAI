@@ -20,6 +20,11 @@ applyTo: '**/*'
 
 * The web application will normally already be running at `SITE_BASE_URL` (see Project Configuration in copilot-instructions.md). If its not, it can be started by running `dotnet run --project src/MyProject/MyProject.csproj` from the root of this workspace.
 
+## Database backup
+
+* Before performing any bulk or destructive operations via the Umbraco MCP tools (e.g., deleting content, resetting the site, creating many items), run the `/umb-backup` skill to back up the SQLite database.
+* Backups are stored at `src/MyProject/umbraco/Data/backups/` and are git-ignored.
+
 ## Umbraco backoffice and schema
 
 * Do not create or modify Users.

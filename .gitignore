@@ -490,3 +490,6 @@ FodyWeavers.xsd
 **/.vscode/mcp.json
 
 **/.clinerules/
+
+# Umbraco SQLite database backups
+src/MyProject/umbraco/Data/backups/
