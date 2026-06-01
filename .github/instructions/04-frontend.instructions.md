@@ -1,10 +1,7 @@
 ---
-root: false
-targets: ["*"]
-description: "Rules for working with front-end files"
-globs: ["**/*"]
+description: Rules for working with front-end files
+applyTo: '**/*'
 ---
-
 # Rules for working with front-end files
 
 Page design should be consistent between all pages.

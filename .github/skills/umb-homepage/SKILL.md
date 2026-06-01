@@ -1,6 +1,6 @@
 ---
-description: 'Create Umbraco home page'
-targets: ["*"]
+name: umb-homepage
+description: Create the Umbraco home page structure, template, styling, and published root content. Use when asked to scaffold or build the home page.
 ---
 
 # Create a Home page in Umbraco

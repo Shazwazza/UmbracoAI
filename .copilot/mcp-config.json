@@ -2,7 +2,9 @@
   "mcpServers": {
     "umbraco-mcp": {
       "command": "npx",
-      "args": ["@umbraco-cms/mcp-dev@beta"],
+      "args": [
+        "@umbraco-cms/mcp-dev@beta"
+      ],
       "env": {
         "NODE_TLS_REJECT_UNAUTHORIZED": "0",
         "UMBRACO_CLIENT_ID": "umbraco-back-office-mcp",
@@ -218,7 +220,8 @@
         "get-template-children",
         "get-template-root",
         "create-media-multiple"
-      ]
+      ],
+      "type": "stdio"
     },
     "git": {
       "command": "uvx",
@@ -240,7 +243,8 @@
         "git_show",
         "git_branch",
         "git_status"
-      ]
+      ],
+      "type": "stdio"
     },
     "playwright": {
       "command": "npx",
@@ -256,9 +260,10 @@
         "browser_take_screenshot",
         "browser_click",
         "browser_network_requests"
-      ]
-     },
-      "a11y-accessibility": {
+      ],
+      "type": "stdio"
+    },
+    "a11y-accessibility": {
       "command": "npx",
       "args": [
         "-y",
@@ -271,7 +276,8 @@
         "check_color_contrast",
         "check_aria_attributes",
         "check_orientation_lock"
-      ]
+      ],
+      "type": "stdio"
     },
     "fetch": {
       "command": "uvx",
@@ -280,7 +286,8 @@
       ],
       "alwaysAllow": [
         "fetch"
-      ]
+      ],
+      "type": "stdio"
     }
   }
 }

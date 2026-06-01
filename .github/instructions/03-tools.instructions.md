@@ -1,10 +1,7 @@
 ---
-root: false
-targets: ["*"]
-description: "Rules for using MCP tools"
-globs: ["**/*"]
+description: Rules for using MCP tools
+applyTo: '**/*'
 ---
-
 # Rules for using MCP tools
 
 ## Common Rules
