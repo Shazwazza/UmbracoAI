@@ -13,7 +13,22 @@ You are the end-to-end demo orchestrator for the Umbraco Blogging Site demo. You
 Ask the user: "Would you like to reset the Umbraco site to a clean state before building the demo? (yes/no)"
 
 - If yes (or they confirm), run the `/umb-backup` skill first to back up the database, then run the `/umb-reset` skill to wipe all existing templates, content, media, document types, and CSS.
-- If no, skip straight to Step 1.
+- If no, skip straight to Step 0.
+
+## Step 0 — Branch Setup
+
+**CRITICAL:** Before making any Umbraco changes, ensure you are on a develop branch.
+
+1. Check the current branch: `git branch --show-current`
+2. If on `main` or `master`, create and checkout a new develop branch:
+   ```
+   git checkout -b develop/demo-build-<date>
+   ```
+3. If already on a `develop/*` branch, stay on it.
+
+Do NOT proceed to Step 1 until you are on a develop branch.
+
+---
 
 ## Demo sequence
 
@@ -48,28 +63,7 @@ Use the `umb-navigation` skill to:
 
 ---
 
-### Step 4 — Sitemap (`/umb-sitemap`)
-
-Use the `umb-sitemap` skill to:
-- Generate `/sitemap.xml` from published content.
-- Crawl each URL in the sitemap with Playwright to verify pages render without errors.
-
-**Validate:** Playwright — open `SITE_BASE_URL/sitemap.xml`. Confirm it contains entries for all published pages.
-
----
-
-### Step 5 — Accessibility (`/umb-accessibility`)
-
-Use the `umb-accessibility` skill to:
-- Run the a11y-accessibility MCP tool against the site.
-- Fix any accessibility issues found.
-- Repeat until all checks pass.
-
-**Validate:** All accessibility checks must pass before moving on.
-
----
-
-### Step 6 — Blog posts (`/umb-blogposts`)
+### Step 4 — Blog posts (`/umb-blogposts`)
 
 Use the `umb-blogposts` skill to:
 - Ensure at least 10 blog posts exist, each with meaningful content.
@@ -78,7 +72,18 @@ Use the `umb-blogposts` skill to:
 
 ---
 
-### Step 7 — Tag cloud (`/umb-tagcloud`)
+### Step 5 — Blog post images (`/umb-blogpost-images`)
+
+Use the `umb-blogpost-images` skill to:
+- Add a hero image to each blog post.
+- Update the blog post template to render the hero image.
+- Update the blog list template to show image thumbnails.
+
+**Validate:** Use Playwright to open the Blog List page and at least one Blog Post page. Confirm images are rendered.
+
+---
+
+### Step 6 — Tag cloud (`/umb-tagcloud`)
 
 Use the `umb-tagcloud` skill to:
 - Add a tag cloud widget to the Blog List page template.
@@ -88,14 +93,24 @@ Use the `umb-tagcloud` skill to:
 
 ---
 
-### Step 8 — Blog post images (`/umb-blogpost-images`)
+### Step 7 — Sitemap (`/umb-sitemap`)
 
-Use the `umb-blogpost-images` skill to:
-- Add a hero image to each blog post.
-- Update the blog post template to render the hero image.
-- Update the blog list template to show image thumbnails.
+Use the `umb-sitemap` skill to:
+- Generate `/sitemap.xml` from all published content (including all blog posts and images added in earlier steps).
+- Crawl each URL in the sitemap with Playwright to verify pages render without errors.
 
-**Validate:** Use Playwright to open the Blog List page and at least one Blog Post page. Confirm images are rendered.
+**Validate:** Playwright — open `SITE_BASE_URL/sitemap.xml`. Confirm it contains entries for all published pages.
+
+---
+
+### Step 8 — Accessibility (`/umb-accessibility`)
+
+Use the `umb-accessibility` skill to:
+- Run the a11y-accessibility MCP tool against the site.
+- Fix any accessibility issues found.
+- Repeat until all checks pass.
+
+**Validate:** All accessibility checks must pass before moving on.
 
 ---
 

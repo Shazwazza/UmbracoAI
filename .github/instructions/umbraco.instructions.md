@@ -57,3 +57,49 @@ Defines the minimal Document Types that will need to be created with Templates:
 ## Additional libraries/plugins
 
 DO NOT install additional libraries, plugins or extensions, they are not necessary.
+
+## Razor & rendering patterns
+
+These are known-good patterns for rendering Umbraco content in Razor views. Follow them to avoid common compilation errors.
+
+### Partial views
+
+All partial views MUST include the `@inherits` directive to access Umbraco helpers like `Model.Root()`:
+```csharp
+@inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage
+```
+
+### Rich Text (Tiptap editor)
+
+Retrieve with untyped `Model.Value()` and render with `@Html.Raw()`:
+```csharp
+var content = Model.Value("mainContent");
+@Html.Raw(content)
+```
+Do NOT use `Model.Value<IHtmlContent>()` — it returns null for Tiptap rich text.
+
+### Markdown editor
+
+Umbraco converts Markdown to HTML automatically. Just retrieve as string and render:
+```csharp
+var html = Model.Value<string>("content");
+@Html.Raw(html)
+```
+Do NOT install Markdig or other Markdown libraries. Do NOT use `HtmlStringUtilities.ReplaceLineBreaks()` — it does not resolve in Razor views.
+
+### Media Picker (Image)
+
+Retrieve as `IPublishedContent` and call `.Url()`:
+```csharp
+var heroImage = Model.Value<Umbraco.Cms.Core.Models.PublishedContent.IPublishedContent>("heroImage");
+var imageUrl = heroImage?.Url();
+```
+Do NOT use `MediaWithCrops` — it does not resolve correctly. Use image processor query strings for cropping: `?width=1200&height=500&mode=crop`.
+
+### Document type + template linking
+
+Creating a document type does NOT auto-link a template. After creating both, you must update the document type with `allowedTemplates` and `defaultTemplate` to connect them.
+
+### Template creation
+
+`create-template` creates both the Umbraco template record AND a minimal `.cshtml` file (just `@inherits` and `Layout = null`). You must edit the `.cshtml` via the filesystem to add your actual HTML/Razor markup.

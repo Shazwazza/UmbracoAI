@@ -5,6 +5,19 @@ applyTo: '**/*'
 # Git
 
 * Anytime a task is completed and files are changed, a Git commit should be made to track changes.
-* Any Umbraco specific changes in the folder: src\MyProject must be done on a develop branch (i.e. "/develop/featureABC"). If the changes are not specific to Umbraco, its ok to commit to the current checked out branch.
-  * If the current branch is main/master, create and checkout a new develop branch before executing anything that affects Umbraco. DO NOT re-use an existing develop branch, if you are creating a new branch it should be unique.
-  * If the current branch is already a "develop" branch, don't create a new one, just remain on the current develop branch.
+
+## CRITICAL: Branch discipline for Umbraco work
+
+**You MUST use a develop branch for any changes under `src/MyProject`.**
+
+* **Before your first commit** that touches files in `src/MyProject`, check which branch you are on:
+  ```
+  git branch --show-current
+  ```
+* If the current branch is `main` or `master`, you MUST create and checkout a new develop branch before making any changes:
+  ```
+  git checkout -b develop/<descriptive-name>
+  ```
+* If the current branch is already a `develop/*` branch, stay on it — do NOT create a new one.
+* DO NOT commit Umbraco-related changes directly to `main` or `master`. This is a hard rule, not a suggestion.
+* Non-Umbraco changes (e.g., updates to `.github/instructions/`, `.github/skills/`) may be committed to the current branch.
