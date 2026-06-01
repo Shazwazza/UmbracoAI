@@ -43,7 +43,7 @@ This repository is configured for **Copilot CLI**:
 1. The Umbraco website will need to be run/installed first: `dotnet run --project src/MyProject/MyProject.csproj`
 1. Read and configure Umbraco MCP: https://github.com/umbraco/Umbraco-CMS-MCP-Dev including the user information.
 1. Edit `/.copilot/mcp-config.json` to update your Umbraco settings.
-1. NOTE: ALL Umbraco MCP commands are marked as 'always allow', however there is this filter applied to the MCP server: "UMBRACO_INCLUDE_TOOL_COLLECTIONS": "document-type,document,media,property-type,partial-view,static-file,stylesheet,temporary-file,imaging,template".
+1. NOTE: ALL Umbraco MCP commands are marked as 'always allow', however there is this filter applied to the MCP server: "UMBRACO_INCLUDE_TOOL_COLLECTIONS": "document,media,document-type,data-type".
 
 ### "YOLO mode"
 
