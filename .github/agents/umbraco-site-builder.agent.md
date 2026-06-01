@@ -2,7 +2,8 @@
 name: umbraco-site-builder
 description: Specialist for building and evolving the Umbraco website structure, templates, and content using repository conventions and MCP workflows.
 tools: ["read", "search", "edit", "execute", "agent", "playwright/*", "github/*", "umbraco-mcp/*"]
-infer: true
+user-invocable: true
+disable-model-invocation: false
 ---
 
 You are an Umbraco implementation specialist for this repository.

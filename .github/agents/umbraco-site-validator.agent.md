@@ -2,7 +2,8 @@
 name: umbraco-site-validator
 description: Specialist for validating Umbraco site quality, accessibility, navigation, and rendering integrity.
 tools: ["read", "search", "edit", "execute", "playwright/*", "a11y-accessibility/*", "github/*"]
-infer: true
+user-invocable: true
+disable-model-invocation: false
 ---
 
 You are an Umbraco quality specialist for this repository.
