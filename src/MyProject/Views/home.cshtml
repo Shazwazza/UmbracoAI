@@ -1,0 +1,43 @@
+@inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage
+@{
+    Layout = null;
+    var heroTitle = Model.Value<string>("heroTitle");
+    var heroSubtitle = Model.Value<string>("heroSubtitle");
+    var mainContent = Model.Value("mainContent");
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>@heroTitle — Neon Aurora Blog</title>
+    <link rel="stylesheet" href="/css/site.css" />
+</head>
+<body>
+    @await Html.PartialAsync("_Navigation")
+
+    <section class="hero" role="banner">
+        <div class="container">
+            <h1 class="hero__title">@heroTitle</h1>
+            <p class="hero__subtitle">@heroSubtitle</p>
+            @{
+                var blogList = Model.Root().Children.FirstOrDefault(x => x.ContentType.Alias == "blogList");
+            }
+            @if (blogList != null)
+            {
+                <a href="@blogList.Url()" class="hero__cta">Read the Blog →</a>
+            }
+        </div>
+    </section>
+
+    <section class="content-section">
+        <div class="container">
+            <div class="content-section__body">
+                @Html.Raw(mainContent)
+            </div>
+        </div>
+    </section>
+
+    @await Html.PartialAsync("_Footer")
+</body>
+</html>
