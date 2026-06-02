@@ -33,7 +33,13 @@
 					foreach (var post in posts) {
 						var pubDate = post.Value<DateTime>("publishDate");
 						var dateStr = pubDate.ToString("MMM dd, yyyy");
+						var heroImage = post.Value<Umbraco.Cms.Core.Models.PublishedContent.IPublishedContent>("heroImage");
 						<article class="blog-card">
+							@if (heroImage != null) {
+								<div class="blog-card-image">
+									<img src="@heroImage.Url()?width=600&height=300&mode=crop" alt="@post.Value("title")" />
+								</div>
+							}
 							<div class="blog-card-header">
 								<h2><a href="@post.Url()">@post.Value("title")</a></h2>
 								<time class="blog-date">@dateStr</time>

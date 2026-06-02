@@ -38,6 +38,15 @@
 			</div>
 		</div>
 
+		@{
+			var heroImage = Model.Value<Umbraco.Cms.Core.Models.PublishedContent.IPublishedContent>("heroImage");
+		}
+		@if (heroImage != null) {
+			<div class="post-hero-image">
+				<img src="@heroImage.Url()?width=1200&height=500&mode=crop" alt="@Model.Value("title")" />
+			</div>
+		}
+
 		<div class="post-content">
 			<div class="container">
 				@Html.Raw(Model.Value("content"))

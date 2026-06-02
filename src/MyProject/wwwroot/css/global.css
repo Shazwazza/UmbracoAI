@@ -468,7 +468,46 @@ html, body {
 	color: var(--secondary-color);
 }
 
+/* Blog Card Images */
+.blog-card-image {
+	margin: -1.5rem -1.5rem 1rem -1.5rem;
+	width: calc(100% + 3rem);
+	height: 200px;
+	overflow: hidden;
+	border-radius: var(--border-radius) var(--border-radius) 0 0;
+}
+
+.blog-card-image img {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	transition: var(--transition);
+}
+
+.blog-card:hover .blog-card-image img {
+	transform: scale(1.05);
+}
+
+/* Post Hero Image */
+.post-hero-image {
+	width: 100%;
+	height: 400px;
+	overflow: hidden;
+	margin-bottom: 2rem;
+}
+
+.post-hero-image img {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	display: block;
+}
+
 @media (max-width: 768px) {
+	.post-hero-image {
+		height: 250px;
+		margin-bottom: 1.5rem;
+	}
 	.blog-posts {
 		grid-template-columns: 1fr;
 	}
