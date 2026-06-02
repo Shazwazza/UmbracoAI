@@ -7,6 +7,8 @@
 	var publishDate = Model.Value<DateTime>("publishDate");
 	var content = Model.Value<string>("content");
 	var tags = Model.Value<string[]>("tags") ?? Array.Empty<string>();
+	var heroImage = Model.Value<Umbraco.Cms.Core.Models.PublishedContent.IPublishedContent>("heroImage");
+	var heroImageUrl = heroImage?.Url();
 }
 <!DOCTYPE html>
 <html lang="en">
@@ -48,7 +50,14 @@
                     }
                 </div>
 
-                <div class="post-content">
+                @if (!string.IsNullOrEmpty(heroImageUrl))
+                {
+                    <div class="post-hero-image">
+                        <img src="@heroImageUrl" alt="@title" />
+                    </div>
+                }
+
+                <div class="post-content"
                     @Html.Raw(content)
                 </div>
 

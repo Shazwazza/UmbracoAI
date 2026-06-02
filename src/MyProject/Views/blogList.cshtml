@@ -41,8 +41,16 @@
                     var publishDate = post.Value<DateTime>("publishDate");
                     var postUrl = post.Url();
                     var tags = post.Value<string[]>("tags") ?? Array.Empty<string>();
+                    var heroImage = post.Value<Umbraco.Cms.Core.Models.PublishedContent.IPublishedContent>("heroImage");
+                    var thumbnailUrl = heroImage?.Url();
                     
                     <article class="blog-card">
+                        @if (!string.IsNullOrEmpty(thumbnailUrl))
+                        {
+                            <div class="card-image">
+                                <img src="@thumbnailUrl" alt="@postTitle" />
+                            </div>
+                        }
                         <div class="card-header">
                             <time class="post-date" datetime="@publishDate.ToString("yyyy-MM-dd")">
                                 @publishDate.ToString("MMMM dd, yyyy")
