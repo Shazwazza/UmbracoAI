@@ -32,17 +32,28 @@ close the browser at any point.
 ## Running the workflow
 
 Run from the repository root so that the MCP servers and `--workspace-instructions`
-auto-discovery resolve correctly. **Always pass `--web`** so the run and any
-human-in-the-loop gates are visible in the live dashboard:
+auto-discovery resolve correctly. **Always pass `--web`** so the live dashboard
+(DAG graph, agent streaming, gate nodes) is visible to the audience:
 
 ```bash
-conductor run .github/skills/umb-demo-conductor/umbraco-demo.yaml --workspace-instructions --web
+conductor run .github/skills/umb-demo-conductor/umbraco-demo.yaml --workspace-instructions --web --skip-gates --no-interactive
 ```
 
-- `--web` opens the real-time dashboard (DAG graph, live streaming, in-browser
-  human gates). This is required for this demo — we always want to watch the
-  workflow and handle gates in the browser. Use `--web-bg` only if you need the
-  command to print the dashboard URL and return immediately.
+- `--web` opens the real-time dashboard (DAG graph, live streaming, gate nodes).
+  This is required for this demo — we always want to watch the workflow in the
+  browser. After launch, open the printed `Dashboard:` URL in a browser window.
+- `--skip-gates` auto-selects the first option at the human gate, which is
+  *"Yes — back up and reset to a clean slate first"* — the correct default for a
+  fresh demo build. This flag is needed because the agent launches the command
+  **non-interactively** (no TTY): Conductor v0.1.18 cannot yet resolve a human
+  gate from the browser, so a plain foreground `--web` run blocks on terminal
+  stdin and fails with `EOFError`, and `--web-bg` is rejected outright when a
+  `human_gate` is present. The gate node still appears in the dashboard.
+- `--no-interactive` disables the Esc/Ctrl+G interrupt listener so the
+  non-interactive process never blocks on stdin.
+- If you DO have an interactive terminal and want to answer the gate yourself,
+  run `... --web` without `--skip-gates --no-interactive` and select the option
+  at the terminal prompt.
 - `--workspace-instructions` layers in the full repository rules at run time
   (`.github/copilot-instructions.md` and the applicable
   `.github/instructions/**/*.instructions.md` files), so the workflow does not
@@ -56,8 +67,12 @@ conductor run .github/skills/umb-demo-conductor/umbraco-demo.yaml --workspace-in
 ### Human gate (reset prompt)
 
 The first step is a **human gate** asking whether to back up and reset the site
-to a clean slate before building. With `--web` (always used here), answer the
-gate directly in the dashboard in your browser.
+to a clean slate before building. The recommended hands-off command above passes
+`--skip-gates`, which auto-selects the first option (*"Yes — back up and reset"*)
+— the right choice for a fresh demo build — while the gate node remains visible
+in the `--web` dashboard. To answer the gate manually instead, run with `--web`
+in an interactive terminal (without `--skip-gates --no-interactive`) and pick the
+option at the prompt.
 
 ## Validating without running
 

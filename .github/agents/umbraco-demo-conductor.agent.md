@@ -35,15 +35,30 @@ Closing it ruins the demo.
 2. Confirm the `conductor` CLI is available (`conductor --version`). If it is
    missing, install it per the Conductor skill's setup guide.
 3. **Invoke the `/umb-demo-conductor` skill** and follow its instructions to run
-   the workflow. **Always pass `--web`** so the run and any human-in-the-loop
-   gates are visible in the live dashboard. From the repository root:
+   the workflow. **Always pass `--web`** so the live dashboard (DAG graph, agent
+   streaming, gate nodes) is visible to the audience. From the repository root:
 
    ```bash
-   conductor run .github/skills/umb-demo-conductor/umbraco-demo.yaml --workspace-instructions --web
+   conductor run .github/skills/umb-demo-conductor/umbraco-demo.yaml --workspace-instructions --web --skip-gates --no-interactive
    ```
 
-   The workflow's first step is a human gate (asking whether to back up and
-   reset the site) — answer it in the `--web` dashboard. Pass
+   Why these flags (this agent launches the command **non-interactively**, with
+   no TTY):
+   - `--web` — opens the real-time dashboard. The workflow's first step is a
+     human gate (back up + reset). The gate node still appears in the dashboard
+     so the audience sees it.
+   - `--skip-gates` — auto-selects the gate's **first** option, which is
+     *"Yes — back up and reset to a clean slate first"*: exactly what a fresh
+     demo build wants. This is required because Conductor v0.1.18 cannot resolve
+     a human gate from the browser yet, and a foreground `--web` run would
+     otherwise block on terminal stdin and fail with `EOFError` (and `--web-bg`
+     is rejected outright when a `human_gate` exists). Auto-accepting the
+     desired clean-slate option is the correct hands-off behavior here.
+   - `--no-interactive` — disables the Esc/Ctrl+G interrupt listener so the
+     detached, non-interactive process never blocks on stdin.
+
+   After launching, open the printed `Dashboard:` URL in a browser window so the
+   audience can watch the run, then wait for the workflow to complete. Pass
    `--input site_base_url=...` to override the default site URL.
 
 ## Guardrails

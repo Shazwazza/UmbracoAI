@@ -83,10 +83,10 @@ The same end-to-end demo can also be run as a [Conductor](https://github.com/git
 Use the umbraco-demo-conductor agent to build the full Umbraco blogging site
 ```
 
-Or run the workflow directly from the repo root (always with `--web` so the run and any human gates are visible in the dashboard):
+Or run the workflow directly from the repo root. Always pass `--web` so the live dashboard is visible; add `--skip-gates --no-interactive` for a hands-off run (auto-accepts the gate's first option — back up + reset — and avoids blocking on stdin in a non-interactive shell):
 
 ```
-conductor run .github/skills/umb-demo-conductor/umbraco-demo.yaml --workspace-instructions --web
+conductor run .github/skills/umb-demo-conductor/umbraco-demo.yaml --workspace-instructions --web --skip-gates --no-interactive
 ```
 
 The original `umbraco-demo` agent (inline orchestration) and the Conductor variant produce the same site; pick whichever orchestration style you prefer.
