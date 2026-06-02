@@ -1,0 +1,18 @@
+@inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage
+@{
+    var home = Model.Root();
+    var currentUrl = Model.Url();
+    var isHome = currentUrl == "/";
+    var isBlog = currentUrl.StartsWith("/blog");
+}
+
+<nav class="site-nav">
+    <a href="/" class="nav-link @(isHome ? "active" : "")">
+        <span class="nav-icon">⌂</span>
+        <span class="nav-text">Home</span>
+    </a>
+    <a href="/blog" class="nav-link @(isBlog ? "active" : "")">
+        <span class="nav-icon">◈</span>
+        <span class="nav-text">Blog</span>
+    </a>
+</nav>

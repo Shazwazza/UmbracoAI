@@ -86,6 +86,59 @@ body {
         0 0 20px var(--neon-pink);
 }
 
+/* Navigation */
+.site-nav {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+    margin-top: 2rem;
+    padding: 1.5rem 0;
+}
+
+.nav-link {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.5rem;
+    background: rgba(15, 23, 41, 0.6);
+    border: 2px solid var(--neon-blue);
+    border-radius: 8px;
+    color: var(--neon-blue);
+    text-decoration: none;
+    font-family: 'Orbitron', sans-serif;
+    font-weight: 700;
+    font-size: 1rem;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    transition: all 0.3s ease;
+    box-shadow: 0 0 10px rgba(0, 243, 255, 0.2);
+}
+
+.nav-link:hover {
+    background: rgba(0, 243, 255, 0.1);
+    border-color: var(--neon-pink);
+    color: var(--neon-pink);
+    box-shadow: 0 0 20px rgba(255, 0, 229, 0.4);
+    text-shadow: 0 0 10px var(--neon-pink);
+    transform: translateY(-2px);
+}
+
+.nav-link.active {
+    background: rgba(255, 0, 229, 0.15);
+    border-color: var(--neon-pink);
+    color: var(--neon-pink);
+    box-shadow: 0 0 20px rgba(255, 0, 229, 0.4);
+    text-shadow: 0 0 10px var(--neon-pink);
+}
+
+.nav-icon {
+    font-size: 1.2rem;
+}
+
+.nav-text {
+    font-size: 0.9rem;
+}
+
 /* Hero section */
 .hero {
     text-align: center;
