@@ -370,6 +370,52 @@ html, body {
 	min-height: 100vh;
 }
 
+/* Blog Post Page */
+.blog-post {
+	background: white;
+	min-height: 100vh;
+}
+
+/* Tag Cloud */
+.tag-cloud-section {
+	background: linear-gradient(135deg, rgba(45, 27, 105, 0.05) 0%, rgba(255, 107, 53, 0.05) 100%);
+	padding: 3rem 2rem;
+	margin-bottom: 3rem;
+	border-radius: var(--border-radius);
+	text-align: center;
+}
+
+.tag-cloud-section h2 {
+	color: var(--primary-color);
+	margin-bottom: 2rem;
+	font-size: 1.8rem;
+}
+
+.tag-cloud {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+	gap: 1.5rem;
+	align-items: center;
+}
+
+.cloud-tag {
+	background: linear-gradient(135deg, var(--primary-color) 0%, #3d2d7a 100%);
+	color: white;
+	padding: 0.5rem 1rem;
+	border-radius: 20px;
+	cursor: pointer;
+	transition: var(--transition);
+	display: inline-block;
+	white-space: nowrap;
+	font-weight: 500;
+}
+
+.cloud-tag:hover {
+	background: linear-gradient(135deg, var(--secondary-color) 0%, #ff5620 100%);
+	transform: scale(1.1);
+}
+
 .post-header {
 	background: linear-gradient(135deg, var(--primary-color) 0%, #1a0f3d 50%);
 	color: var(--text-light);

@@ -23,13 +23,53 @@
 
 	<section class="blog-section">
 		<div class="container">
+			@{
+				var posts = Model.Children()
+					.Where(p => p.ContentType.Alias == "blogPost" && p.IsPublished())
+					.OrderByDescending(p => p.Value<DateTime>("publishDate"))
+					.ToList();
+
+				// Calculate tag frequencies
+				var tagFrequency = new Dictionary<string, int>();
+				foreach (var post in posts) {
+					var tags = post.Value<IEnumerable<string>>("tags");
+					if (tags != null) {
+						foreach (var tag in tags) {
+							if (tagFrequency.ContainsKey(tag)) {
+								tagFrequency[tag]++;
+							} else {
+								tagFrequency[tag] = 1;
+							}
+						}
+					}
+				}
+
+				var maxFrequency = tagFrequency.Values.Max();
+				var minFrequency = tagFrequency.Values.Min();
+				var sortedTags = tagFrequency.OrderBy(kv => kv.Key).ToList();
+			}
+
+			@if (tagFrequency.Any()) {
+				<div class="tag-cloud-section">
+					<h2>Explore Topics</h2>
+					<div class="tag-cloud">
+						@foreach (var tagItem in sortedTags) {
+							var frequency = tagItem.Value;
+							var range = maxFrequency - minFrequency;
+							var size = 1.0 + (range > 0 ? (frequency - minFrequency) / (double)range : 0) * 1.5;
+							var opacity = 0.6 + (range > 0 ? (frequency - minFrequency) / (double)range : 0) * 0.4;
+							var sizeStr = size.ToString("F2");
+							var opacityStr = opacity.ToString("F2");
+							<span class="cloud-tag" style="font-size: @(sizeStr)rem; opacity: @opacityStr">
+								@tagItem.Key (@frequency)
+							</span>
+						}
+					</div>
+				</div>
+			}
+
 			<div class="blog-posts">
 				@{
-					var posts = Model.Children()
-						.Where(p => p.ContentType.Alias == "blogPost" && p.IsPublished())
-						.OrderByDescending(p => p.Value<DateTime>("publishDate"))
-						.ToList();
-
 					foreach (var post in posts) {
 						var pubDate = post.Value<DateTime>("publishDate");
 						var dateStr = pubDate.ToString("MMM dd, yyyy");
