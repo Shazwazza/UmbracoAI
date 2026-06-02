@@ -24,3 +24,12 @@ Use Playwright to:
 1. Navigate to the Blog List page URL. Confirm it loads without errors (no `div#stackpage`).
 2. Confirm at least one blog post card is visible with title, date, and excerpt.
 3. Click through to a blog post. Confirm it renders without errors.
+
+## Commit
+
+After validation passes, commit all changes before considering this step done:
+```
+git add -A
+git commit -m "Step 2: Blog pages — <brief summary of what was created>"
+```
+This commit is **mandatory**. The step is not complete until the commit exists in the git log.

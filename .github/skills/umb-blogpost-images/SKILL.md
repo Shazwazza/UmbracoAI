@@ -47,3 +47,12 @@ description: Add hero images to blog posts and render image previews on list and
 Use Playwright to:
 1. Navigate to the Blog List page. Confirm each blog card shows a thumbnail image.
 2. Navigate to at least one Blog Post page. Confirm the hero image renders below the header.
+
+## Commit
+
+After validation passes, commit all changes before considering this step done:
+```
+git add -A
+git commit -m "Step 5: Blog post images — <brief summary>"
+```
+This commit is **mandatory**. The step is not complete until the commit exists in the git log.

@@ -18,3 +18,12 @@ description: Create the Umbraco home page structure, template, styling, and publ
 Use Playwright to navigate to `SITE_BASE_URL`. Confirm:
 1. The page loads without errors (no `div#stackpage` element).
 2. The hero section and content render correctly.
+
+## Commit
+
+After validation passes, commit all changes before considering this step done:
+```
+git add -A
+git commit -m "Step 1: Home page — <brief summary of what was created>"
+```
+This commit is **mandatory**. The step is not complete until the commit exists in the git log.

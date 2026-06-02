@@ -26,3 +26,12 @@ description: Generate sitemap.xml and validate all site links and navigation pat
 ## Validate navigation
 
 * Each URL listed in the sitemap should be accessible through navigation on the website.
+
+## Commit
+
+After validation passes, commit all changes before considering this step done:
+```
+git add -A
+git commit -m "Step 7: Sitemap — <brief summary>"
+```
+This commit is **mandatory**. The step is not complete until the commit exists in the git log.

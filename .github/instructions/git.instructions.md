@@ -6,6 +6,15 @@ applyTo: '**/*'
 
 * Anytime a task is completed and files are changed, a Git commit should be made to track changes.
 
+## Per-step commit rule — NO EXCEPTIONS
+
+**After completing each skill or demo step, you MUST make a git commit before considering that step done.**
+
+* Do not skip the commit even if the changes seem minor.
+* Do not batch multiple steps into one commit — each step gets its own commit.
+* The commit must happen *after* validation passes for that step, not before.
+* A step is not complete until its commit exists in the git log.
+
 ## CRITICAL: Branch discipline for Umbraco work
 
 **You MUST use a develop branch for any changes under `src/MyProject`.**

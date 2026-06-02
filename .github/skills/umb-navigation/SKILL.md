@@ -23,3 +23,12 @@ description: Implement shared site navigation and validate rendering with Playwr
   1. Navigation links are visible on all pages (Home, Blog List, Blog Post).
   2. Clicking each nav link loads the correct page without errors.
   3. Each page has a way to return to the Home page.
+
+## Commit
+
+After validation passes, commit all changes before considering this step done:
+```
+git add -A
+git commit -m "Step 3: Navigation — <brief summary of what was added>"
+```
+This commit is **mandatory**. The step is not complete until the commit exists in the git log.

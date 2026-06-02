@@ -24,3 +24,12 @@ Pages to test (based on sitemap or content tree):
 
 * Re-run `a11y-accessibility-test_accessibility` on each page after fixes.
 * Repeat until all pages report zero violations.
+
+## Commit
+
+After all pages report zero violations, commit all changes before considering this step done:
+```
+git add -A
+git commit -m "Step 8: Accessibility — <brief summary of fixes>"
+```
+This commit is **mandatory**. The step is not complete until the commit exists in the git log.

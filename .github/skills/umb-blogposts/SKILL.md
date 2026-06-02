@@ -38,3 +38,12 @@ Check how many blog posts currently exist under the Blog List page. Create addit
 Use Playwright to navigate to the Blog List page. Confirm:
 1. At least 10 blog post cards are visible.
 2. Each card shows a title, date, and excerpt.
+
+## Commit
+
+After validation passes, commit all changes before considering this step done:
+```
+git add -A
+git commit -m "Step 4: Blog posts — <brief summary, e.g. '10 posts authored'>"
+```
+This commit is **mandatory**. The step is not complete until the commit exists in the git log.

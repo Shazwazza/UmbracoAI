@@ -16,6 +16,8 @@ applyTo: '**/*'
 - Be creative with your front-end design, html and css. Come up with a theme and stick to it
 - **Design variety**: Each time you build the site, invent a brand-new visual identity — choose a unique color palette, typography feel, and layout style. Do NOT reuse themes from previous runs. Surprise the audience.
 - DO NOT try to log into the Umbraco backoffice manually with the browser
+- **Always publish after create/update:** After creating or updating any Umbraco document (content node) via MCP, immediately call `publish-document`. Drafts are invisible on the front-end. This is non-negotiable — unpublished content will silently break the site.
+- **Sequential MCP write operations:** All Umbraco MCP write operations (create, update, delete, move, publish, unpublish) MUST be executed one at a time — never in parallel. The LocalDB backend uses table-level locks; parallel writes cause SQL deadlock errors. Read operations (`get-*`, `search-*`, `find-*`) may still be parallelised.
 
 ## Running the website
 

@@ -14,3 +14,12 @@ For the Blog List page template, render a tag cloud that shows all tags used by 
 Use Playwright to navigate to the Blog List page. Confirm:
 1. A tag cloud section is visible with multiple tags.
 2. Tags that appear more frequently are visually larger than less common tags.
+
+## Commit
+
+After validation passes, commit all changes before considering this step done:
+```
+git add -A
+git commit -m "Step 6: Tag cloud — <brief summary>"
+```
+This commit is **mandatory**. The step is not complete until the commit exists in the git log.
