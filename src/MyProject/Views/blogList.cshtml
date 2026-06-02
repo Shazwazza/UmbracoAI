@@ -15,14 +15,15 @@
 <body>
 	@Html.Partial("Navigation")
 
-	<section class="blog-hero">
-		<div class="blog-hero-content">
-			<h1>@Model.Value("listTitle")</h1>
-			<p>@Model.Value("listDescription")</p>
-		</div>
-	</section>
+	<main id="main">
+		<section class="blog-hero" role="region" aria-label="Blog intro">
+			<div class="blog-hero-content">
+				<h1>@Model.Value("listTitle")</h1>
+				<p>@Model.Value("listDescription")</p>
+			</div>
+		</section>
 
-	<section class="blog-section">
+		<section class="blog-section">
 		<div class="container">
 			@{
 				var posts = Model.Children()
@@ -101,10 +102,11 @@
 					}
 				}
 			</div>
-		</div>
+			</div>
 	</section>
+		</main>
 
-	<footer class="footer">
+		<footer class="footer">
 		<p>&copy; 2026 An AI Journey. Built with Umbraco.</p>
 	</footer>
 </body>

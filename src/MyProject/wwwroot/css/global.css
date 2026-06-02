@@ -25,6 +25,23 @@ html, body {
 	background-color: var(--bg-light);
 }
 
+/* Skip Link - Accessibility */
+.skip-link {
+	position: absolute;
+	top: -40px;
+	left: 0;
+	background: var(--secondary-color);
+	color: var(--text-light);
+	padding: 0.5rem 1rem;
+	text-decoration: none;
+	border-radius: 0 0 4px 0;
+	z-index: 1000;
+}
+
+.skip-link:focus {
+	top: 0;
+}
+
 /* Navigation */
 .navbar {
 	background: linear-gradient(135deg, var(--primary-color) 0%, #3d2d7a 100%);
@@ -63,6 +80,8 @@ html, body {
 	font-weight: 500;
 	transition: var(--transition);
 	position: relative;
+	outline: 2px solid transparent;
+	outline-offset: 2px;
 }
 
 .nav-links a::after {
@@ -78,6 +97,10 @@ html, body {
 
 .nav-links a:hover::after {
 	width: 100%;
+}
+
+.nav-links a:focus {
+	outline: 2px solid var(--accent-color);
 }
 
 /* Hero Section */
@@ -155,6 +178,8 @@ html, body {
 	cursor: pointer;
 	transition: var(--transition);
 	display: inline-block;
+	outline: 2px solid transparent;
+	outline-offset: 2px;
 }
 
 .btn-primary {
@@ -166,6 +191,10 @@ html, body {
 	background-color: #ff5620;
 	transform: translateY(-2px);
 	box-shadow: 0 5px 15px rgba(255, 107, 53, 0.4);
+}
+
+.btn-primary:focus {
+	outline: 2px solid var(--accent-color);
 }
 
 .hero-image {
@@ -327,12 +356,12 @@ html, body {
 }
 
 .blog-date {
-	color: #999;
+	color: #555;
 	font-size: 0.9rem;
 }
 
 .blog-excerpt {
-	color: #666;
+	color: #444;
 	margin-bottom: 1rem;
 	flex-grow: 1;
 	line-height: 1.6;
@@ -358,10 +387,17 @@ html, body {
 	text-decoration: none;
 	font-weight: 600;
 	transition: var(--transition);
+	outline: 2px solid transparent;
+	outline-offset: 2px;
 }
 
 .read-more:hover {
 	color: #ff5620;
+}
+
+.read-more:focus {
+	outline: 2px solid var(--accent-color);
+	border-radius: 2px;
 }
 
 /* Blog Post Page */
@@ -508,10 +544,16 @@ html, body {
 	text-decoration: none;
 	font-weight: 600;
 	transition: var(--transition);
+	outline: 2px solid transparent;
+	outline-offset: 2px;
 }
 
 .back-link:hover {
 	color: var(--secondary-color);
+}
+
+.back-link:focus {
+	outline: 2px solid var(--accent-color);
 }
 
 /* Blog Card Images */

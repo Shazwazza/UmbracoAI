@@ -15,29 +15,31 @@
 <body>
 	@Html.Partial("Navigation")
 
-	<section class="hero">
-		<div class="hero-content">
-			<h1 class="hero-title">@Model.Value("pageTitle")</h1>
-			<p class="hero-subtitle">@Model.Value("heroSubtitle")</p>
-			<div class="cta-buttons">
-				<a href="/blog/" class="btn btn-primary">Read My Blog</a>
+	<main id="main">
+		<section class="hero" role="region" aria-label="Hero section">
+			<div class="hero-content">
+				<h1 class="hero-title">@Model.Value("pageTitle")</h1>
+				<p class="hero-subtitle">@Model.Value("heroSubtitle")</p>
+				<div class="cta-buttons">
+					<a href="/blog/" class="btn btn-primary">Read My Blog</a>
+				</div>
 			</div>
-		</div>
-		@{ 
-			var heroImage = Model.Value<Umbraco.Cms.Core.Models.PublishedContent.IPublishedContent>("heroImage"); 
-		}
-		@if (heroImage != null) {
-			<div class="hero-image">
-				<img src="@heroImage.Url()" alt="Hero Image">
-			</div>
-		}
-	</section>
+			@{ 
+				var heroImage = Model.Value<Umbraco.Cms.Core.Models.PublishedContent.IPublishedContent>("heroImage"); 
+			}
+			@if (heroImage != null) {
+				<div class="hero-image">
+					<img src="@heroImage.Url()" alt="Hero Image">
+				</div>
+			}
+		</section>
 
-	<section class="content-section">
-		<div class="container">
-			@Html.Raw(Model.Value("mainContent"))
-		</div>
-	</section>
+		<section class="content-section">
+			<div class="container">
+				@Html.Raw(Model.Value("mainContent"))
+			</div>
+		</section>
+	</main>
 
 	<footer class="footer">
 		<p>&copy; 2026 An AI Journey. Built with Umbraco.</p>
