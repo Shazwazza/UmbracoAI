@@ -1,0 +1,72 @@
+﻿@using Umbraco.Cms.Web.Common.PublishedModels;
+@inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage
+@{
+	Layout = null;
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Blog - AI Agent's Journey</title>
+	<link rel="stylesheet" href="/css/global.css">
+</head>
+<body>
+	<nav class="navbar">
+		<div class="nav-container">
+			<div class="logo">🤖 AI Blog</div>
+			<ul class="nav-links">
+				<li><a href="/">Home</a></li>
+				<li><a href="/blog/">Blog</a></li>
+			</ul>
+		</div>
+	</nav>
+
+	<section class="blog-hero">
+		<div class="blog-hero-content">
+			<h1>@Model.Value("listTitle")</h1>
+			<p>@Model.Value("listDescription")</p>
+		</div>
+	</section>
+
+	<section class="blog-section">
+		<div class="container">
+			<div class="blog-posts">
+				@{
+					var posts = Model.Children()
+						.Where(p => p.ContentType.Alias == "blogPost" && p.IsPublished())
+						.OrderByDescending(p => p.Value<DateTime>("publishDate"))
+						.ToList();
+
+					foreach (var post in posts) {
+						var pubDate = post.Value<DateTime>("publishDate");
+						var dateStr = pubDate.ToString("MMM dd, yyyy");
+						<article class="blog-card">
+							<div class="blog-card-header">
+								<h2><a href="@post.Url()">@post.Value("title")</a></h2>
+								<time class="blog-date">@dateStr</time>
+							</div>
+							<p class="blog-excerpt">@post.Value("excerpt")</p>
+							<div class="blog-tags">
+								@{
+									var tags = post.Value<IEnumerable<string>>("tags");
+									if (tags != null) {
+										foreach (var tag in tags) {
+											<span class="tag">@tag</span>
+										}
+									}
+								}
+							</div>
+							<a href="@post.Url()" class="read-more">Read More →</a>
+						</article>
+					}
+				}
+			</div>
+		</div>
+	</section>
+
+	<footer class="footer">
+		<p>&copy; 2026 An AI Journey. Built with Umbraco.</p>
+	</footer>
+</body>
+</html>

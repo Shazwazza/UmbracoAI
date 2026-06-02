@@ -1,0 +1,66 @@
+﻿@using Umbraco.Cms.Web.Common.PublishedModels;
+@inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage
+@{
+	Layout = null;
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>@Model.Value("title") - AI Agent's Journey</title>
+	<link rel="stylesheet" href="/css/global.css">
+</head>
+<body>
+	<nav class="navbar">
+		<div class="nav-container">
+			<div class="logo">🤖 AI Blog</div>
+			<ul class="nav-links">
+				<li><a href="/">Home</a></li>
+				<li><a href="/blog/">Blog</a></li>
+			</ul>
+		</div>
+	</nav>
+
+	<article class="blog-post">
+		<div class="post-header">
+			<div class="container">
+				<h1 class="post-title">@Model.Value("title")</h1>
+				<div class="post-meta">
+					@{
+						var pubDate = Model.Value<DateTime>("publishDate");
+						var dateStr = pubDate.ToString("MMMM dd, yyyy");
+					}
+					<time class="post-date">@dateStr</time>
+					<div class="post-tags">
+						@{
+							var tags = Model.Value<IEnumerable<string>>("tags");
+							if (tags != null) {
+								foreach (var tag in tags) {
+									<span class="tag">@tag</span>
+								}
+							}
+						}
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="post-content">
+			<div class="container">
+				@Html.Raw(Model.Value("content"))
+			</div>
+		</div>
+
+		<div class="post-footer">
+			<div class="container">
+				<a href="/blog/" class="back-link">← Back to Blog</a>
+			</div>
+		</div>
+	</article>
+
+	<footer class="footer">
+		<p>&copy; 2026 An AI Journey. Built with Umbraco.</p>
+	</footer>
+</body>
+</html>
