@@ -14,7 +14,7 @@
   --accent-gradient: linear-gradient(135deg, #00d4ff 0%, #a855f7 100%);
   --text-primary: #e8eaf6;
   --text-secondary: #8892b0;
-  --text-muted: #4a5568;
+  --text-muted: #7a8fb8;
   --border-subtle: rgba(168, 85, 247, 0.15);
   --border-glow: rgba(0, 212, 255, 0.3);
   --font-heading: 'Courier New', 'Courier', monospace;
@@ -45,6 +45,8 @@ a {
   transition: color var(--transition), opacity var(--transition);
 }
 a:hover { color: var(--accent-violet); }
+/* Links inside paragraphs must be underlined for accessibility (WCAG 1.4.1) */
+p a, li a, .footer-text a, .blog-content a { text-decoration: underline; }
 
 img { max-width: 100%; height: auto; display: block; }
 
@@ -347,7 +349,7 @@ h1, h2, h3, h4 {
 .tag-pill {
   background: rgba(168, 85, 247, 0.12);
   border: 1px solid rgba(168, 85, 247, 0.25);
-  color: var(--accent-violet);
+  color: #c084fc;
   font-size: 0.7rem;
   padding: 0.2rem 0.6rem;
   border-radius: 100px;

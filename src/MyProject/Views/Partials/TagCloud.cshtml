@@ -22,8 +22,11 @@
     int maxCount = tagCounts.Values.Max();
     double minSize = 0.75;  // rem
     double maxSize = 2.0;   // rem
-    double minOpacity = 0.55;
-    double maxOpacity = 1.0;
+
+    // Interpolate from muted cyan (#7fb5cc) to bright cyan (#00d4ff)
+    // All colors are high-contrast on the dark tag-cloud background
+    int lowR = 127, lowG = 181, lowB = 204;
+    int highR = 0,  highG = 212, highB = 255;
 }
 
 <section class="tag-cloud-section">
@@ -34,11 +37,13 @@
             {
                 double ratio = maxCount == minCount ? 1.0 : (double)(kvp.Value - minCount) / (maxCount - minCount);
                 double fontSize = minSize + ratio * (maxSize - minSize);
-                double opacity = minOpacity + ratio * (maxOpacity - minOpacity);
+                int r = (int)Math.Round(lowR + ratio * (highR - lowR));
+                int g = (int)Math.Round(lowG + ratio * (highG - lowG));
+                int b = (int)Math.Round(lowB + ratio * (highB - lowB));
+                string color = $"#{r:X2}{g:X2}{b:X2}";
                 string sizeStr = fontSize.ToString("F2", System.Globalization.CultureInfo.InvariantCulture);
-                string opacityStr = opacity.ToString("F2", System.Globalization.CultureInfo.InvariantCulture);
                 <span class="tag-cloud-item"
-                      style="font-size: @(sizeStr)rem; opacity: @opacityStr;"
+                      style="font-size: @(sizeStr)rem; color: @color;"
                       title="@kvp.Value post@(kvp.Value == 1 ? "" : "s")">
                     @kvp.Key
                     <sup class="tag-cloud-count">@kvp.Value</sup>
