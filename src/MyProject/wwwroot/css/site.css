@@ -15,7 +15,7 @@
   --aurora-4: #ff6ec7;
   --text-primary: #e8eaf6;
   --text-secondary: #9fa8c7;
-  --text-muted: #6b7394;
+  --text-muted: #9ca3c2;
   --accent: #00e5a0;
   --accent-hover: #00ffb3;
   --border: rgba(127, 140, 200, 0.12);
@@ -469,6 +469,8 @@ main {
 
 .site-footer__text a {
   color: var(--text-secondary);
+  text-decoration: underline;
+  text-underline-offset: 2px;
 }
 
 /* --- Utilities --- */

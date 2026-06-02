@@ -17,24 +17,25 @@
 <body>
     @await Html.PartialAsync("_Navigation")
 
-    <section class="page-header">
-        <div class="container">
-            <h1 class="page-header__title">@pageTitle</h1>
-            @if (!string.IsNullOrEmpty(pageDescription))
-            {
-                <p class="page-header__subtitle">@pageDescription</p>
-            }
-        </div>
-    </section>
+    <main id="main-content">
+        <section class="page-header">
+            <div class="container">
+                <h1 class="page-header__title">@pageTitle</h1>
+                @if (!string.IsNullOrEmpty(pageDescription))
+                {
+                    <p class="page-header__subtitle">@pageDescription</p>
+                }
+            </div>
+        </section>
 
-    <section class="content-section">
-        <div class="container">
-            @await Html.PartialAsync("_TagCloud")
+        <section class="content-section">
+            <div class="container">
+                @await Html.PartialAsync("_TagCloud")
 
-            @if (posts != null && posts.Any())
-            {
-                <div class="card-grid">
-                    @foreach (var post in posts)
+                @if (posts != null && posts.Any())
+                {
+                    <div class="card-grid">
+                        @foreach (var post in posts)
                     {
                         var pubDate = post.Value<DateTime>("publishDate");
                         var subtitle = post.Value<string>("subtitle");
@@ -76,7 +77,8 @@
                 <p>No blog posts yet. Check back soon!</p>
             }
         </div>
-    </section>
+        </section>
+    </main>
 
     @await Html.PartialAsync("_Footer")
 </body>
