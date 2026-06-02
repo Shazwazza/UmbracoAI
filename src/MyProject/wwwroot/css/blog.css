@@ -180,7 +180,7 @@
 .post-date {
     display: inline-block;
     font-size: 0.9rem;
-    color: var(--neon-purple);
+    color: #c77dff; /* Lighter purple for WCAG AA contrast compliance */
     text-transform: uppercase;
     letter-spacing: 1px;
     font-weight: 600;
@@ -321,7 +321,7 @@
 
 .post-content h3 {
     font-family: 'Orbitron', sans-serif;
-    color: var(--neon-purple);
+    color: #c77dff; /* Lighter purple for WCAG AA contrast compliance */
     font-size: 1.5rem;
     margin: 1.5rem 0 1rem;
 }
@@ -351,7 +351,7 @@
 }
 
 .post-content em {
-    color: var(--neon-purple);
+    color: #c77dff; /* Lighter purple for WCAG AA contrast compliance */
 }
 
 .post-content code {
@@ -411,19 +411,19 @@
 
 .back-link {
     display: inline-block;
-    color: var(--neon-purple);
+    color: #c77dff; /* Lighter purple for WCAG AA contrast compliance */
     text-decoration: none;
     font-weight: 600;
     padding: 0.75rem 1.5rem;
-    border: 2px solid var(--neon-purple);
+    border: 2px solid #c77dff;
     border-radius: 5px;
     transition: all 0.3s ease;
 }
 
 .back-link:hover {
-    background: rgba(157, 0, 255, 0.1);
-    box-shadow: 0 0 20px rgba(157, 0, 255, 0.3);
-    text-shadow: 0 0 10px var(--neon-purple);
+    background: rgba(199, 125, 255, 0.1);
+    box-shadow: 0 0 20px rgba(199, 125, 255, 0.3);
+    text-shadow: 0 0 10px #c77dff;
 }
 
 /* Responsive adjustments */
