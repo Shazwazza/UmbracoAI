@@ -75,6 +75,22 @@ The agent will:
 
 The `umbraco-demo` agent profile lives at `/.github/agents/umbraco-demo.agent.md` and is auto-discovered by Copilot CLI.
 
+### Conductor workflow variant
+
+The same end-to-end demo can also be run as a [Conductor](https://github.com/github/conductor) multi-agent workflow. The `umbraco-demo-conductor` agent calls the `/umb-demo-conductor` skill, which runs the workflow defined at `/.github/skills/umb-demo-conductor/umbraco-demo.yaml`. That workflow embeds each demo step by including its existing `SKILL.md`, with a human gate for the optional reset, a branch-setup step, and a final summary:
+
+```
+Use the umbraco-demo-conductor agent to build the full Umbraco blogging site
+```
+
+Or run the workflow directly from the repo root:
+
+```
+conductor run .github/skills/umb-demo-conductor/umbraco-demo.yaml --workspace-instructions
+```
+
+The original `umbraco-demo` agent (inline orchestration) and the Conductor variant produce the same site; pick whichever orchestration style you prefer.
+
 ## Skills
 
 Reusable skills are found in `/.github/skills` and are auto-discovered by Copilot CLI.
@@ -94,11 +110,14 @@ Demo build order:
 
 There's also a reset skill to wipe everything back to defaults: `/umb-reset`
 
+There's also a Conductor workflow skill that runs the whole demo end-to-end as a multi-agent workflow: `/umb-demo-conductor` (see "Conductor workflow variant" above).
+
 ## Custom agents
 
 All agents are in `/.github/agents` and are auto-discovered by Copilot CLI:
 
 * `umbraco-demo.agent.md` — end-to-end demo orchestrator
+* `umbraco-demo-conductor.agent.md` — end-to-end demo orchestrator, run as a Conductor multi-agent workflow (via the `/umb-demo-conductor` skill)
 * `umbraco-site-builder.agent.md` — Umbraco implementation specialist
 * `umbraco-site-validator.agent.md` — site quality and accessibility specialist
 

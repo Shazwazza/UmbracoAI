@@ -1,0 +1,284 @@
+workflow:
+  name: umbraco-demo
+  description: >-
+    End-to-end Umbraco blogging-site demo expressed as a Conductor multi-agent
+    workflow. Mirrors the 8-step umbraco-demo agent: optional reset, branch
+    setup, then one agent per step (home page, blog pages, navigation, blog
+    posts, images, tag cloud, sitemap, accessibility), validating each step in
+    Playwright and committing per step. Designed to run as a live conference
+    demonstration with a single, persistent Playwright browser window.
+  version: "1.0.0"
+  entry_point: gate_reset
+
+  input:
+    site_base_url:
+      type: string
+      required: false
+      default: "http://localhost:14737"
+      description: Base URL of the running Umbraco site.
+
+  runtime:
+    provider: copilot
+    default_model: claude-sonnet-4.5
+    # Each step performs many MCP tool round-trips, so allow a high ceiling.
+    max_agent_iterations: 200
+    mcp_servers:
+      umbraco-mcp:
+        command: npx
+        args: ["@umbraco-cms/mcp-dev@latest"]
+        env:
+          NODE_TLS_REJECT_UNAUTHORIZED: "0"
+          UMBRACO_CLIENT_ID: "umbraco-back-office-mcp"
+          UMBRACO_CLIENT_SECRET: "1234567890"
+          UMBRACO_BASE_URL: "http://localhost:14737"
+          UMBRACO_INCLUDE_TOOL_COLLECTIONS: "data-type,document-type,document,media,property-type,partial-view,static-file,stylesheet,temporary-file,imaging,template"
+        tools: ["*"]
+      playwright:
+        command: npx
+        args: ["-y", "@playwright/mcp@latest", "--viewport-size="]
+        tools: ["*"]
+      a11y-accessibility:
+        command: npx
+        args: ["-y", "a11y-mcp-server"]
+        tools: ["*"]
+
+  context:
+    mode: accumulate
+
+  limits:
+    # 8 steps + gate + backup + reset + branch setup + final, with headroom.
+    max_iterations: 50
+
+  # Shared orchestration preamble prepended to every agent. The full repository
+  # rules (copilot-instructions.md + .github/instructions/**) are layered in at
+  # run time via the `--workspace-instructions` flag (see SKILL.md).
+  instructions:
+    - |
+      You are one agent in a live, on-stage Umbraco blogging-site demo. The
+      Playwright browser window is projected to a conference audience.
+
+      CRITICAL BROWSER RULES — obey at all times:
+      - NEVER call `browser_close` or any tool that closes, quits, or stops the
+        browser. There is NO point at which closing the browser is correct.
+      - The browser is opened ONCE (the first `browser_navigate` of the demo,
+        in the home-page step) and then REUSED for every later navigation.
+        Always move to a new page with `browser_navigate`, never by closing and
+        reopening. The browser persists across every agent in this workflow.
+      - Leave the browser OPEN at the end of your step and hand it to the next
+        agent still open on the site.
+
+      UMBRACO MCP RULES:
+      - Use ONLY the umbraco-mcp tools for Umbraco backoffice operations. Never
+        use curl or direct HTTP/API calls to Umbraco.
+      - All write operations (create, update, delete, move, publish, unpublish)
+        MUST be issued ONE AT A TIME — never in parallel (LocalDB uses
+        table-level locks). Read operations may be parallelised.
+      - After creating or updating any document, immediately call
+        `publish-document`. Unpublished drafts are invisible on the front-end.
+
+      PER-STEP VALIDATION & COMMIT (mandatory):
+      - After completing the work for your step, use Playwright to navigate to
+        the relevant page and confirm it renders without errors. A page has an
+        error if a `div` with id `stackpage` is present — fix it before
+        finishing.
+      - Then make a git commit for your step before reporting done. Each step
+        gets its own commit. The step is not complete until the commit exists.
+        Include this trailer in the commit message:
+        `Co-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>`
+
+agents:
+  # ---------------------------------------------------------------------------
+  # Pre-flight: optional reset, then branch setup
+  # ---------------------------------------------------------------------------
+  - name: gate_reset
+    type: human_gate
+    prompt: |
+      Welcome to the Umbraco blogging-site demo.
+
+      Site: {{ workflow.input.site_base_url }}
+
+      Would you like to reset the Umbraco site to a clean state before building
+      the demo? Choosing "Yes" backs up the database first, then wipes all
+      existing content, media, templates, document types, and CSS.
+    options:
+      - label: "Yes — back up and reset to a clean slate first"
+        value: reset
+        route: backup
+      - label: "No — keep the current site and just build"
+        value: keep
+        route: branch_setup
+
+  - name: backup
+    description: Back up the Umbraco LocalDB database before destructive changes.
+    system_prompt: |
+      You are performing the database BACKUP step of the demo, before any
+      reset. Follow the included skill instructions exactly. This step does not
+      require a git commit or Playwright validation.
+    prompt: !file ../umb-backup/SKILL.md
+    routes:
+      - to: reset
+
+  - name: reset
+    description: Wipe all existing Umbraco content, media, templates, and types.
+    system_prompt: |
+      You are performing the RESET step of the demo. Follow the included skill
+      instructions exactly to return the site to its default empty state. This
+      step does not require a git commit. After resetting, you may navigate the
+      browser to the site to show the audience it is now empty (do NOT close the
+      browser).
+    prompt: !file ../umb-reset/SKILL.md
+    routes:
+      - to: branch_setup
+
+  - name: branch_setup
+    description: "Step 0 — ensure work happens on a develop branch."
+    system_prompt: |
+      You are performing Step 0 (Branch Setup) of the demo. Do not build any
+      content in this step and do not commit anything.
+    prompt: |
+      Ensure all subsequent Umbraco changes happen on a develop branch, never on
+      main/master.
+
+      1. Run `git branch --show-current`.
+      2. If the current branch is `main` or `master`:
+         - List existing develop branches with `git branch --list 'develop/*'`
+           to avoid name collisions.
+         - Create and check out a NEW, unique branch named
+           `develop/demo-build-<today's date>` (add a short suffix like `-v2`
+           if that name already exists), e.g.:
+           `git checkout -b develop/demo-build-YYYY-MM-DD`.
+      3. If the current branch is already a `develop/*` branch, stay on it.
+
+      Report the branch you ended up on. Do not proceed to build anything here.
+    routes:
+      - to: step1_homepage
+
+  # ---------------------------------------------------------------------------
+  # The 8 demo steps — each embeds its existing skill via !file
+  # ---------------------------------------------------------------------------
+  - name: step1_homepage
+    description: "Step 1 — Home page."
+    system_prompt: |
+      You are executing Step 1 (Home page) of the live Umbraco demo. The skill
+      instructions to perform are provided below.
+
+      Before creating anything, FIRST open the browser with `browser_navigate`
+      to {{ workflow.input.site_base_url }} and show the audience that the site
+      is currently empty (the default/blank Umbraco state). This is the single
+      time the browser is opened — reuse this window for the rest of the demo.
+
+      Be creative and invent a brand-new visual identity (colour palette,
+      typography, layout) for this build; do not reuse a theme from a previous
+      run. After building, validate the home page renders (no `#stackpage`
+      error div) and commit this step.
+    prompt: !file ../umb-homepage/SKILL.md
+    routes:
+      - to: step2_blog_pages
+
+  - name: step2_blog_pages
+    description: "Step 2 — Blog List and Blog Post pages."
+    system_prompt: |
+      You are executing Step 2 (Blog pages) of the live Umbraco demo. Follow the
+      included skill instructions. Keep the visual identity established in
+      Step 1 consistent. Validate the Blog List page renders and lists at least
+      one post (no `#stackpage` error div), then commit this step.
+    prompt: !file ../umb-blog-pages/SKILL.md
+    routes:
+      - to: step3_navigation
+
+  - name: step3_navigation
+    description: "Step 3 — Site-wide navigation."
+    system_prompt: |
+      You are executing Step 3 (Navigation) of the live Umbraco demo. Follow the
+      included skill instructions to add shared navigation to all pages.
+      Validate by clicking through the navigation links in Playwright (no
+      `#stackpage` error div), then commit this step.
+    prompt: !file ../umb-navigation/SKILL.md
+    routes:
+      - to: step4_blogposts
+
+  - name: step4_blogposts
+    description: "Step 4 — Blog posts (at least 10)."
+    system_prompt: |
+      You are executing Step 4 (Blog posts) of the live Umbraco demo. Follow the
+      included skill instructions to ensure at least 10 meaningful blog posts
+      exist, authored from your first-person perspective as the AI agent that
+      built this site, with original topics for this run. Validate the Blog List
+      shows the posts, then commit this step.
+    prompt: !file ../umb-blogposts/SKILL.md
+    routes:
+      - to: step5_blogpost_images
+
+  - name: step5_blogpost_images
+    description: "Step 5 — Hero images on blog posts."
+    system_prompt: |
+      You are executing Step 5 (Blog post images) of the live Umbraco demo.
+      Follow the included skill instructions to add a hero image to each blog
+      post and render thumbnails/heroes in the templates. Validate images render
+      on the Blog List and a Blog Post page, then commit this step.
+    prompt: !file ../umb-blogpost-images/SKILL.md
+    routes:
+      - to: step6_tagcloud
+
+  - name: step6_tagcloud
+    description: "Step 6 — Tag cloud on the Blog List page."
+    system_prompt: |
+      You are executing Step 6 (Tag cloud) of the live Umbraco demo. Follow the
+      included skill instructions to add a tag cloud whose tag sizes reflect how
+      frequently each tag appears across posts. Validate the tag cloud renders
+      on the Blog List page, then commit this step.
+    prompt: !file ../umb-tagcloud/SKILL.md
+    routes:
+      - to: step7_sitemap
+
+  - name: step7_sitemap
+    description: "Step 7 — sitemap.xml generation and crawl."
+    system_prompt: |
+      You are executing Step 7 (Sitemap) of the live Umbraco demo. Follow the
+      included skill instructions to generate sitemap.xml from all published
+      content and crawl each URL in Playwright to confirm it renders without
+      errors. Then commit this step.
+    prompt: !file ../umb-sitemap/SKILL.md
+    routes:
+      - to: step8_accessibility
+
+  - name: step8_accessibility
+    description: "Step 8 — Accessibility checks and fixes."
+    system_prompt: |
+      You are executing Step 8 (Accessibility) of the live Umbraco demo. Follow
+      the included skill instructions to run the a11y-accessibility MCP tool on
+      each page, fix issues in the templates/CSS, and repeat until every page
+      reports zero violations. When fixing a page, navigate/refresh it in
+      Playwright so the audience sees the change. Then commit this step.
+    prompt: !file ../umb-accessibility/SKILL.md
+    routes:
+      - to: final
+
+  # ---------------------------------------------------------------------------
+  # Wrap-up
+  # ---------------------------------------------------------------------------
+  - name: final
+    description: Final whole-site validation and demo summary.
+    system_prompt: |
+      You are wrapping up the live Umbraco demo. Do NOT close the browser.
+    prompt: |
+      Perform a final pass over the finished site at
+      {{ workflow.input.site_base_url }}:
+
+      1. Use Playwright to navigate through the whole site — home page, blog
+         list, and a few blog posts — confirming every page renders without a
+         `#stackpage` error div.
+      2. Leave the browser OPEN on the finished site for the presenter.
+
+      Then produce a concise summary of what was built: pages created, number of
+      blog posts authored, the visual theme/identity chosen, skills/steps run,
+      and any notable issues fixed along the way.
+    output:
+      summary:
+        type: string
+        description: Human-readable summary of everything the demo produced.
+    routes:
+      - to: $end
+
+output:
+  summary: "{{ final.output.summary }}"
