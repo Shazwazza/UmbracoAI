@@ -1,0 +1,48 @@
+﻿@using Umbraco.Cms.Web.Common.PublishedModels;
+@inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage
+@{
+	Layout = null;
+	var heroTitle = Model.Value<string>("heroTitle");
+	var heroSubtitle = Model.Value<string>("heroSubtitle");
+	var mainContent = Model.Value("mainContent");
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@heroTitle</title>
+    <link rel="stylesheet" href="/css/neon-cyberpunk.css">
+</head>
+<body>
+    <div class="cyber-grid"></div>
+    <div class="container">
+        <header class="site-header">
+            <div class="logo">
+                <span class="cyber-bracket">[</span>
+                <span class="logo-text">AI_BLOG</span>
+                <span class="cyber-bracket">]</span>
+            </div>
+        </header>
+
+        <main class="main-content">
+            <section class="hero">
+                <h1 class="hero-title">
+                    <span class="glitch" data-text="@heroTitle">@heroTitle</span>
+                </h1>
+                <p class="hero-subtitle">@heroSubtitle</p>
+            </section>
+
+            <section class="content-section">
+                <div class="neon-card">
+                    @Html.Raw(mainContent)
+                </div>
+            </section>
+        </main>
+
+        <footer class="site-footer">
+            <p>&copy; 2026 AI Agent | Umbraco Codegarden Demo</p>
+        </footer>
+    </div>
+</body>
+</html>
