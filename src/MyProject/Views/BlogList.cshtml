@@ -1,0 +1,95 @@
+@inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage
+@{
+    Layout = null;
+    var title = Model.Value<string>("title") ?? "Blog";
+    var subtitle = Model.Value<string>("subtitle") ?? "";
+    var posts = Model.Children.Where(x => x.ContentType.Alias == "blogPost")
+                              .OrderByDescending(x => x.CreateDate)
+                              .ToList();
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="@subtitle" />
+    <title>@title — Neural Nexus</title>
+    <link rel="stylesheet" href="/css/site.css" />
+</head>
+<body>
+    @await Html.PartialAsync("~/Views/Partials/Navigation.cshtml")
+
+    <main>
+        <div class="page-header">
+            <h1 class="page-title">@title</h1>
+            @if (!string.IsNullOrWhiteSpace(subtitle))
+            {
+                <p class="page-description">@subtitle</p>
+            }
+        </div>
+
+        @await Html.PartialAsync("~/Views/Partials/TagCloud.cshtml")
+
+        <section class="blog-list-content">
+            <div class="container">
+                @if (posts.Any())
+                {
+                    <div class="blog-grid">
+                        @foreach (var post in posts)
+                        {
+                            var postTitle = post.Value<string>("title") ?? post.Name;
+                            var postSubtitle = post.Value<string>("subtitle") ?? "";
+                            var postTags = post.Value<IEnumerable<string>>("tags") ?? Enumerable.Empty<string>();
+                            var postDate = post.CreateDate.ToString("MMM d, yyyy");
+                            var heroImage = post.Value<IPublishedContent>("heroImage");
+                            <article class="blog-card">
+                                @if (heroImage != null)
+                                {
+                                    <a href="@post.Url()" tabindex="-1" aria-hidden="true">
+                                        <img class="blog-card-image" src="@heroImage.Url()" alt="@postTitle" loading="lazy" />
+                                    </a>
+                                }
+                                else
+                                {
+                                    <div class="blog-card-image-placeholder" aria-hidden="true">✦</div>
+                                }
+                                <div class="blog-card-body">
+                                    @if (postTags.Any())
+                                    {
+                                        <div class="blog-card-tags">
+                                            @foreach (var tag in postTags.Take(3))
+                                            {
+                                                <span class="tag-pill">@tag</span>
+                                            }
+                                        </div>
+                                    }
+                                    <h2 class="blog-card-title">
+                                        <a href="@post.Url()" style="color: inherit; text-decoration: none;">@postTitle</a>
+                                    </h2>
+                                    @if (!string.IsNullOrWhiteSpace(postSubtitle))
+                                    {
+                                        <p class="blog-card-excerpt">@postSubtitle</p>
+                                    }
+                                    <div class="blog-card-meta">
+                                        <span>@postDate</span>
+                                        <a href="@post.Url()" class="blog-card-read-more">Read →</a>
+                                    </div>
+                                </div>
+                            </article>
+                        }
+                    </div>
+                }
+                else
+                {
+                    <div class="text-center" style="padding: 4rem 0; color: var(--text-muted);">
+                        <p style="font-size: 3rem; margin-bottom: 1rem;">✦</p>
+                        <p>No posts yet — check back soon.</p>
+                    </div>
+                }
+            </div>
+        </section>
+    </main>
+
+    @await Html.PartialAsync("~/Views/Partials/Footer.cshtml")
+</body>
+</html>
