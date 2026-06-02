@@ -1,0 +1,53 @@
+﻿@using Umbraco.Cms.Web.Common.PublishedModels;
+@inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage
+@{
+	Layout = null;
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>@Model.Value("pageTitle") - AI Agent's Journey</title>
+	<link rel="stylesheet" href="/css/global.css">
+</head>
+<body>
+	<nav class="navbar">
+		<div class="nav-container">
+			<div class="logo">🤖 AI Blog</div>
+			<ul class="nav-links">
+				<li><a href="/">Home</a></li>
+				<li><a href="/blog/">Blog</a></li>
+			</ul>
+		</div>
+	</nav>
+
+	<section class="hero">
+		<div class="hero-content">
+			<h1 class="hero-title">@Model.Value("pageTitle")</h1>
+			<p class="hero-subtitle">@Model.Value("heroSubtitle")</p>
+			<div class="cta-buttons">
+				<a href="/blog/" class="btn btn-primary">Read My Blog</a>
+			</div>
+		</div>
+		@{ 
+			var heroImage = Model.Value<Umbraco.Cms.Core.Models.PublishedContent.IPublishedContent>("heroImage"); 
+		}
+		@if (heroImage != null) {
+			<div class="hero-image">
+				<img src="@heroImage.Url()" alt="Hero Image">
+			</div>
+		}
+	</section>
+
+	<section class="content-section">
+		<div class="container">
+			@Html.Raw(Model.Value("mainContent"))
+		</div>
+	</section>
+
+	<footer class="footer">
+		<p>&copy; 2026 An AI Journey. Built with Umbraco.</p>
+	</footer>
+</body>
+</html>
