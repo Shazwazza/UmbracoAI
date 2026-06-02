@@ -236,20 +236,23 @@ body {
     gap: 2rem;
 }
 
-.footer-info h3 {
+.footer-info .footer-title {
     font-family: var(--font-mono);
     color: var(--text-primary);
     margin-bottom: 0.8rem;
     letter-spacing: 1px;
+    font-size: 1.17rem;
+    font-weight: bold;
 }
 
-.footer-nav h4 {
+.footer-nav .footer-nav-title {
     font-family: var(--font-mono);
     color: var(--text-primary);
     font-size: 0.95rem;
     margin-bottom: 0.8rem;
     text-transform: uppercase;
     letter-spacing: 1px;
+    font-weight: bold;
 }
 
 .footer-links {
@@ -361,11 +364,11 @@ body {
     background: var(--bg-card);
     border: 1px solid var(--border-color);
     border-radius: 16px;
-    padding: 2rem;
+    padding: 0;
+    overflow: hidden;
     backdrop-filter: blur(12px);
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
     transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
 }
@@ -374,6 +377,49 @@ body {
     transform: translateY(-5px);
     border-color: var(--border-hover);
     box-shadow: 0 12px 30px rgba(0, 242, 254, 0.15);
+}
+
+.post-card:hover .post-card-image {
+    transform: scale(1.05);
+}
+
+.post-card-image-container {
+    height: 220px;
+    overflow: hidden;
+    position: relative;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.post-card-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.placeholder-gradient-small {
+    height: 220px;
+    background: linear-gradient(135deg, rgba(0, 242, 254, 0.03) 0%, rgba(255, 0, 127, 0.03) 100%);
+    border-bottom: 1px solid var(--border-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.placeholder-icon {
+    font-size: 2.5rem;
+    background: var(--gradient-aurora);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    filter: drop-shadow(0 0 10px var(--primary-glow));
+    font-family: var(--font-mono);
+}
+
+.post-card-content {
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
 }
 
 .post-card-meta {
@@ -490,6 +536,35 @@ body {
     margin: 0 auto;
 }
 
+.post-hero-image-container {
+    width: 100%;
+    border-radius: 12px;
+    overflow: hidden;
+    margin-bottom: 3rem;
+    border: 1px solid var(--border-color);
+    box-shadow: 0 0 20px rgba(0, 242, 254, 0.1);
+}
+
+.post-hero-image {
+    width: 100%;
+    height: auto;
+    display: block;
+    object-fit: cover;
+}
+
+.placeholder-gradient {
+    height: 300px;
+    background: linear-gradient(135deg, rgba(0, 242, 254, 0.05) 0%, rgba(255, 0, 127, 0.05) 100%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    color: var(--text-muted);
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+}
+
 .back-navigation {
     margin-top: 4rem;
     padding-top: 2rem;
@@ -510,4 +585,82 @@ body {
     transform: translateX(-5px);
     text-shadow: 0 0 8px var(--primary-glow);
 }
+
+/* Tag Cloud styles */
+.tag-cloud-container {
+    background: rgba(0, 20, 10, 0.4);
+    border: 1px solid var(--primary-low);
+    border-radius: 4px;
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 0 15px rgba(0, 255, 102, 0.05);
+}
+
+.tag-cloud-header {
+    font-family: var(--font-mono);
+    font-size: 0.9rem;
+    color: var(--secondary);
+    margin-bottom: 1rem;
+    border-bottom: 1px solid var(--primary-low);
+    padding-bottom: 0.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.tag-cloud-icon {
+    color: var(--primary);
+}
+
+.clear-filter-btn {
+    color: #ff3366;
+    text-decoration: none;
+    font-weight: bold;
+    transition: color 0.2s ease;
+}
+
+.clear-filter-btn:hover {
+    color: #ff6699;
+    text-shadow: 0 0 8px rgba(255, 51, 102, 0.4);
+}
+
+.tag-cloud {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    align-items: center;
+    justify-content: center;
+}
+
+.tag-cloud-item {
+    color: var(--text-muted);
+    text-decoration: none;
+    transition: all 0.2s ease;
+    display: inline-block;
+    padding: 0.2rem 0.5rem;
+    border-radius: 3px;
+    border: 1px solid transparent;
+}
+
+.tag-cloud-item:hover {
+    color: var(--primary);
+    background: rgba(0, 255, 102, 0.1);
+    border-color: var(--primary-low);
+    text-shadow: 0 0 8px rgba(0, 255, 102, 0.4);
+}
+
+.tag-cloud-item.active {
+    color: var(--text-main);
+    background: rgba(0, 255, 102, 0.2);
+    border-color: var(--primary);
+    text-shadow: 0 0 8px rgba(0, 255, 102, 0.6);
+}
+
+.tag-count {
+    font-size: 0.75rem;
+    color: var(--secondary);
+    opacity: 0.8;
+    margin-left: 0.2rem;
+}
+
 
