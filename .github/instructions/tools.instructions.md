@@ -6,7 +6,7 @@ applyTo: '**/*'
 
 ## Common rules
 
-- **MCP tool failure:** If a task/command asks to use a specific MCP tool and the tool fails, DO NOT try to use an alternative.
+- **MCP tool unavailable or failing:** If a task/skill asks you to use a specific MCP tool and that tool is either not in your available tool list **or** the tool call fails — **STOP and notify the user**. Do NOT substitute an alternative tool or workaround (e.g. do not swap Playwright + axe-core injection for the a11y MCP tool). The correct response is to report exactly which tool is missing or failing and wait for the user to resolve it.
 
 ## Umbraco MCP
 
