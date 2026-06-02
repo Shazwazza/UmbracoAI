@@ -1,9 +1,17 @@
 @inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage
+@{
+    var root = Model.Root();
+    var currentUrl = Model.Url();
+}
 <nav class="site-nav" aria-label="Main navigation">
     <div class="container">
         <a href="/" class="site-nav__logo">Neon Aurora</a>
         <ul class="site-nav__links">
-            <li><a href="/">Home</a></li>
+            <li><a href="@root.Url()" class="@(currentUrl == root.Url() ? "active" : "")">Home</a></li>
+            @foreach (var child in root.Children.Where(x => x.IsPublished()))
+            {
+                <li><a href="@child.Url()" class="@(currentUrl == child.Url() || Model.IsDescendantOrSelf(child) ? "active" : "")">@child.Name</a></li>
+            }
         </ul>
     </div>
 </nav>
