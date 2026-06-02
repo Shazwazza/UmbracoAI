@@ -582,6 +582,12 @@ h1, h2, h3, h4 {
   color: var(--accent-cyan);
   transform: scale(1.05);
 }
+.tag-cloud-count {
+  font-size: 0.6em;
+  opacity: 0.65;
+  margin-left: 0.15em;
+  vertical-align: super;
+}
 
 /* ── Divider ──────────────────────────────────────────────── */
 .divider {

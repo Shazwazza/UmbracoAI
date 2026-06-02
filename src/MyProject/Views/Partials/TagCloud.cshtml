@@ -1,2 +1,49 @@
 @inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage
-@* Tag cloud placeholder — populated in Step 6 *@
+@using System.Collections.Generic
+@using System.Linq
+@{
+    // Aggregate tags from all blog posts under this page
+    var tagCounts = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase);
+    var allPosts = Model.Children.Where(x => x.ContentType.Alias == "blogPost");
+    foreach (var post in allPosts)
+    {
+        var tags = post.Value<IEnumerable<string>>("tags") ?? Enumerable.Empty<string>();
+        foreach (var tag in tags)
+        {
+            var key = tag.Trim().ToLowerInvariant();
+            if (!string.IsNullOrEmpty(key))
+                tagCounts[key] = tagCounts.ContainsKey(key) ? tagCounts[key] + 1 : 1;
+        }
+    }
+
+    if (tagCounts.Count == 0) { return; }
+
+    int minCount = tagCounts.Values.Min();
+    int maxCount = tagCounts.Values.Max();
+    double minSize = 0.75;  // rem
+    double maxSize = 2.0;   // rem
+    double minOpacity = 0.55;
+    double maxOpacity = 1.0;
+}
+
+<section class="tag-cloud-section">
+    <div class="container">
+        <h2 class="tag-cloud-heading">Explore by Topic</h2>
+        <div class="tag-cloud" role="navigation" aria-label="Tag cloud">
+            @foreach (var kvp in tagCounts.OrderByDescending(k => k.Value))
+            {
+                double ratio = maxCount == minCount ? 1.0 : (double)(kvp.Value - minCount) / (maxCount - minCount);
+                double fontSize = minSize + ratio * (maxSize - minSize);
+                double opacity = minOpacity + ratio * (maxOpacity - minOpacity);
+                string sizeStr = fontSize.ToString("F2", System.Globalization.CultureInfo.InvariantCulture);
+                string opacityStr = opacity.ToString("F2", System.Globalization.CultureInfo.InvariantCulture);
+                <span class="tag-cloud-item"
+                      style="font-size: @(sizeStr)rem; opacity: @opacityStr;"
+                      title="@kvp.Value post@(kvp.Value == 1 ? "" : "s")">
+                    @kvp.Key
+                    <sup class="tag-cloud-count">@kvp.Value</sup>
+                </span>
+            }
+        </div>
+    </div>
+</section>
