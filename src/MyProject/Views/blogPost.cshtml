@@ -1,0 +1,70 @@
+@inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage
+@{
+    Layout = null;
+    var title = Model.Name;
+    var subtitle = Model.Value<string>("subtitle");
+    var content = Model.Value<string>("content");
+    var pubDate = Model.Value<DateTime>("publishDate");
+    var tags = Model.Value<IEnumerable<string>>("tags");
+    var heroImage = Model.Value<Umbraco.Cms.Core.Models.PublishedContent.IPublishedContent>("heroImage");
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>@title — Neon Aurora Blog</title>
+    <link rel="stylesheet" href="/css/site.css" />
+</head>
+<body>
+    @await Html.PartialAsync("_Navigation")
+
+    <article class="content-section">
+        <div class="container">
+            <div class="content-section__body">
+                @if (heroImage != null)
+                {
+                    <img class="post-hero" src="@(heroImage.Url())?width=1200&height=500&mode=crop" alt="@title" />
+                }
+
+                <h1 class="page-header__title" style="text-align:left; margin-bottom:0.25rem;">@title</h1>
+                @if (!string.IsNullOrEmpty(subtitle))
+                {
+                    <p class="page-header__subtitle" style="text-align:left; margin-bottom:1rem;">@subtitle</p>
+                }
+
+                <div class="post-meta">
+                    @if (pubDate != default)
+                    {
+                        <time datetime="@pubDate.ToString("yyyy-MM-dd")">@pubDate.ToString("MMMM dd, yyyy")</time>
+                    }
+                </div>
+
+                @if (tags != null && tags.Any())
+                {
+                    <div class="post-tags">
+                        @foreach (var tag in tags)
+                        {
+                            <span class="tag">@tag</span>
+                        }
+                    </div>
+                }
+
+                @Html.Raw(content)
+
+                <div style="margin-top: 3rem; padding-top: 1.5rem; border-top: 1px solid var(--border);">
+                    @{
+                        var blogList = Model.Parent;
+                    }
+                    @if (blogList != null)
+                    {
+                        <a href="@blogList.Url()">← Back to all posts</a>
+                    }
+                </div>
+            </div>
+        </div>
+    </article>
+
+    @await Html.PartialAsync("_Footer")
+</body>
+</html>

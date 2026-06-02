@@ -1,0 +1,81 @@
+@inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage
+@{
+    Layout = null;
+    var pageTitle = Model.Value<string>("pageTitle") ?? Model.Name;
+    var pageDescription = Model.Value<string>("pageDescription");
+    var posts = Model.Children?.Where(x => x.IsPublished())
+        .OrderByDescending(x => x.Value<DateTime>("publishDate"));
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>@pageTitle — Neon Aurora Blog</title>
+    <link rel="stylesheet" href="/css/site.css" />
+</head>
+<body>
+    @await Html.PartialAsync("_Navigation")
+
+    <section class="page-header">
+        <div class="container">
+            <h1 class="page-header__title">@pageTitle</h1>
+            @if (!string.IsNullOrEmpty(pageDescription))
+            {
+                <p class="page-header__subtitle">@pageDescription</p>
+            }
+        </div>
+    </section>
+
+    <section class="content-section">
+        <div class="container">
+            @if (posts != null && posts.Any())
+            {
+                <div class="card-grid">
+                    @foreach (var post in posts)
+                    {
+                        var pubDate = post.Value<DateTime>("publishDate");
+                        var subtitle = post.Value<string>("subtitle");
+                        var tags = post.Value<IEnumerable<string>>("tags");
+                        var heroImage = post.Value<Umbraco.Cms.Core.Models.PublishedContent.IPublishedContent>("heroImage");
+                        <article class="card">
+                            @if (heroImage != null)
+                            {
+                                <img class="card__image" src="@(heroImage.Url())?width=680&height=400&mode=crop" alt="@post.Name" loading="lazy" />
+                            }
+                            <div class="card__body">
+                                <h2 class="card__title"><a href="@post.Url()">@post.Name</a></h2>
+                                <div class="card__meta">
+                                    @if (pubDate != default)
+                                    {
+                                        <time datetime="@pubDate.ToString("yyyy-MM-dd")">@pubDate.ToString("MMM dd, yyyy")</time>
+                                    }
+                                </div>
+                                @if (!string.IsNullOrEmpty(subtitle))
+                                {
+                                    <p class="card__excerpt">@subtitle</p>
+                                }
+                                @if (tags != null && tags.Any())
+                                {
+                                    <div class="card__tags">
+                                        @foreach (var tag in tags)
+                                        {
+                                            <span class="tag">@tag</span>
+                                        }
+                                    </div>
+                                }
+                            </div>
+                        </article>
+                    }
+                </div>
+            }
+            else
+            {
+                <p>No blog posts yet. Check back soon!</p>
+            }
+        </div>
+    </section>
+
+    @await Html.PartialAsync("_Footer")
+</body>
+</html>
