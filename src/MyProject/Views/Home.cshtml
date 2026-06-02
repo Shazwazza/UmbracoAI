@@ -1,0 +1,145 @@
+@inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage
+@{
+    Layout = null;
+    var title = Model.Value<string>("title") ?? "Neural Nexus";
+    var subtitle = Model.Value<string>("subtitle") ?? "";
+    var bodyText = Model.Value("bodyText");
+    var blogListPage = Model.Root().Children.FirstOrDefault(x => x.ContentType.Alias == "blogList");
+    var recentPosts = blogListPage != null
+        ? blogListPage.Children.Where(x => x.ContentType.Alias == "blogPost").OrderByDescending(x => x.CreateDate).Take(3).ToList()
+        : new List<IPublishedContent>();
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="@subtitle" />
+    <title>@title — Neural Nexus</title>
+    <link rel="stylesheet" href="/css/site.css" />
+</head>
+<body>
+    @await Html.PartialAsync("~/Views/Partials/Navigation.cshtml")
+
+    <main>
+        <!-- ── Hero ──────────────────────────────────────── -->
+        <section class="hero">
+            <div class="hero-tag">⚡ AI-Built at Umbraco CodeGarden 2026</div>
+            <h1 class="hero-title">@title</h1>
+            @if (!string.IsNullOrWhiteSpace(subtitle))
+            {
+                <p class="hero-subtitle">@subtitle</p>
+            }
+            @if (blogListPage != null)
+            {
+                <a href="@blogListPage.Url()" class="hero-cta">
+                    Read the Blog →
+                </a>
+            }
+        </section>
+
+        <!-- ── Body Content ──────────────────────────────── -->
+        @if (bodyText != null)
+        {
+            <section class="intro-section">
+                <div class="container">
+                    <div class="intro-grid">
+                        <div class="intro-text">
+                            <h2 class="section-heading">About <span class="accent">This Blog</span></h2>
+                            @Html.Raw(bodyText)
+                        </div>
+                        <div class="intro-visual">
+                            <div class="stat-card">
+                                <div class="stat-icon">🤖</div>
+                                <div>
+                                    <div class="stat-label">Built by</div>
+                                    <div class="stat-value">GitHub Copilot AI Agent</div>
+                                </div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-icon">🚀</div>
+                                <div>
+                                    <div class="stat-label">Platform</div>
+                                    <div class="stat-value">Umbraco CMS</div>
+                                </div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-icon">🎤</div>
+                                <div>
+                                    <div class="stat-label">Presented at</div>
+                                    <div class="stat-value">CodeGarden 2026</div>
+                                </div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-icon">⚡</div>
+                                <div>
+                                    <div class="stat-label">Stack</div>
+                                    <div class="stat-value">Umbraco + .NET + Razor</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        }
+
+        <!-- ── Recent Posts ───────────────────────────────── -->
+        @if (recentPosts.Any())
+        {
+            <section class="featured-section">
+                <div class="container">
+                    <div class="section-header">
+                        <h2 class="section-heading">Latest <span class="accent">Posts</span></h2>
+                        @if (blogListPage != null)
+                        {
+                            <a href="@blogListPage.Url()" class="section-view-all">View all →</a>
+                        }
+                    </div>
+                    <div class="blog-grid">
+                        @foreach (var post in recentPosts)
+                        {
+                            var postTitle = post.Value<string>("title") ?? post.Name;
+                            var postSubtitle = post.Value<string>("subtitle") ?? "";
+                            var postTags = post.Value<IEnumerable<string>>("tags") ?? Enumerable.Empty<string>();
+                            var postDate = post.CreateDate.ToString("MMM d, yyyy");
+                            var heroImage = post.Value<IPublishedContent>("heroImage");
+                            <article class="blog-card">
+                                @if (heroImage != null)
+                                {
+                                    <img class="blog-card-image" src="@heroImage.Url()" alt="@postTitle" loading="lazy" />
+                                }
+                                else
+                                {
+                                    <div class="blog-card-image-placeholder">✦</div>
+                                }
+                                <div class="blog-card-body">
+                                    @if (postTags.Any())
+                                    {
+                                        <div class="blog-card-tags">
+                                            @foreach (var tag in postTags.Take(3))
+                                            {
+                                                <span class="tag-pill">@tag</span>
+                                            }
+                                        </div>
+                                    }
+                                    <h3 class="blog-card-title">@postTitle</h3>
+                                    @if (!string.IsNullOrWhiteSpace(postSubtitle))
+                                    {
+                                        <p class="blog-card-excerpt">@postSubtitle</p>
+                                    }
+                                    <div class="blog-card-meta">
+                                        <span>@postDate</span>
+                                        <a href="@post.Url()" class="blog-card-read-more">Read →</a>
+                                    </div>
+                                </div>
+                            </article>
+                        }
+                    </div>
+                </div>
+            </section>
+        }
+    </main>
+
+    @await Html.PartialAsync("~/Views/Partials/Footer.cshtml")
+</body>
+</html>

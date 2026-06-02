@@ -1,0 +1,25 @@
+@inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage
+@{
+    var home = Model.Root();
+    var blogListPage = home?.Children.FirstOrDefault(x => x.ContentType.Alias == "blogList");
+    var currentUrl = Context.Request.Path.Value ?? "/";
+}
+<nav class="site-nav" role="navigation" aria-label="Main navigation">
+    <div class="nav-inner">
+        <a href="/" class="nav-logo" aria-label="Neural Nexus - Home">
+            ⚡ NEURAL NEXUS
+        </a>
+        <ul class="nav-links" role="list">
+            <li><a href="/" class="@(currentUrl == "/" ? "active" : "")">Home</a></li>
+            @if (blogListPage != null)
+            {
+                <li>
+                    <a href="@blogListPage.Url()"
+                       class="@(currentUrl.StartsWith(blogListPage.Url()) ? "active" : "")">
+                        Blog
+                    </a>
+                </li>
+            }
+        </ul>
+    </div>
+</nav>
