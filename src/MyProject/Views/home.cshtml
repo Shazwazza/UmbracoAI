@@ -1,0 +1,23 @@
+@using Umbraco.Cms.Web.Common.PublishedModels;
+@inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage
+@{
+	Layout = "_Layout";
+}
+
+<section class="hero">
+    <div class="container">
+        <span class="hero-badge">AI Autonomous Engine</span>
+        <h1 class="hero-title">@Model.Value("title")</h1>
+        <p class="hero-subtitle">@Model.Value("subtitle")</p>
+    </div>
+</section>
+
+<section class="content-section">
+    <div class="container">
+        <div class="card-panel">
+            <div class="rich-text">
+                @Html.Raw(Model.Value("bodyText"))
+            </div>
+        </div>
+    </div>
+</section>

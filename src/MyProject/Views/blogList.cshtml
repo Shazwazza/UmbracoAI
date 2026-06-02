@@ -1,0 +1,57 @@
+@using Umbraco.Cms.Web.Common.PublishedModels;
+@inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage
+@{
+	Layout = "_Layout";
+    var posts = Model.Children()
+        .Where(x => x.IsVisible())
+        .OrderByDescending(x => x.Value<DateTime>("publishDate"));
+}
+
+<section class="hero blog-hero">
+    <div class="container">
+        <span class="hero-badge">Deep Thought Cycle</span>
+        <h1 class="hero-title">@Model.Value("title")</h1>
+        <p class="hero-subtitle">@Model.Value("subtitle")</p>
+    </div>
+</section>
+
+<section class="blog-list-section">
+    <div class="container">
+        @if (!posts.Any())
+        {
+            <div class="no-posts-card">
+                <p>System status: No log entries found. The prompt queue is silent.</p>
+            </div>
+        }
+        else
+        {
+            <div class="posts-grid">
+                @foreach (var post in posts)
+                {
+                    var pubDate = post.Value<DateTime>("publishDate");
+                    var tags = post.Value<IEnumerable<string>>("tags") ?? Enumerable.Empty<string>();
+                    
+                    <article class="post-card">
+                        <div class="post-card-meta">
+                            <span class="post-date">@pubDate.ToString("yyyy-MM-dd")</span>
+                            @if (tags.Any())
+                            {
+                                <div class="post-tags">
+                                    @foreach (var tag in tags)
+                                    {
+                                        <span class="post-tag">#@tag</span>
+                                    }
+                                </div>
+                            }
+                        </div>
+                        <h2 class="post-card-title">
+                            <a href="@post.Url()">@post.Value("title")</a>
+                        </h2>
+                        <p class="post-card-excerpt">@post.Value("subtitle")</p>
+                        <a href="@post.Url()" class="read-more-btn">Read entry <span class="arrow">→</span></a>
+                    </article>
+                }
+            </div>
+        }
+    </div>
+</section>

@@ -1,0 +1,44 @@
+@using Umbraco.Cms.Web.Common.PublishedModels;
+@inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage
+@{
+	Layout = "_Layout";
+    var pubDate = Model.Value<DateTime>("publishDate");
+    var tags = Model.Value<IEnumerable<string>>("tags") ?? Enumerable.Empty<string>();
+}
+
+<section class="hero blog-post-hero">
+    <div class="container">
+        <span class="hero-badge">Log Entry #@Model.Key.ToString().Substring(0, 8)</span>
+        <h1 class="hero-title">@Model.Value("title")</h1>
+        <p class="hero-subtitle">@Model.Value("subtitle")</p>
+        
+        <div class="post-meta-details">
+            <time class="post-date-large" datetime="@pubDate.ToString("yyyy-MM-dd")">
+                Published on <strong>@pubDate.ToString("MMMM dd, yyyy")</strong>
+            </time>
+            @if (tags.Any())
+            {
+                <div class="post-tags-large">
+                    @foreach (var tag in tags)
+                    {
+                        <span class="tag-badge">#@tag</span>
+                    }
+                </div>
+            }
+        </div>
+    </div>
+</section>
+
+<section class="content-section">
+    <div class="container">
+        <article class="card-panel blog-post-body">
+            <div class="rich-text">
+                @Html.Raw(Model.Value<string>("content"))
+            </div>
+            
+            <div class="back-navigation">
+                <a href="@Model.Parent.Url()" class="back-link">← Back to AI Log Entries</a>
+            </div>
+        </article>
+    </div>
+</section>

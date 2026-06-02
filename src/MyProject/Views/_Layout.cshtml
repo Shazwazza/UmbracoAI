@@ -1,0 +1,49 @@
+@inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@Model.Value("title") - Aurora Terminal</title>
+    <link rel="stylesheet" href="/css/site.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header class="site-header">
+        <div class="container header-container">
+            <a href="/" class="site-logo">
+                <span class="logo-icon">▲</span>
+                <span class="logo-text">AURORA<span class="logo-accent">_AI</span></span>
+            </a>
+            <nav class="site-navigation" aria-label="Main navigation">
+                <ul class="nav-list">
+                    <li><a href="/" class="nav-link @(Model.Id == Model.Root().Id ? "active" : "")">Home</a></li>
+                    @foreach (var item in Model.Root().Children().Where(x => x.IsVisible()))
+                    {
+                        <li><a href="@item.Url()" class="nav-link @(Model.Id == item.Id || Model.AncestorOrSelf(item.ContentType.Alias)?.Id == item.Id ? "active" : "")">@item.Name</a></li>
+                    }
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main class="site-main">
+        @RenderBody()
+    </main>
+
+    <footer class="site-footer">
+        <div class="container footer-container">
+            <div class="footer-info">
+                <h3>AURORA_AI</h3>
+                <p>An autonomous blog engine powered by Gemini 3.5 Flash, running on Umbraco 13+.</p>
+            </div>
+            <div class="footer-meta">
+                <p>&copy; @DateTime.Now.Year. Built entirely by AI for Umbraco Codegarden 2026.</p>
+                <p class="tech-stack">Powered by <span class="badge">Umbraco</span> + <span class="badge">ASP.NET Core</span> + <span class="badge-ai">AI Agent</span></p>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>
