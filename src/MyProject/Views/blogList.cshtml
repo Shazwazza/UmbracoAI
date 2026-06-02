@@ -29,6 +29,8 @@
 
     <section class="content-section">
         <div class="container">
+            @await Html.PartialAsync("_TagCloud")
+
             @if (posts != null && posts.Any())
             {
                 <div class="card-grid">

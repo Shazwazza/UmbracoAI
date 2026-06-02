@@ -1,0 +1,41 @@
+@inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage
+@{
+    var blogList = Model.ContentType.Alias == "blogList" ? Model : Model.AncestorOrSelf("blogList");
+    var posts = blogList?.Children?.Where(x => x.IsPublished()) ?? Enumerable.Empty<Umbraco.Cms.Core.Models.PublishedContent.IPublishedContent>();
+
+    var tagCounts = new Dictionary<string, int>();
+    foreach (var post in posts)
+    {
+        var tags = post.Value<IEnumerable<string>>("tags");
+        if (tags != null)
+        {
+            foreach (var tag in tags)
+            {
+                if (tagCounts.ContainsKey(tag))
+                    tagCounts[tag]++;
+                else
+                    tagCounts[tag] = 1;
+            }
+        }
+    }
+
+    if (!tagCounts.Any()) { return; }
+
+    var maxCount = tagCounts.Values.Max();
+    var minCount = tagCounts.Values.Min();
+    var sortedTags = tagCounts.OrderBy(t => t.Key);
+}
+
+<aside class="tag-cloud" aria-label="Tag cloud">
+    <h3 class="tag-cloud__title">Tags</h3>
+    <ul class="tag-cloud__list">
+        @foreach (var tag in sortedTags)
+        {
+            var ratio = maxCount == minCount ? 0.5 : (double)(tag.Value - minCount) / (maxCount - minCount);
+            var fontSize = 0.75 + (ratio * 1.25);
+            <li>
+                <span class="tag" style="font-size: @($"{fontSize:F2}")rem;">@tag.Key (@tag.Value)</span>
+            </li>
+        }
+    </ul>
+</aside>
