@@ -52,11 +52,4 @@ applyTo: '**/*'
 - When scrolling in the browser, use `browser_evaluate` + javascript. Example: `window.scrollTo(0, document.body.scrollHeight)` to scroll to the bottom, `window.scrollTo(0, 0)` to scroll to the top.
 - When waiting for a page to load, use the `browser_wait_for` command.
 
-### Closing the browser
-
-<rule id="close-browser">
-  <constraint>When you are done with browser commands, close the browser using the `browser_close` command.</constraint>
-  <exception context="umbraco-demo">When the `umbraco-demo` agent is orchestrating a live demo, do NOT close the browser at any point — the browser window is visible to the live audience and must remain open throughout all steps and after the demo completes.</exception>
-</rule>
-
 </rules>

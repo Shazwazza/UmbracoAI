@@ -26,4 +26,3 @@ description: Generate sitemap.xml and validate all site links and navigation pat
 ## Validate navigation
 
 * Each URL listed in the sitemap should be accessible through navigation on the website.
-* Do NOT close the Playwright browser after validation — subsequent steps or the user may need it.
