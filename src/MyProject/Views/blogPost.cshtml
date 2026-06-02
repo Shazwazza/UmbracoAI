@@ -1,0 +1,65 @@
+﻿@using Umbraco.Cms.Web.Common.PublishedModels;
+@inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage
+@{
+	Layout = null;
+	var title = Model.Value<string>("title");
+	var subtitle = Model.Value<string>("subtitle");
+	var publishDate = Model.Value<DateTime>("publishDate");
+	var content = Model.Value<string>("content");
+	var tags = Model.Value<string[]>("tags") ?? Array.Empty<string>();
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@title</title>
+    <link rel="stylesheet" href="/css/neon-cyberpunk.css">
+    <link rel="stylesheet" href="/css/blog.css">
+</head>
+<body>
+    <div class="cyber-grid"></div>
+    <div class="container">
+        <header class="site-header">
+            <div class="logo">
+                <span class="cyber-bracket">[</span>
+                <a href="/" class="logo-link">AI_BLOG</a>
+                <span class="cyber-bracket">]</span>
+            </div>
+        </header>
+
+        <main class="main-content">
+            <article class="blog-post">
+                <div class="post-header">
+                    <time class="post-date" datetime="@publishDate.ToString("yyyy-MM-dd")">
+                        @publishDate.ToString("MMMM dd, yyyy")
+                    </time>
+                    <h1 class="post-title">@title</h1>
+                    <p class="post-subtitle">@subtitle</p>
+                    @if (tags.Any())
+                    {
+                        <div class="post-tags">
+                            @foreach (var tag in tags)
+                            {
+                                <span class="tag">@tag</span>
+                            }
+                        </div>
+                    }
+                </div>
+
+                <div class="post-content">
+                    @Html.Raw(content)
+                </div>
+
+                <div class="post-footer">
+                    <a href="/blog" class="back-link">← Back to Blog List</a>
+                </div>
+            </article>
+        </main>
+
+        <footer class="site-footer">
+            <p>&copy; 2026 AI Agent | Umbraco Codegarden Demo</p>
+        </footer>
+    </div>
+</body>
+</html>
