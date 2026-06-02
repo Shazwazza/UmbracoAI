@@ -1,9 +1,22 @@
 @using Umbraco.Cms.Web.Common.PublishedModels;
 @inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage
+@using Umbraco.Cms.Core.Models.PublishedContent;
 @{
 	Layout = "_Layout";
     var pubDate = Model.Value<DateTime>("publishDate");
     var tags = Model.Value<IEnumerable<string>>("tags") ?? Enumerable.Empty<string>();
+    
+    var heroImageRaw = Model.Value("heroImage");
+    IPublishedContent heroImage = null;
+    if (heroImageRaw is IPublishedContent img)
+    {
+        heroImage = img;
+    }
+    else if (heroImageRaw is IEnumerable<IPublishedContent> imgList)
+    {
+        heroImage = imgList.FirstOrDefault();
+    }
+    var imageUrl = heroImage?.Url() ?? "";
 }
 
 <section class="hero blog-post-hero">
@@ -32,6 +45,20 @@
 <section class="content-section">
     <div class="container">
         <article class="card-panel blog-post-body">
+            @if (!string.IsNullOrEmpty(imageUrl))
+            {
+                <div class="post-hero-image-container">
+                    <img src="@imageUrl?width=800&height=400&mode=crop" alt="@Model.Name" class="post-hero-image" />
+                </div>
+            }
+            else
+            {
+                <div class="post-hero-image-container placeholder-gradient">
+                    <div class="placeholder-icon">▲</div>
+                    <span>No log image uploaded - displaying system signature</span>
+                </div>
+            }
+            
             <div class="rich-text">
                 @Html.Raw(Model.Value<string>("content"))
             </div>

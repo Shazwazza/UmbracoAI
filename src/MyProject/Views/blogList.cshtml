@@ -1,10 +1,40 @@
 @using Umbraco.Cms.Web.Common.PublishedModels;
 @inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage
+@using Umbraco.Cms.Core.Models.PublishedContent;
 @{
 	Layout = "_Layout";
-    var posts = Model.Children()
+    
+    // Get all posts for counting global tags
+    var allPosts = Model.Children()
         .Where(x => x.IsVisible())
-        .OrderByDescending(x => x.Value<DateTime>("publishDate"));
+        .OrderByDescending(x => x.Value<DateTime>("publishDate"))
+        .ToList();
+
+    var allTags = allPosts
+        .SelectMany(x => x.Value<IEnumerable<string>>("tags") ?? Enumerable.Empty<string>())
+        .Where(t => !string.IsNullOrEmpty(t))
+        .GroupBy(t => t.ToLowerInvariant())
+        .Select(g => new { Tag = g.Key, Count = g.Count() })
+        .OrderByDescending(x => x.Count)
+        .ThenBy(x => x.Tag)
+        .ToList();
+
+    var maxCount = allTags.Any() ? allTags.Max(x => x.Count) : 1;
+    var minCount = allTags.Any() ? allTags.Min(x => x.Count) : 1;
+
+    // Filter by query string
+    var selectedTag = Context.Request.Query["tag"].ToString()?.ToLowerInvariant();
+    var posts = allPosts;
+    
+    if (!string.IsNullOrEmpty(selectedTag))
+    {
+        posts = allPosts.Where(x => (x.Value<IEnumerable<string>>("tags") ?? Enumerable.Empty<string>())
+            .Any(t => t.Equals(selectedTag, StringComparison.OrdinalIgnoreCase)))
+            .ToList();
+    }
+
+    double minSize = 0.8;
+    double maxSize = 1.8;
 }
 
 <section class="hero blog-hero">
@@ -17,6 +47,28 @@
 
 <section class="blog-list-section">
     <div class="container">
+        @if (allTags.Any())
+        {
+            <div class="tag-cloud-container">
+                <div class="tag-cloud-header">
+                    <span><span class="tag-cloud-icon">⚡</span> SYSTEM_TAGS_INDEX</span>
+                    @if (!string.IsNullOrEmpty(selectedTag))
+                    {
+                        <a href="?" class="clear-filter-btn">[RESET_FILTER: #@selectedTag ×]</a>
+                    }
+                </div>
+                <div class="tag-cloud">
+                    @foreach (var item in allTags)
+                    {
+                        var size = minSize + (double)(item.Count - minCount) / (maxCount - minCount == 0 ? 1 : maxCount - minCount) * (maxSize - minSize);
+                        <a href="?tag=@item.Tag" class="tag-cloud-item @(selectedTag == item.Tag ? "active" : "")" style="font-size: @(size.ToString("0.00", System.Globalization.CultureInfo.InvariantCulture))rem;" title="Appears in @item.Count entries">
+                            #@item.Tag<span class="tag-count">(@item.Count)</span>
+                        </a>
+                    }
+                </div>
+            </div>
+        }
+
         @if (!posts.Any())
         {
             <div class="no-posts-card">
@@ -31,24 +83,52 @@
                     var pubDate = post.Value<DateTime>("publishDate");
                     var tags = post.Value<IEnumerable<string>>("tags") ?? Enumerable.Empty<string>();
                     
+                    var heroImageRaw = post.Value("heroImage");
+                    IPublishedContent heroImage = null;
+                    if (heroImageRaw is IPublishedContent img)
+                    {
+                        heroImage = img;
+                    }
+                    else if (heroImageRaw is IEnumerable<IPublishedContent> imgList)
+                    {
+                        heroImage = imgList.FirstOrDefault();
+                    }
+                    var imageUrl = heroImage?.Url() ?? "";
+                    
                     <article class="post-card">
-                        <div class="post-card-meta">
-                            <span class="post-date">@pubDate.ToString("yyyy-MM-dd")</span>
-                            @if (tags.Any())
-                            {
-                                <div class="post-tags">
-                                    @foreach (var tag in tags)
-                                    {
-                                        <span class="post-tag">#@tag</span>
-                                    }
-                                </div>
-                            }
+                        @if (!string.IsNullOrEmpty(imageUrl))
+                        {
+                            <div class="post-card-image-container">
+                                <a href="@post.Url()">
+                                    <img src="@imageUrl?width=400&height=220&mode=crop" alt="@post.Name" class="post-card-image" />
+                                </a>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="post-card-image-container placeholder-gradient-small">
+                                <div class="placeholder-icon">▲</div>
+                            </div>
+                        }
+                        <div class="post-card-content">
+                            <div class="post-card-meta">
+                                <span class="post-date">@pubDate.ToString("yyyy-MM-dd")</span>
+                                @if (tags.Any())
+                                {
+                                    <div class="post-tags">
+                                        @foreach (var tag in tags)
+                                        {
+                                            <span class="post-tag">#@tag</span>
+                                        }
+                                    </div>
+                                }
+                            </div>
+                            <h2 class="post-card-title">
+                                <a href="@post.Url()">@post.Value("title")</a>
+                            </h2>
+                            <p class="post-card-excerpt">@post.Value("subtitle")</p>
+                            <a href="@post.Url()" class="read-more-btn">Read entry <span class="arrow">→</span></a>
                         </div>
-                        <h2 class="post-card-title">
-                            <a href="@post.Url()">@post.Value("title")</a>
-                        </h2>
-                        <p class="post-card-excerpt">@post.Value("subtitle")</p>
-                        <a href="@post.Url()" class="read-more-btn">Read entry <span class="arrow">→</span></a>
                     </article>
                 }
             </div>
