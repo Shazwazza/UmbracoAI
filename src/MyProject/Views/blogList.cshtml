@@ -5,6 +5,32 @@
 	var pageTitle = Model.Value<string>("pageTitle");
 	var pageDescription = Model.Value<string>("pageDescription");
 	var blogPosts = Model.Children().OrderByDescending(x => x.Value<DateTime>("publishDate"));
+	
+	// Build tag cloud: collect all tags and count frequencies
+	var tagCounts = new Dictionary<string, int>();
+	foreach (var post in blogPosts)
+	{
+		var tags = post.Value<string[]>("tags") ?? Array.Empty<string>();
+		foreach (var tag in tags)
+		{
+			if (!string.IsNullOrEmpty(tag))
+			{
+				if (tagCounts.ContainsKey(tag))
+				{
+					tagCounts[tag]++;
+				}
+				else
+				{
+					tagCounts[tag] = 1;
+				}
+			}
+		}
+	}
+	
+	// Sort tags by frequency (descending) then alphabetically
+	var sortedTags = tagCounts.OrderByDescending(x => x.Value).ThenBy(x => x.Key);
+	var maxCount = tagCounts.Any() ? tagCounts.Values.Max() : 1;
+	var minCount = tagCounts.Any() ? tagCounts.Values.Min() : 1;
 }
 <!DOCTYPE html>
 <html lang="en">
@@ -32,6 +58,37 @@
                 <h1 class="page-title">@pageTitle</h1>
                 <p class="page-description">@pageDescription</p>
             </section>
+
+            @if (tagCounts.Any())
+            {
+                <section class="tag-cloud">
+                    <h2 class="tag-cloud-title">Explore Topics</h2>
+                    <div class="tag-cloud-items">
+                        @foreach (var tagPair in sortedTags)
+                        {
+                            var tag = tagPair.Key;
+                            var count = tagPair.Value;
+                            
+                            // Calculate size class based on frequency
+                            var sizeClass = "tag-cloud-item";
+                            if (maxCount > minCount)
+                            {
+                                var percentage = (double)(count - minCount) / (maxCount - minCount);
+                                if (percentage >= 0.75) sizeClass += " tag-size-xl";
+                                else if (percentage >= 0.5) sizeClass += " tag-size-lg";
+                                else if (percentage >= 0.25) sizeClass += " tag-size-md";
+                                else sizeClass += " tag-size-sm";
+                            }
+                            else
+                            {
+                                sizeClass += " tag-size-md";
+                            }
+                            
+                            <span class="@sizeClass" title="@count post(s)">@tag</span>
+                        }
+                    </div>
+                </section>
+            }
 
             <section class="blog-grid">
                 @foreach (var post in blogPosts)
