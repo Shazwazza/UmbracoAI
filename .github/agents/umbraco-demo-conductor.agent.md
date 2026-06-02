@@ -35,14 +35,15 @@ Closing it ruins the demo.
 2. Confirm the `conductor` CLI is available (`conductor --version`). If it is
    missing, install it per the Conductor skill's setup guide.
 3. **Invoke the `/umb-demo-conductor` skill** and follow its instructions to run
-   the workflow. In short, from the repository root:
+   the workflow. **Always pass `--web`** so the run and any human-in-the-loop
+   gates are visible in the live dashboard. From the repository root:
 
    ```bash
-   conductor run .github/skills/umb-demo-conductor/umbraco-demo.yaml --workspace-instructions
+   conductor run .github/skills/umb-demo-conductor/umbraco-demo.yaml --workspace-instructions --web
    ```
 
-   Use `--web` if you need the in-browser human gate (the workflow's first step
-   asks whether to back up and reset the site). Pass
+   The workflow's first step is a human gate (asking whether to back up and
+   reset the site) — answer it in the `--web` dashboard. Pass
    `--input site_base_url=...` to override the default site URL.
 
 ## Guardrails

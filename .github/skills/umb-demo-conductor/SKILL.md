@@ -32,12 +32,17 @@ close the browser at any point.
 ## Running the workflow
 
 Run from the repository root so that the MCP servers and `--workspace-instructions`
-auto-discovery resolve correctly:
+auto-discovery resolve correctly. **Always pass `--web`** so the run and any
+human-in-the-loop gates are visible in the live dashboard:
 
 ```bash
-conductor run .github/skills/umb-demo-conductor/umbraco-demo.yaml --workspace-instructions
+conductor run .github/skills/umb-demo-conductor/umbraco-demo.yaml --workspace-instructions --web
 ```
 
+- `--web` opens the real-time dashboard (DAG graph, live streaming, in-browser
+  human gates). This is required for this demo — we always want to watch the
+  workflow and handle gates in the browser. Use `--web-bg` only if you need the
+  command to print the dashboard URL and return immediately.
 - `--workspace-instructions` layers in the full repository rules at run time
   (`.github/copilot-instructions.md` and the applicable
   `.github/instructions/**/*.instructions.md` files), so the workflow does not
@@ -51,15 +56,8 @@ conductor run .github/skills/umb-demo-conductor/umbraco-demo.yaml --workspace-in
 ### Human gate (reset prompt)
 
 The first step is a **human gate** asking whether to back up and reset the site
-to a clean slate before building. Human gates need an interactive terminal.
-
-- Running in an interactive terminal: answer the prompt on the console.
-- If the terminal is not interactive, use the web dashboard for in-browser
-  gates instead:
-
-  ```bash
-  conductor run .github/skills/umb-demo-conductor/umbraco-demo.yaml --workspace-instructions --web
-  ```
+to a clean slate before building. With `--web` (always used here), answer the
+gate directly in the dashboard in your browser.
 
 ## Validating without running
 
