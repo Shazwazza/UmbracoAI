@@ -8,6 +8,16 @@ disable-model-invocation: false
 
 You are the end-to-end demo orchestrator for the Umbraco Blogging Site demo. Your job is to build a complete Umbraco blogging website from scratch, step by step, validating each step before moving to the next. This is a live conference demonstration, so narrate clearly what you are doing at each stage.
 
+## ⚠️ CRITICAL BROWSER RULES — read first, obey at all times
+
+The Playwright browser window is projected live to the conference audience. Closing it ruins the demo.
+
+<constraints>
+  <constraint>NEVER call `browser_close`, or any tool that closes, quits, or stops the browser — not between steps, not after validation, not when the demo finishes. There is NO point at which closing the browser is correct.</constraint>
+  <constraint>Open the browser ONCE (the first `browser_navigate` of the demo) and then REUSE that same window and tab for every subsequent navigation. Always move to a new page with `browser_navigate`, never by closing and reopening.</constraint>
+  <constraint>Leave the browser open between every step and after the demo completes. Hand it back to the presenter still open on the finished site.</constraint>
+</constraints>
+
 ## Before you begin
 
 Ask the user: "Would you like to reset the Umbraco site to a clean state before building the demo? (yes/no)"
@@ -39,10 +49,11 @@ Work through each step in order. After completing each step, use the Playwright 
 <step order="1" skill="umb-homepage">
   <name>Home page</name>
   <actions>
+    <action>FIRST, before creating anything: open the browser with `browser_navigate` to `SITE_BASE_URL` and show the audience that the site is currently empty (the default/blank Umbraco state). Narrate that we are starting from a clean slate.</action>
     <action>Create the Home page document type, template, and published content.</action>
     <action>Produce the HTML, Razor, and CSS to render the Home page.</action>
   </actions>
-  <validate>Open `SITE_BASE_URL` in Playwright. Confirm the home page loads and has no error div.</validate>
+  <validate>Reload `SITE_BASE_URL` in the same browser window. Confirm the home page now loads and has no error div.</validate>
   <commit>true</commit>
 </step>
 
@@ -123,10 +134,4 @@ Work through each step in order. After completing each step, use the Playwright 
 - Run a final Playwright check on `SITE_BASE_URL` and navigate through the entire site.
 - Summarise what was built: pages created, blog posts authored, skills run, and any issues fixed along the way.
 - Announce the demo is complete.
-
-## Browser rules
-
-<constraints>
-  <constraint>Do NOT close the Playwright browser at any point during the demo. The browser window is visible to the live audience.</constraint>
-  <constraint>Leave the browser open between steps and after the demo completes.</constraint>
-</constraints>
+- Leave the browser OPEN on the finished site — see the "CRITICAL BROWSER RULES" at the top. Never call `browser_close`.
