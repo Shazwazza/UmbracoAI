@@ -19,10 +19,12 @@ Pages to test (based on sitemap or content tree):
 * Review the violations returned by the tool.
 * Fix issues in the Razor templates or CSS as needed.
 * Common fixes include: adding `<main>` landmarks, ensuring all content is inside landmark regions, correct heading hierarchy.
+* **Show the fix live for the audience:** This is a live demo. After applying a fix to a page, immediately navigate to (or reload) that page in Playwright with `browser_navigate` so the audience can see the change happen on screen. Reloading the same URL forces a fresh render and busts any cached CSS. Do this for each page you fix, before moving on.
 
 ## Verification
 
 * Re-run `a11y-accessibility-test_accessibility` on each page after fixes.
+* After re-testing, navigate/refresh the page in Playwright again so the audience sees the corrected, passing page.
 * Repeat until all pages report zero violations.
 
 ## Commit
