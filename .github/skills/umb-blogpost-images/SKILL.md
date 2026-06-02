@@ -37,9 +37,12 @@ description: Add hero images to blog posts and render image previews on list and
 
 ## What NOT to do
 
-* DO NOT try to log into the Umbraco backoffice to manually upload images.
-* DO NOT use `sourceType: "filePath"` for media uploads (it is disabled).
-* DO NOT use `MediaWithCrops` type in Razor — use `IPublishedContent` instead.
+<constraints>
+  <constraint>DO NOT try to log into the Umbraco backoffice to manually upload images.</constraint>
+  <constraint>DO NOT use `sourceType: "filePath"` for media uploads — it is disabled.</constraint>
+  <constraint>DO NOT use `MediaWithCrops` type in Razor — use `IPublishedContent` instead.</constraint>
+  <constraint>DO NOT upload SVG files — only PNG and JPG are supported.</constraint>
+</constraints>
 
 ## Validation
 

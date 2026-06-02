@@ -24,3 +24,4 @@ Pages to test (based on sitemap or content tree):
 
 * Re-run `a11y-accessibility-test_accessibility` on each page after fixes.
 * Repeat until all pages report zero violations.
+* Do NOT close the Playwright browser after testing — subsequent steps or the user may need it.

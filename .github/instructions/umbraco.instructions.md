@@ -28,15 +28,18 @@ applyTo: '**/*'
 
 ## Umbraco backoffice and schema
 
-* Do not create or modify Users.
-* Do not create or modify Members.
-* Do not create or modify Translations or Dictionary items.
-* Do not install Packages.
-* Do not create or use document blueprints.
-* Do not create custom Property Editors, only use the built in ones.
-* Do not be concerned about Public Access.
-* Do not be concerned about Domains.
-* Do not be concerned about Variants or Segments.
+<prohibited-actions>
+  <action>Do not create or modify Users.</action>
+  <action>Do not create or modify Members.</action>
+  <action>Do not create or modify Translations or Dictionary items.</action>
+  <action>Do not install Packages.</action>
+  <action>Do not create or use document blueprints.</action>
+  <action>Do not create custom Property Editors — only use the built-in ones.</action>
+  <action>Do not be concerned about Public Access.</action>
+  <action>Do not be concerned about Domains.</action>
+  <action>Do not be concerned about Variants or Segments.</action>
+  <action>DO NOT install additional libraries, plugins or extensions — they are not necessary.</action>
+</prohibited-actions>
 
 ### Umbraco page requirements
 
@@ -55,52 +58,62 @@ Defines the minimal Document Types that will need to be created with Templates:
     * Tags
     * etc...
 
-## Additional libraries/plugins
-
-DO NOT install additional libraries, plugins or extensions, they are not necessary.
-
 ## Razor & rendering patterns
 
 These are known-good patterns for rendering Umbraco content in Razor views. Follow them to avoid common compilation errors.
 
-### Partial views
+<pattern name="partial-views">
+  <description>All partial views MUST include the `@inherits` directive to access Umbraco helpers like `Model.Root()`.</description>
+  <correct>
+    ```csharp
+    @inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage
+    ```
+  </correct>
+</pattern>
 
-All partial views MUST include the `@inherits` directive to access Umbraco helpers like `Model.Root()`:
-```csharp
-@inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage
-```
+<pattern name="rich-text-tiptap">
+  <description>Rich Text (Tiptap editor) — retrieve with untyped `Model.Value()` and render with `@Html.Raw()`.</description>
+  <correct>
+    ```csharp
+    var content = Model.Value("mainContent");
+    @Html.Raw(content)
+    ```
+  </correct>
+  <incorrect reason="returns null for Tiptap rich text">
+    ```csharp
+    Model.Value&lt;IHtmlContent&gt;("mainContent")
+    ```
+  </incorrect>
+</pattern>
 
-### Rich Text (Tiptap editor)
+<pattern name="markdown-editor">
+  <description>Umbraco converts Markdown to HTML automatically. Retrieve as string and render.</description>
+  <correct>
+    ```csharp
+    var html = Model.Value&lt;string&gt;("content");
+    @Html.Raw(html)
+    ```
+  </correct>
+  <incorrect reason="not needed — Umbraco handles Markdown natively">Installing Markdig or other Markdown libraries.</incorrect>
+  <incorrect reason="does not resolve in Razor views">Using `HtmlStringUtilities.ReplaceLineBreaks()`.</incorrect>
+</pattern>
 
-Retrieve with untyped `Model.Value()` and render with `@Html.Raw()`:
-```csharp
-var content = Model.Value("mainContent");
-@Html.Raw(content)
-```
-Do NOT use `Model.Value<IHtmlContent>()` — it returns null for Tiptap rich text.
+<pattern name="media-picker-image">
+  <description>Media Picker (Image) — retrieve as `IPublishedContent` and call `.Url()`.</description>
+  <correct>
+    ```csharp
+    var heroImage = Model.Value&lt;Umbraco.Cms.Core.Models.PublishedContent.IPublishedContent&gt;("heroImage");
+    var imageUrl = heroImage?.Url();
+    ```
+    Use image processor query strings for cropping: `?width=1200&amp;height=500&amp;mode=crop`.
+  </correct>
+  <incorrect reason="does not resolve correctly">Using `MediaWithCrops` type.</incorrect>
+</pattern>
 
-### Markdown editor
+<pattern name="doctype-template-linking">
+  <description>Creating a document type does NOT auto-link a template. After creating both, you must update the document type with `allowedTemplates` and `defaultTemplate` to connect them.</description>
+</pattern>
 
-Umbraco converts Markdown to HTML automatically. Just retrieve as string and render:
-```csharp
-var html = Model.Value<string>("content");
-@Html.Raw(html)
-```
-Do NOT install Markdig or other Markdown libraries. Do NOT use `HtmlStringUtilities.ReplaceLineBreaks()` — it does not resolve in Razor views.
-
-### Media Picker (Image)
-
-Retrieve as `IPublishedContent` and call `.Url()`:
-```csharp
-var heroImage = Model.Value<Umbraco.Cms.Core.Models.PublishedContent.IPublishedContent>("heroImage");
-var imageUrl = heroImage?.Url();
-```
-Do NOT use `MediaWithCrops` — it does not resolve correctly. Use image processor query strings for cropping: `?width=1200&height=500&mode=crop`.
-
-### Document type + template linking
-
-Creating a document type does NOT auto-link a template. After creating both, you must update the document type with `allowedTemplates` and `defaultTemplate` to connect them.
-
-### Template creation
-
-`create-template` creates both the Umbraco template record AND a minimal `.cshtml` file (just `@inherits` and `Layout = null`). You must edit the `.cshtml` via the filesystem to add your actual HTML/Razor markup.
+<pattern name="template-creation">
+  <description>`create-template` creates both the Umbraco template record AND a minimal `.cshtml` file (just `@inherits` and `Layout = null`). You must edit the `.cshtml` via the filesystem to add your actual HTML/Razor markup.</description>
+</pattern>
