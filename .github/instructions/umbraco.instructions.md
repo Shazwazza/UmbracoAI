@@ -62,58 +62,44 @@ Defines the minimal Document Types that will need to be created with Templates:
 
 These are known-good patterns for rendering Umbraco content in Razor views. Follow them to avoid common compilation errors.
 
-<pattern name="partial-views">
-  <description>All partial views MUST include the `@inherits` directive to access Umbraco helpers like `Model.Root()`.</description>
-  <correct>
-    ```csharp
-    @inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage
-    ```
-  </correct>
-</pattern>
+### Partial views
 
-<pattern name="rich-text-tiptap">
-  <description>Rich Text (Tiptap editor) — retrieve with untyped `Model.Value()` and render with `@Html.Raw()`.</description>
-  <correct>
-    ```csharp
-    var content = Model.Value("mainContent");
-    @Html.Raw(content)
-    ```
-  </correct>
-  <incorrect reason="returns null for Tiptap rich text">
-    ```csharp
-    Model.Value&lt;IHtmlContent&gt;("mainContent")
-    ```
-  </incorrect>
-</pattern>
+All partial views MUST include the `@inherits` directive to access Umbraco helpers like `Model.Root()`:
+```csharp
+@inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage
+```
 
-<pattern name="markdown-editor">
-  <description>Umbraco converts Markdown to HTML automatically. Retrieve as string and render.</description>
-  <correct>
-    ```csharp
-    var html = Model.Value&lt;string&gt;("content");
-    @Html.Raw(html)
-    ```
-  </correct>
-  <incorrect reason="not needed — Umbraco handles Markdown natively">Installing Markdig or other Markdown libraries.</incorrect>
-  <incorrect reason="does not resolve in Razor views">Using `HtmlStringUtilities.ReplaceLineBreaks()`.</incorrect>
-</pattern>
+### Rich Text (Tiptap editor)
 
-<pattern name="media-picker-image">
-  <description>Media Picker (Image) — retrieve as `IPublishedContent` and call `.Url()`.</description>
-  <correct>
-    ```csharp
-    var heroImage = Model.Value&lt;Umbraco.Cms.Core.Models.PublishedContent.IPublishedContent&gt;("heroImage");
-    var imageUrl = heroImage?.Url();
-    ```
-    Use image processor query strings for cropping: `?width=1200&amp;height=500&amp;mode=crop`.
-  </correct>
-  <incorrect reason="does not resolve correctly">Using `MediaWithCrops` type.</incorrect>
-</pattern>
+Retrieve with untyped `Model.Value()` and render with `@Html.Raw()`:
+```csharp
+var content = Model.Value("mainContent");
+@Html.Raw(content)
+```
+Do NOT use `Model.Value<IHtmlContent>()` — it returns null for Tiptap rich text.
 
-<pattern name="doctype-template-linking">
-  <description>Creating a document type does NOT auto-link a template. After creating both, you must update the document type with `allowedTemplates` and `defaultTemplate` to connect them.</description>
-</pattern>
+### Markdown editor
 
-<pattern name="template-creation">
-  <description>`create-template` creates both the Umbraco template record AND a minimal `.cshtml` file (just `@inherits` and `Layout = null`). You must edit the `.cshtml` via the filesystem to add your actual HTML/Razor markup.</description>
-</pattern>
+Umbraco converts Markdown to HTML automatically. Just retrieve as string and render:
+```csharp
+var html = Model.Value<string>("content");
+@Html.Raw(html)
+```
+Do NOT install Markdig or other Markdown libraries. Do NOT use `HtmlStringUtilities.ReplaceLineBreaks()` — it does not resolve in Razor views.
+
+### Media Picker (Image)
+
+Retrieve as `IPublishedContent` and call `.Url()`:
+```csharp
+var heroImage = Model.Value<Umbraco.Cms.Core.Models.PublishedContent.IPublishedContent>("heroImage");
+var imageUrl = heroImage?.Url();
+```
+Do NOT use `MediaWithCrops` — it does not resolve correctly. Use image processor query strings for cropping: `?width=1200&height=500&mode=crop`.
+
+### Document type + template linking
+
+Creating a document type does NOT auto-link a template. After creating both, you must update the document type with `allowedTemplates` and `defaultTemplate` to connect them.
+
+### Template creation
+
+`create-template` creates both the Umbraco template record AND a minimal `.cshtml` file (just `@inherits` and `Layout = null`). You must edit the `.cshtml` via the filesystem to add your actual HTML/Razor markup.

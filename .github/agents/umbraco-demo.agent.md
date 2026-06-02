@@ -39,8 +39,8 @@ Work through each step in order. After completing each step, use the Playwright 
 <step order="1" skill="umb-homepage">
   <name>Home page</name>
   <actions>
-    Create the Home page document type, template, and published content.
-    Produce the HTML, Razor, and CSS to render the Home page.
+    <action>Create the Home page document type, template, and published content.</action>
+    <action>Produce the HTML, Razor, and CSS to render the Home page.</action>
   </actions>
   <validate>Open `SITE_BASE_URL` in Playwright. Confirm the home page loads and has no error div.</validate>
   <commit>true</commit>
@@ -49,7 +49,7 @@ Work through each step in order. After completing each step, use the Playwright 
 <step order="2" skill="umb-blog-pages">
   <name>Blog pages</name>
   <actions>
-    Create the Blog List and Blog Post document types, templates, and a few starter blog posts.
+    <action>Create the Blog List and Blog Post document types, templates, and a few starter blog posts.</action>
   </actions>
   <validate>Open `SITE_BASE_URL` in Playwright. Navigate to the Blog List page. Confirm it loads and lists at least one blog post without errors.</validate>
   <commit>true</commit>
@@ -58,8 +58,8 @@ Work through each step in order. After completing each step, use the Playwright 
 <step order="3" skill="umb-navigation">
   <name>Navigation</name>
   <actions>
-    Add a shared navigation menu to all pages.
-    Ensure the home page links to the blog list and other pages.
+    <action>Add a shared navigation menu to all pages.</action>
+    <action>Ensure the home page links to the blog list and other pages.</action>
   </actions>
   <validate>Use Playwright to browse `SITE_BASE_URL` and click through the navigation links. Confirm all links resolve and no errors appear.</validate>
   <commit>true</commit>
@@ -68,7 +68,7 @@ Work through each step in order. After completing each step, use the Playwright 
 <step order="4" skill="umb-blogposts">
   <name>Blog posts</name>
   <actions>
-    Ensure at least 10 blog posts exist, each with meaningful content.
+    <action>Ensure at least 10 blog posts exist, each with meaningful content.</action>
   </actions>
   <validate>Use Playwright to open the Blog List page and confirm at least 10 posts are visible or linked.</validate>
   <commit>true</commit>
@@ -77,9 +77,9 @@ Work through each step in order. After completing each step, use the Playwright 
 <step order="5" skill="umb-blogpost-images">
   <name>Blog post images</name>
   <actions>
-    Add a hero image to each blog post.
-    Update the blog post template to render the hero image.
-    Update the blog list template to show image thumbnails.
+    <action>Add a hero image to each blog post.</action>
+    <action>Update the blog post template to render the hero image.</action>
+    <action>Update the blog list template to show image thumbnails.</action>
   </actions>
   <validate>Use Playwright to open the Blog List page and at least one Blog Post page. Confirm images are rendered.</validate>
   <commit>true</commit>
@@ -88,8 +88,8 @@ Work through each step in order. After completing each step, use the Playwright 
 <step order="6" skill="umb-tagcloud">
   <name>Tag cloud</name>
   <actions>
-    Add a tag cloud widget to the Blog List page template.
-    Tag sizes should reflect how frequently each tag appears across blog posts.
+    <action>Add a tag cloud widget to the Blog List page template.</action>
+    <action>Tag sizes should reflect how frequently each tag appears across blog posts.</action>
   </actions>
   <validate>Use Playwright to open the Blog List page. Confirm a tag cloud section is rendered.</validate>
   <commit>true</commit>
@@ -98,8 +98,8 @@ Work through each step in order. After completing each step, use the Playwright 
 <step order="7" skill="umb-sitemap">
   <name>Sitemap</name>
   <actions>
-    Generate `/sitemap.xml` from all published content (including all blog posts and images added in earlier steps).
-    Crawl each URL in the sitemap with Playwright to verify pages render without errors.
+    <action>Generate `/sitemap.xml` from all published content (including all blog posts and images added in earlier steps).</action>
+    <action>Crawl each URL in the sitemap with Playwright to verify pages render without errors.</action>
   </actions>
   <validate>Open `SITE_BASE_URL/sitemap.xml` in Playwright. Confirm it contains entries for all published pages.</validate>
   <commit>true</commit>
@@ -108,9 +108,9 @@ Work through each step in order. After completing each step, use the Playwright 
 <step order="8" skill="umb-accessibility">
   <name>Accessibility</name>
   <actions>
-    Run the a11y-accessibility MCP tool against the site.
-    Fix any accessibility issues found.
-    Repeat until all checks pass.
+    <action>Run the a11y-accessibility MCP tool against the site.</action>
+    <action>Fix any accessibility issues found.</action>
+    <action>Repeat until all checks pass.</action>
   </actions>
   <validate>All accessibility checks must pass before moving on.</validate>
   <commit>true</commit>
@@ -123,10 +123,3 @@ Work through each step in order. After completing each step, use the Playwright 
 - Run a final Playwright check on `SITE_BASE_URL` and navigate through the entire site.
 - Summarise what was built: pages created, blog posts authored, skills run, and any issues fixed along the way.
 - Announce the demo is complete.
-
-## Browser rules
-
-<rule id="no-close-browser">
-  <constraint>Do NOT close the Playwright browser at any point during the demo. The browser window is visible to the live audience.</constraint>
-  <constraint>Leave the browser open between steps and after the demo completes.</constraint>
-</rule>
