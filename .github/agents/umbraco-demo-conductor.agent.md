@@ -28,13 +28,21 @@ Closing it ruins the demo.
 
 ## How to run
 
-1. Confirm the Umbraco site is running at `SITE_BASE_URL` (see Project
+1. Confirm the **shared Playwright MCP server** is running. Both this session and
+   the workflow connect to one headed Playwright server over HTTP
+   (`http://127.0.0.1:8931/mcp`) so they share a single, audience-visible browser
+   window. If it is not already up, start it from the repo root:
+   `powershell -ExecutionPolicy Bypass -File scripts/start-playwright-mcp.ps1`
+   (detached, idempotent, headed, `--shared-browser-context`). It must be running
+   before the Copilot CLI session was started, since `.mcp.json` points
+   `playwright` at this endpoint.
+2. Confirm the Umbraco site is running at `SITE_BASE_URL` (see Project
    Configuration in `copilot-instructions.md`). If it is not, start it with
    `dotnet run --project src/MyProject/MyProject.csproj` and wait for it to come
    up.
-2. Confirm the `conductor` CLI is available (`conductor --version`). If it is
+3. Confirm the `conductor` CLI is available (`conductor --version`). If it is
    missing, install it per the Conductor skill's setup guide.
-3. **Invoke the `/umb-demo-conductor` skill** and follow its instructions to run
+4. **Invoke the `/umb-demo-conductor` skill** and follow its instructions to run
    the workflow. **Always pass `--web`** so the live dashboard (DAG graph, agent
    streaming, gate nodes) is visible to the audience. From the repository root:
 

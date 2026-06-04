@@ -34,8 +34,8 @@ workflow:
           UMBRACO_INCLUDE_TOOL_COLLECTIONS: "data-type,document-type,document,media,property-type,partial-view,static-file,stylesheet,temporary-file,imaging,template"
         tools: ["*"]
       playwright:
-        command: npx
-        args: ["-y", "@playwright/mcp@latest", "--viewport-size="]
+        type: http
+        url: http://127.0.0.1:8931/mcp
         tools: ["*"]
       a11y-accessibility:
         command: npx

@@ -83,6 +83,17 @@ The same end-to-end demo can also be run as a [Conductor](https://github.com/git
 Use the umbraco-demo-conductor agent to build the full Umbraco blogging site
 ```
 
+**Before running, start the shared Playwright browser server** so the main CLI session and the workflow drive the *same* visible window (otherwise later steps run in a hidden browser). From the repo root, in this order:
+
+```powershell
+# 1. Start the shared, headed Playwright MCP server (detached, idempotent)
+powershell -ExecutionPolicy Bypass -File scripts/start-playwright-mcp.ps1
+# 2. Start your Copilot CLI session (it reads .mcp.json -> connects over HTTP)
+# 3. Run the workflow (connects to the SAME server)
+```
+
+Both `.mcp.json` and the workflow point their `playwright` MCP server at `http://127.0.0.1:8931/mcp`, a single headed `@playwright/mcp` instance launched with `--shared-browser-context`. The server is detached, so the browser stays open after the run.
+
 Or run the workflow directly from the repo root. Always pass `--web` so the live dashboard is visible; add `--skip-gates --no-interactive` for a hands-off run (auto-accepts the gate's first option — back up + reset — and avoids blocking on stdin in a non-interactive shell):
 
 ```

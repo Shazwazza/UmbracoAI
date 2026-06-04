@@ -14,13 +14,8 @@
       "tools": ["*"]
     },
     "playwright": {
-      "type": "stdio",
-      "command": "npx",
-      "args": [
-        "-y",
-        "@playwright/mcp@latest",
-        "--viewport-size="
-      ],
+      "type": "http",
+      "url": "http://127.0.0.1:8931/mcp",
       "tools": ["*"]
     },
     "a11y-accessibility": {

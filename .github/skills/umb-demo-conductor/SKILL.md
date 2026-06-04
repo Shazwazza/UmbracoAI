@@ -22,12 +22,33 @@ close the browser at any point.
 
 ## Prerequisites
 
-1. The Umbraco site must be running at `SITE_BASE_URL` (see Project
+1. **Start the shared Playwright MCP server FIRST.** Both this Copilot CLI
+   session and the Conductor workflow connect to a single headed Playwright
+   server over HTTP, so they drive the **same** visible browser window. Without
+   this, each consumer spawns its own browser and later steps appear to run
+   "behind the scenes" in a window nobody is watching. From the repo root:
+   ```powershell
+   powershell -ExecutionPolicy Bypass -File scripts/start-playwright-mcp.ps1
+   ```
+   This launches one detached, headed `@playwright/mcp` server with
+   `--shared-browser-context` on `http://127.0.0.1:8931/mcp`. It is idempotent
+   (reuses an already-running server) and detached (the browser stays open after
+   the run). **It must be up before the Copilot CLI session starts**, because the
+   CLI reads `.mcp.json` at launch — both `.mcp.json` and the workflow point
+   `playwright` at this HTTP endpoint.
+2. The Umbraco site must be running at `SITE_BASE_URL` (see Project
    Configuration in `copilot-instructions.md`). If not, start it with:
    `dotnet run --project src/MyProject/MyProject.csproj`.
-2. The `conductor` CLI must be installed. Check with `conductor --version`.
+3. The `conductor` CLI must be installed. Check with `conductor --version`.
    - If it is missing, install it per the Conductor skill's setup guide
      (`/.copilot/installed-plugins/conductor/.../references/setup.md`).
+
+### Launch order (important)
+
+1. `scripts/start-playwright-mcp.ps1` — start the shared headed browser server.
+2. Start the Copilot CLI session — it connects to the server via HTTP.
+3. Run the conductor workflow (below) — it connects to the **same** server, so
+   every step drives the one visible window.
 
 ## Running the workflow
 
@@ -59,8 +80,10 @@ conductor run .github/skills/umb-demo-conductor/umbraco-demo.yaml --workspace-in
   `.github/instructions/**/*.instructions.md` files), so the workflow does not
   duplicate them.
 - The workflow defines its own MCP servers (`umbraco-mcp`, `playwright`,
-  `a11y-accessibility`) mirroring `.mcp.json`, so the browser and Umbraco
-  connection persist across every step.
+  `a11y-accessibility`) mirroring `.mcp.json`. `playwright` is configured as an
+  HTTP server pointing at the shared headed browser started in the Prerequisites
+  (`http://127.0.0.1:8931/mcp`), so a single browser window persists across every
+  step. `umbraco-mcp` and `a11y-accessibility` remain stdio.
 - Override the site URL if needed:
   `--input site_base_url=http://localhost:14737`.
 
