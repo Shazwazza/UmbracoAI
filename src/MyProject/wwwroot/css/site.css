@@ -397,8 +397,58 @@ a:hover { text-decoration: underline; }
   color: var(--text-dim);
   font-size: 0.85rem;
 }
+
+/* ── Tag Cloud ── */
+.tag-cloud-section {
+  padding: 2.5rem 2rem 0;
+}
 
-/* ── Nav Logo as Link ── */
+.tag-cloud {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem 0.9rem;
+  align-items: center;
+  margin-top: 1rem;
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.75rem 2rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.tag-cloud::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--accent-teal), var(--accent-violet));
+}
+
+.tag-cloud-item {
+  font-family: var(--font-mono);
+  color: var(--accent-teal);
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  cursor: default;
+  transition: color 0.2s, text-shadow 0.2s;
+  white-space: nowrap;
+  line-height: 1.4;
+}
+
+.tag-cloud-item:hover {
+  color: #ffffff;
+  text-shadow: 0 0 12px var(--accent-teal);
+}
+
+.tag-cloud-count {
+  font-size: 0.62em;
+  color: var(--accent-violet);
+  margin-left: 0.25em;
+  vertical-align: super;
+  font-weight: 400;
+}
+
 a.nav-logo {
   font-family: var(--font-mono);
   font-size: 1.1rem;

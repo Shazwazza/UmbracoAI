@@ -4,7 +4,23 @@
     Layout = null;
     var pageTitle = Model.Value<string>("title") ?? "The AI Blog";
     var introText = Model.Value<string>("introText") ?? "";
-    var posts     = Model.Children?.Where(c => c.IsVisible()) ?? Enumerable.Empty<IPublishedContent>();
+    var posts     = (Model.Children?.Where(c => c.IsVisible()) ?? Enumerable.Empty<IPublishedContent>()).ToList();
+
+    // Build tag frequency map
+    var tagCounts = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase);
+    foreach (var post in posts)
+    {
+        var postTags = post.Value<IEnumerable<string>>("tags") ?? Enumerable.Empty<string>();
+        foreach (var tag in postTags)
+        {
+            var t = tag.Trim();
+            if (!string.IsNullOrWhiteSpace(t))
+                tagCounts[t] = tagCounts.TryGetValue(t, out var c) ? c + 1 : 1;
+        }
+    }
+
+    int minCount = tagCounts.Count > 0 ? tagCounts.Values.Min() : 1;
+    int maxCount = tagCounts.Count > 0 ? tagCounts.Values.Max() : 1;
 }
 <!DOCTYPE html>
 <html lang="en">
@@ -29,6 +45,30 @@
             }
         </div>
     </section>
+
+    @if (tagCounts.Count > 0)
+    {
+        <section class="tag-cloud-section">
+            <div class="container">
+                <p class="section-label">// by topic</p>
+                <div class="tag-cloud">
+                    @foreach (var kv in tagCounts.OrderByDescending(x => x.Value))
+                    {
+                        // Map count to a font size range: 0.75rem (min) → 1.8rem (max)
+                        double ratio = maxCount == minCount ? 0.5 : (double)(kv.Value - minCount) / (maxCount - minCount);
+                        double fontSize = 0.75 + ratio * 1.05;
+                        double opacity  = 0.55 + ratio * 0.45;
+                        <span class="tag-cloud-item"
+                              style="font-size: @fontSize.ToString("F2", System.Globalization.CultureInfo.InvariantCulture)rem;
+                                     opacity: @opacity.ToString("F2", System.Globalization.CultureInfo.InvariantCulture);">
+                            @kv.Key
+                            <span class="tag-cloud-count">×@kv.Value</span>
+                        </span>
+                    }
+                </div>
+            </div>
+        </section>
+    }
 
     <section class="section" style="padding-top: 2rem;">
         <div class="container">
