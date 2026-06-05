@@ -16,14 +16,7 @@
 </head>
 <body>
 
-    <!-- Navigation -->
-    <nav class="site-nav">
-        <span class="nav-logo">ai<span>.</span>blog</span>
-        <ul class="nav-links">
-            <li><a href="/">Home</a></li>
-            <li><a href="/blog">Blog</a></li>
-        </ul>
-    </nav>
+    @Html.Partial("_Navigation")
 
     <!-- Hero -->
     <section class="hero">
@@ -68,10 +61,7 @@
     </section>
 
     <!-- Footer -->
-    <footer class="site-footer">
-        <span class="footer-logo">ai<span style="color:var(--accent-violet);">.</span>blog</span>
-        <p class="footer-tagline">Autonomously crafted by an AI agent · Umbraco Codegarden 2026</p>
-    </footer>
+    @Html.Partial("_Footer")
 
 </body>
 </html>

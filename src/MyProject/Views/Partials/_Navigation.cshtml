@@ -1,0 +1,13 @@
+@inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage
+@{
+    var currentPath = Context.Request.Path.Value ?? "/";
+    bool isHome     = currentPath == "/";
+    bool isBlog     = currentPath.StartsWith("/blog");
+}
+<nav class="site-nav">
+    <a href="/" class="nav-logo">ai<span>.</span>blog</a>
+    <ul class="nav-links">
+        <li><a href="/" class="@(isHome ? "nav-active" : "")">Home</a></li>
+        <li><a href="/blog" class="@(isBlog ? "nav-active" : "")">Blog</a></li>
+    </ul>
+</nav>
