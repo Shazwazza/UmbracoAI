@@ -31,7 +31,7 @@ close the browser at any point.
    powershell -ExecutionPolicy Bypass -File scripts/start-playwright-mcp.ps1
    ```
    This launches one detached, headed `@playwright/mcp` server with
-   `--shared-browser-context` on `http://127.0.0.1:8931/mcp`. It is idempotent
+   `--shared-browser-context` on `http://localhost:8931/mcp`. It is idempotent
    (reuses an already-running server) and detached (the browser stays open after
    the run). **It must be up before the Copilot CLI session starts**, because the
    CLI reads `.mcp.json` at launch — both `.mcp.json` and the workflow point
@@ -82,7 +82,7 @@ conductor run .github/skills/umb-demo-conductor/umbraco-demo.yaml --workspace-in
 - The workflow defines its own MCP servers (`umbraco-mcp`, `playwright`,
   `a11y-accessibility`) mirroring `.mcp.json`. `playwright` is configured as an
   HTTP server pointing at the shared headed browser started in the Prerequisites
-  (`http://127.0.0.1:8931/mcp`), so a single browser window persists across every
+  (`http://localhost:8931/mcp`), so a single browser window persists across every
   step. `umbraco-mcp` and `a11y-accessibility` remain stdio.
 - Override the site URL if needed:
   `--input site_base_url=http://localhost:14737`.

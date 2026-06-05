@@ -30,7 +30,7 @@ Closing it ruins the demo.
 
 1. Confirm the **shared Playwright MCP server** is running. Both this session and
    the workflow connect to one headed Playwright server over HTTP
-   (`http://127.0.0.1:8931/mcp`) so they share a single, audience-visible browser
+   (`http://localhost:8931/mcp`) so they share a single, audience-visible browser
    window. If it is not already up, start it from the repo root:
    `powershell -ExecutionPolicy Bypass -File scripts/start-playwright-mcp.ps1`
    (detached, idempotent, headed, `--shared-browser-context`). It must be running
