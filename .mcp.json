@@ -15,7 +15,7 @@
     },
     "playwright": {
       "type": "http",
-      "url": "http://127.0.0.1:8931/mcp",
+      "url": "http://localhost:8931/mcp",
       "tools": ["*"]
     },
     "a11y-accessibility": {

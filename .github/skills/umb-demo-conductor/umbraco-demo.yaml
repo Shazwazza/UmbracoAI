@@ -35,7 +35,7 @@ workflow:
         tools: ["*"]
       playwright:
         type: http
-        url: http://127.0.0.1:8931/mcp
+        url: http://localhost:8931/mcp
         tools: ["*"]
       a11y-accessibility:
         command: npx
@@ -81,6 +81,13 @@ workflow:
         the relevant page and confirm it renders without errors. A page has an
         error if a `div` with id `stackpage` is present — fix it before
         finishing.
+      - Validate ONLY with the provided Playwright `browser_*` MCP tools (e.g.
+        `browser_navigate`, `browser_snapshot`). You MUST NOT install Playwright
+        or any npm package, MUST NOT write or run a custom script (JS/Node/shell)
+        to load or check the site, and MUST NOT use curl or direct HTTP requests
+        for validation. If the `browser_*` MCP tools are not available to you,
+        STOP immediately and report that the Playwright MCP server is
+        unavailable — do not improvise an alternative validation method.
       - Then make a git commit for your step before reporting done. Each step
         gets its own commit. The step is not complete until the commit exists.
         Include this trailer in the commit message:

@@ -35,7 +35,7 @@ $ErrorActionPreference = "Stop"
 # (Playwright then errors with "too many arguments"). LOCALAPPDATA is the
 # conventional, reliably space-free home for a browser profile.
 $profileDir = Join-Path $env:LOCALAPPDATA "umbraco-demo-playwright-mcp"
-$mcpUrl = "http://127.0.0.1:$Port/mcp"
+$mcpUrl = "http://localhost:$Port/mcp"
 
 # --- Idempotency: skip if a server is already listening on the port ----------
 $listening = $false
@@ -60,6 +60,7 @@ $mcpArgs = @(
     "-y", "@playwright/mcp@$Version",
     "--port", "$Port",
     "--host", "127.0.0.1",
+    "--allowed-hosts", "localhost,127.0.0.1,localhost:$Port,127.0.0.1:$Port",
     "--shared-browser-context",
     "--user-data-dir", "$profileDir",
     "--viewport-size", "1280x720"
