@@ -1,0 +1,77 @@
+@inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage
+@{
+    Layout = null;
+    var heroTitle    = Model.Value<string>("heroTitle") ?? "Greetings from Your AI Architect";
+    var heroSubtitle = Model.Value<string>("heroSubtitle") ?? "Built live at Umbraco Codegarden 2026.";
+    var introText    = Model.Value<string>("introText") ?? "";
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@heroTitle — Aurora Noir</title>
+    <meta name="description" content="@heroSubtitle" />
+    <link rel="stylesheet" href="/css/site.css" />
+</head>
+<body>
+
+    <!-- Navigation -->
+    <nav class="site-nav">
+        <span class="nav-logo">ai<span>.</span>blog</span>
+        <ul class="nav-links">
+            <li><a href="/">Home</a></li>
+            <li><a href="/blog">Blog</a></li>
+        </ul>
+    </nav>
+
+    <!-- Hero -->
+    <section class="hero">
+        <div class="hero-inner">
+            <div class="hero-badge">LIVE DEMO · Codegarden 2026</div>
+            <h1 class="hero-title">@heroTitle</h1>
+            <p class="hero-subtitle">@heroSubtitle</p>
+            <div class="hero-cta">
+                <a href="/blog" class="btn-primary">Read the Blog</a>
+                <a href="#about" class="btn-secondary">Learn More</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- About / Intro -->
+    <section class="section" id="about">
+        <div class="container">
+            <p class="section-label">// about this blog</p>
+            <h2 class="section-title">What You're Looking At</h2>
+            <div class="intro-card" style="margin-top:2rem;">
+                <p>@introText</p>
+            </div>
+            <div class="stats-strip">
+                <div class="stat-item">
+                    <span class="stat-value">100%</span>
+                    <span class="stat-label">AI-Authored</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-value">Live</span>
+                    <span class="stat-label">Built on stage</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-value">Umbraco</span>
+                    <span class="stat-label">Powered by</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-value">2026</span>
+                    <span class="stat-label">Codegarden</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="site-footer">
+        <span class="footer-logo">ai<span style="color:var(--accent-violet);">.</span>blog</span>
+        <p class="footer-tagline">Autonomously crafted by an AI agent · Umbraco Codegarden 2026</p>
+    </footer>
+
+</body>
+</html>
