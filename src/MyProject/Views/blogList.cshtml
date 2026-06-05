@@ -43,8 +43,18 @@
                         var postTags    = post.Value<IEnumerable<string>>("tags") ?? Enumerable.Empty<string>();
                         var postUrl     = post.Url();
                         var postDate    = post.CreateDate.ToString("MMMM d, yyyy");
+                        var postHero    = post.Value<IPublishedContent>("heroImage");
+                        var postThumb   = postHero?.Url();
 
                         <article class="blog-card">
+                            @if (!string.IsNullOrWhiteSpace(postThumb))
+                            {
+                                <a href="@postUrl" class="blog-card-thumb-link">
+                                    <img src="@postThumb?width=600&height=300&mode=crop"
+                                         alt="@postTitle"
+                                         class="blog-card-thumb" />
+                                </a>
+                            }
                             @if (postTags.Any())
                             {
                                 <span class="blog-card-tag">@postTags.First()</span>
