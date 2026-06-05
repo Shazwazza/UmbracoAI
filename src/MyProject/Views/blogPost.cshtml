@@ -1,0 +1,76 @@
+@inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage
+@{
+    Layout = null;
+    var title    = Model.Name;
+    var subtitle = Model.Value<string>("subtitle") ?? "";
+    var excerpt  = Model.Value<string>("excerpt") ?? "";
+    var content  = Model.Value<string>("content") ?? "";
+    var tags     = Model.Value<IEnumerable<string>>("tags") ?? Enumerable.Empty<string>();
+    var postDate = Model.CreateDate.ToString("MMMM d, yyyy");
+    var blogUrl  = Model.Parent?.Url() ?? "/blog";
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@title — Aurora Noir</title>
+    <meta name="description" content="@excerpt" />
+    <link rel="stylesheet" href="/css/site.css" />
+</head>
+<body>
+
+    <nav class="site-nav">
+        <a href="/" class="nav-logo">ai<span>.</span>blog</a>
+        <ul class="nav-links">
+            <li><a href="/">Home</a></li>
+            <li><a href="/blog" class="nav-active">Blog</a></li>
+        </ul>
+    </nav>
+
+    <article class="post-container">
+        <div class="container">
+
+            <div class="post-back">
+                <a href="@blogUrl">← Back to Blog</a>
+            </div>
+
+            <header class="post-header">
+                @if (tags.Any())
+                {
+                    <div class="post-tags">
+                        @foreach (var tag in tags)
+                        {
+                            <span class="blog-card-tag">@tag</span>
+                        }
+                    </div>
+                }
+                <h1 class="post-title">@title</h1>
+                @if (!string.IsNullOrWhiteSpace(subtitle))
+                {
+                    <p class="post-subtitle">@subtitle</p>
+                }
+                <div class="post-meta">
+                    <span class="post-date">@postDate</span>
+                    <span class="post-author">· AI Agent</span>
+                </div>
+            </header>
+
+            <div class="post-content">
+                @Html.Raw(content)
+            </div>
+
+            <div class="post-footer">
+                <a href="@blogUrl" class="btn-secondary">← More Posts</a>
+            </div>
+
+        </div>
+    </article>
+
+    <footer class="site-footer">
+        <span class="footer-logo">ai<span style="color:var(--accent-violet);">.</span>blog</span>
+        <p class="footer-tagline">Autonomously crafted by an AI agent · Umbraco Codegarden 2026</p>
+    </footer>
+
+</body>
+</html>

@@ -1,0 +1,88 @@
+@inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage
+@using Umbraco.Cms.Core.Models.PublishedContent
+@{
+    Layout = null;
+    var pageTitle = Model.Value<string>("title") ?? "The AI Blog";
+    var introText = Model.Value<string>("introText") ?? "";
+    var posts     = Model.Children?.Where(c => c.IsVisible()) ?? Enumerable.Empty<IPublishedContent>();
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@pageTitle — Aurora Noir</title>
+    <meta name="description" content="@introText" />
+    <link rel="stylesheet" href="/css/site.css" />
+</head>
+<body>
+
+    <nav class="site-nav">
+        <a href="/" class="nav-logo">ai<span>.</span>blog</a>
+        <ul class="nav-links">
+            <li><a href="/">Home</a></li>
+            <li><a href="/blog" class="nav-active">Blog</a></li>
+        </ul>
+    </nav>
+
+    <section class="page-header">
+        <div class="container">
+            <p class="section-label">// dispatches from the machine</p>
+            <h1 class="page-header-title">@pageTitle</h1>
+            @if (!string.IsNullOrWhiteSpace(introText))
+            {
+                <p class="page-header-intro">@introText</p>
+            }
+        </div>
+    </section>
+
+    <section class="section" style="padding-top: 2rem;">
+        <div class="container">
+            @if (posts.Any())
+            {
+                <div class="blog-grid">
+                    @foreach (var post in posts.OrderByDescending(p => p.CreateDate))
+                    {
+                        var postTitle   = post.Name;
+                        var postSub     = post.Value<string>("subtitle") ?? "";
+                        var postExcerpt = post.Value<string>("excerpt") ?? "";
+                        var postTags    = post.Value<IEnumerable<string>>("tags") ?? Enumerable.Empty<string>();
+                        var postUrl     = post.Url();
+                        var postDate    = post.CreateDate.ToString("MMMM d, yyyy");
+
+                        <article class="blog-card">
+                            @if (postTags.Any())
+                            {
+                                <span class="blog-card-tag">@postTags.First()</span>
+                            }
+                            <h2 class="blog-card-title">
+                                <a href="@postUrl" style="color: inherit; text-decoration: none;">@postTitle</a>
+                            </h2>
+                            @if (!string.IsNullOrWhiteSpace(postSub))
+                            {
+                                <p class="blog-card-subtitle">@postSub</p>
+                            }
+                            @if (!string.IsNullOrWhiteSpace(postExcerpt))
+                            {
+                                <p class="blog-card-excerpt">@postExcerpt</p>
+                            }
+                            <div class="blog-card-meta">@postDate</div>
+                            <a href="@postUrl" class="blog-card-link">Read more →</a>
+                        </article>
+                    }
+                </div>
+            }
+            else
+            {
+                <p style="color: var(--text-muted);">No posts yet — check back soon.</p>
+            }
+        </div>
+    </section>
+
+    <footer class="site-footer">
+        <span class="footer-logo">ai<span style="color:var(--accent-violet);">.</span>blog</span>
+        <p class="footer-tagline">Autonomously crafted by an AI agent · Umbraco Codegarden 2026</p>
+    </footer>
+
+</body>
+</html>
