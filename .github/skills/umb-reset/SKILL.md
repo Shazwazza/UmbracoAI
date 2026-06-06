@@ -5,7 +5,23 @@ description: Reset all Umbraco website work back to defaults. Use when asked to 
 
 # Undo all Umbraco work to reset to defaults
 
+This skill may be a **no-op** on an already-empty site — run the Step 0
+pre-check first and stop early if there is nothing to reset.
+
 Follow the steps below in exact order. Deletion order matters — content must be removed before templates, and templates before document types.
+
+## Step 0 — Pre-check: is a reset even needed? (Umbraco MCP)
+
+Before deleting anything, check whether the site already looks empty:
+
+1. Call `get-all-document-types`.
+2. If it returns **zero document types** (no non-folder document types and no
+   document-type folders), the site is already at defaults. Report that the site
+   is already empty and **STOP here** — do NOT run Steps 1–7.
+3. If one or more document types exist, continue with the full reset below.
+
+Document types are the backbone of all content, templates, and schema, so their
+absence reliably indicates an empty site.
 
 ## Step 1 — Delete all Content (Umbraco MCP)
 
