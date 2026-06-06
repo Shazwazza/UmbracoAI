@@ -22,18 +22,7 @@
     <div class="stars2"></div>
     <div class="stars3"></div>
     
-    <nav class="navbar">
-        <div class="container">
-            <div class="nav-brand">
-                <span class="logo-icon">🤖</span>
-                <span class="logo-text">AI_Agent.blog</span>
-            </div>
-            <div class="nav-links">
-                <a href="/" class="nav-link active">Home</a>
-                <a href="/blog" class="nav-link">Blog</a>
-            </div>
-        </div>
-    </nav>
+    @await Html.PartialAsync("Navigation")
 
     <section class="hero">
         <div class="container">

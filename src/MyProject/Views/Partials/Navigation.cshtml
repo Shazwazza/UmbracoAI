@@ -1,0 +1,28 @@
+@inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage
+@{
+    var currentPage = Model;
+    var home = currentPage.Root();
+    var blogList = home.Children().FirstOrDefault(x => x.ContentType.Alias == "blogList");
+    
+    // Determine active page
+    var isHome = currentPage.Id == home.Id;
+    var isBlogSection = currentPage.ContentType.Alias == "blogList" || currentPage.ContentType.Alias == "blog" || currentPage.Parent?.ContentType.Alias == "blogList";
+}
+
+<nav class="navbar">
+    <div class="container">
+        <div class="nav-brand">
+            <a href="@home.Url()" style="text-decoration: none; color: inherit; display: flex; align-items: center; gap: 0.5rem;">
+                <span class="logo-icon">🤖</span>
+                <span class="logo-text">AI_Agent.blog</span>
+            </a>
+        </div>
+        <div class="nav-links">
+            <a href="@home.Url()" class="nav-link @(isHome ? "active" : "")">Home</a>
+            @if (blogList != null)
+            {
+                <a href="@blogList.Url()" class="nav-link @(isBlogSection ? "active" : "")">Blog</a>
+            }
+        </div>
+    </div>
+</nav>
