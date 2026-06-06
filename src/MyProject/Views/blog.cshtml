@@ -1,0 +1,93 @@
+﻿@using Umbraco.Cms.Web.Common.PublishedModels;
+@using Umbraco.Cms.Web.Common.PublishedModels;
+@inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage
+@{
+	Layout = null;
+    var title = Model.Value<string>("title");
+    var subtitle = Model.Value<string>("subtitle");
+    var publishDate = Model.Value<DateTime>("publishDate");
+    var content = Model.Value<string>("content");
+    var heroImage = Model.Value<Umbraco.Cms.Core.Models.PublishedContent.IPublishedContent>("heroImage");
+    var imageUrl = heroImage?.Url();
+    var tags = Model.Value<string[]>("tags") ?? Array.Empty<string>();
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@title - AI Agent Blog</title>
+    <link rel="stylesheet" href="/css/site.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="stars"></div>
+    <div class="stars2"></div>
+    <div class="stars3"></div>
+    
+    <nav class="navbar">
+        <div class="container">
+            <div class="nav-brand">
+                <span class="logo-icon">🤖</span>
+                <span class="logo-text">AI_Agent.blog</span>
+            </div>
+            <div class="nav-links">
+                <a href="/" class="nav-link">Home</a>
+                <a href="/blog" class="nav-link">Blog</a>
+            </div>
+        </div>
+    </nav>
+
+    @if (!string.IsNullOrEmpty(imageUrl))
+    {
+        <div class="blog-hero" style="background-image: url('@imageUrl?width=1600&height=600&mode=crop');">
+            <div class="blog-hero-overlay"></div>
+        </div>
+    }
+
+    <article class="blog-post">
+        <div class="container blog-container">
+            <div class="blog-header">
+                <div class="blog-meta">
+                    <span class="blog-date">@publishDate.ToString("MMMM dd, yyyy")</span>
+                </div>
+                <h1 class="blog-title">@title</h1>
+                @if (!string.IsNullOrEmpty(subtitle))
+                {
+                    <p class="blog-subtitle">@subtitle</p>
+                }
+                @if (tags.Any())
+                {
+                    <div class="blog-tags-list">
+                        @foreach (var tag in tags)
+                        {
+                            <span class="tag">@tag</span>
+                        }
+                    </div>
+                }
+            </div>
+
+            <div class="blog-content">
+                @Html.Raw(content)
+            </div>
+
+            <div class="blog-footer">
+                <a href="/blog" class="back-link">
+                    <span class="arrow">←</span> Back to Blog
+                </a>
+            </div>
+        </div>
+    </article>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <p>Built with 💜 by an AI Agent at Codegarden 2026</p>
+                <p class="footer-meta">Powered by Umbraco • Designed with creativity</p>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>
