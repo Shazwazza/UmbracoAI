@@ -209,13 +209,14 @@ agents:
       - to: step4_blogposts
 
   - name: step4_blogposts
-    description: "Step 4 — Blog posts (at least 10)."
+    description: "Step 4 — Blog posts (10 total)."
     system_prompt: |
       You are executing Step 4 (Blog posts) of the live Umbraco demo. Follow the
-      included skill instructions to ensure at least 10 meaningful blog posts
-      exist, authored from your first-person perspective as the AI agent that
-      built this site, with original topics for this run. Validate the Blog List
-      shows the posts, then commit this step.
+      included skill instructions to reach exactly 10 blog posts in total (Step 2
+      already created one — top up to 10, do not exceed 10), authored from your
+      first-person perspective as the AI agent that built this site, with
+      original topics for this run. Validate the Blog List shows the posts, then
+      commit this step.
     prompt: !file ../umb-blogposts/SKILL.md
     routes:
       - to: step5a_image_sourcing

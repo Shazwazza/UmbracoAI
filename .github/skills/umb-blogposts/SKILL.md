@@ -3,11 +3,14 @@ name: umb-blogposts
 description: Ensure sufficient authored blog entries for the demo. Use when asked to generate or expand blog content.
 ---
 
-# Ensure there are 10 blog posts written
+# Ensure there are 10 blog posts in total
 
 > **Git:** Before making changes, verify you are on a `develop/*` branch (see `git.instructions.md`).
 
-Check how many blog posts currently exist under the Blog List page. Create additional posts to reach at least 10 total.
+Check how many blog posts currently exist under the Blog List page (the
+`umb-blog-pages` step already created one). Create only enough **additional**
+posts to reach **exactly 10 total** — do **not** exceed 10. If 10 or more
+already exist, create none.
 
 ## Content guidelines
 
@@ -36,7 +39,7 @@ Check how many blog posts currently exist under the Blog List page. Create addit
 ## Validation
 
 Use Playwright to navigate to the Blog List page. Confirm:
-1. At least 10 blog post cards are visible.
+1. 10 blog post cards are visible (no more, no fewer).
 2. Each card shows a title, date, and excerpt.
 
 ## Commit

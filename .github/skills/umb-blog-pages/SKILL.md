@@ -16,7 +16,7 @@ description: Create Blog List and Blog page document types, templates, and start
   * Blog posts should be authored in Markdown so choose an appropriate property editor to allow for this.
   * Ensure there is a Template assigned for this Document Type.
   * Produce the HTML, Razor and CSS to render the Blog page.
-  * Ensure there are a few Blog pages created and published.
+  * Ensure there is a single Blog page created and published. (The `umb-blogposts` step bulk-creates the rest later.)
 
 ## Validation
 

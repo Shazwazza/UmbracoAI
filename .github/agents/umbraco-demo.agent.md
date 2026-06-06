@@ -60,7 +60,7 @@ Work through each step in order. After completing each step, use the Playwright 
 <step order="2" skill="umb-blog-pages">
   <name>Blog pages</name>
   <actions>
-    <action>Create the Blog List and Blog Post document types, templates, and a few starter blog posts.</action>
+    <action>Create the Blog List and Blog Post document types, templates, and a single starter blog post.</action>
   </actions>
   <validate>Open `SITE_BASE_URL` in Playwright. Navigate to the Blog List page. Confirm it loads and lists at least one blog post without errors.</validate>
   <commit>true</commit>
@@ -79,9 +79,9 @@ Work through each step in order. After completing each step, use the Playwright 
 <step order="4" skill="umb-blogposts">
   <name>Blog posts</name>
   <actions>
-    <action>Ensure at least 10 blog posts exist, each with meaningful content.</action>
+    <action>Ensure exactly 10 blog posts exist in total, each with meaningful content. Top up to 10 — do not exceed 10.</action>
   </actions>
-  <validate>Use Playwright to open the Blog List page and confirm at least 10 posts are visible or linked.</validate>
+  <validate>Use Playwright to open the Blog List page and confirm 10 posts are visible or linked.</validate>
   <commit>true</commit>
 </step>
 
