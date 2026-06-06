@@ -132,7 +132,6 @@ Work through each step in order. After completing each step, use the Playwright 
 
 ## After all steps complete
 
-- Run a final Playwright check on `SITE_BASE_URL` and navigate through the entire site.
 - Summarise what was built: pages created, blog posts authored, skills run, and any issues fixed along the way.
 - Announce the demo is complete.
 - Leave the browser OPEN on the finished site — see the "CRITICAL BROWSER RULES" at the top. Never call `browser_close`.

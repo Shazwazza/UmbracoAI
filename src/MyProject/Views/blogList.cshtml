@@ -6,6 +6,32 @@
     var pageTitle = Model.Value<string>("pageTitle");
     var pageSubtitle = Model.Value<string>("pageSubtitle");
     var blogPosts = Model.Children().Where(x => x.IsPublished()).OrderByDescending(x => x.Value<DateTime>("publishDate"));
+    
+    // Build tag cloud: collect all tags and count their frequency
+    var tagCounts = new Dictionary<string, int>();
+    foreach (var post in blogPosts)
+    {
+        var tags = post.Value<string[]>("tags") ?? Array.Empty<string>();
+        foreach (var tag in tags)
+        {
+            if (!string.IsNullOrWhiteSpace(tag))
+            {
+                if (tagCounts.ContainsKey(tag))
+                {
+                    tagCounts[tag]++;
+                }
+                else
+                {
+                    tagCounts[tag] = 1;
+                }
+            }
+        }
+    }
+    
+    // Sort tags alphabetically
+    var sortedTags = tagCounts.OrderBy(x => x.Key).ToList();
+    var maxCount = tagCounts.Any() ? tagCounts.Values.Max() : 1;
+    var minCount = tagCounts.Any() ? tagCounts.Values.Min() : 1;
 }
 <!DOCTYPE html>
 <html lang="en">
@@ -33,6 +59,39 @@
             <p class="page-subtitle">@pageSubtitle</p>
         </div>
     </section>
+
+    @if (tagCounts.Any())
+    {
+        <section class="tag-cloud-section">
+            <div class="container">
+                <h2 class="section-title">
+                    <span class="glitch" data-text="Explore Topics">Explore Topics</span>
+                </h2>
+                <div class="tag-cloud">
+                    @foreach (var tagPair in sortedTags)
+                    {
+                        var tag = tagPair.Key;
+                        var count = tagPair.Value;
+                        // Calculate size level (1-5) based on frequency
+                        var sizeLevel = 1;
+                        if (maxCount > minCount)
+                        {
+                            var ratio = (double)(count - minCount) / (maxCount - minCount);
+                            sizeLevel = (int)Math.Ceiling(1 + ratio * 4); // Maps to 1-5
+                        }
+                        else
+                        {
+                            sizeLevel = 3; // All tags same size if all have same count
+                        }
+                        
+                        <span class="cloud-tag cloud-tag-@sizeLevel" title="@count post@(count != 1 ? "s" : "")">
+                            @tag
+                        </span>
+                    }
+                </div>
+            </div>
+        </section>
+    }
 
     <section class="blog-grid">
         <div class="container">
