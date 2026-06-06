@@ -329,7 +329,7 @@ body {
 .footer-meta {
     font-family: 'JetBrains Mono', monospace;
     font-size: 0.9rem;
-    opacity: 0.7;
+    color: #9a9a9d; /* Increased contrast from #727275 to meet 4.5:1 ratio */
 }
 
 /* Responsive Design */
@@ -460,7 +460,7 @@ body {
     background: rgba(157, 78, 221, 0.2);
     border: 1px solid rgba(157, 78, 221, 0.3);
     border-radius: 20px;
-    color: var(--primary);
+    color: #c88efa; /* Increased contrast from #9d4edd to meet 4.5:1 ratio */
     font-family: 'JetBrains Mono', monospace;
 }
 
@@ -724,32 +724,30 @@ body {
 /* Tag size levels based on frequency */
 .cloud-tag-1 {
     font-size: 0.85rem;
-    opacity: 0.7;
+    color: #b56fe8; /* Increased contrast from reduced opacity purple */
 }
 
 .cloud-tag-2 {
     font-size: 1rem;
-    opacity: 0.8;
+    color: #c088f0; /* Increased contrast from reduced opacity purple */
 }
 
 .cloud-tag-3 {
     font-size: 1.25rem;
-    opacity: 0.9;
+    color: #cfa0f5; /* Increased contrast for better visibility */
 }
 
 .cloud-tag-4 {
     font-size: 1.5rem;
-    opacity: 0.95;
     border-color: rgba(0, 217, 255, 0.4);
-    color: var(--secondary);
+    color: #4de1ff; /* Increased contrast for secondary color */
 }
 
 .cloud-tag-5 {
     font-size: 1.85rem;
     font-weight: 600;
-    opacity: 1;
     border-color: var(--accent);
-    color: var(--accent);
+    color: #ff4d94; /* Increased contrast for accent color */
     box-shadow: 0 0 10px rgba(255, 0, 110, 0.3);
 }
 
