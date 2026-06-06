@@ -1,6 +1,6 @@
 ---
 description: Rules for working git
-applyTo: '**/*'
+applyTo: '**'
 ---
 # Git
 

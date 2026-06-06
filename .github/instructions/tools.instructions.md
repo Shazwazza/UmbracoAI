@@ -1,6 +1,6 @@
 ---
 description: Rules for using MCP tools
-applyTo: '**/*'
+applyTo: '**'
 ---
 # Rules for using MCP tools
 

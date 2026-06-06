@@ -1,6 +1,6 @@
 ---
 description: Umbraco best practices
-applyTo: '**/*'
+applyTo: '**'
 ---
 # Umbraco best practices & rules
 

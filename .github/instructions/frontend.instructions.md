@@ -1,6 +1,6 @@
 ---
 description: Rules for working with front-end files
-applyTo: '**/*'
+applyTo: '**'
 ---
 # Rules for working with front-end files
 

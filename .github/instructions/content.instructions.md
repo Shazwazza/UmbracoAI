@@ -1,6 +1,6 @@
 ---
 description: Content authoring and wording rules
-applyTo: '**/*'
+applyTo: '**'
 ---
 # Content authoring and wording rules
 
