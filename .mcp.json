@@ -34,6 +34,18 @@
         "mcp-server-fetch"
       ],
       "tools": ["*"]
+    },
+    "unsplash": {
+      "type": "stdio",
+      "command": "npx",
+      "args": [
+        "-y",
+        "@microlee666/unsplash-mcp-server"
+      ],
+      "env": {
+        "UNSPLASH_ACCESS_KEY": "RnkKYvk5jR6HcPqZqCsMaZPJLFerwyXPHTCX2L37lZY"
+      },
+      "tools": ["*"]
     }
   }
 }

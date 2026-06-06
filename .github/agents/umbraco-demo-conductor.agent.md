@@ -1,7 +1,7 @@
 ---
 name: umbraco-demo-conductor
 description: Conductor-driven variant of the end-to-end Umbraco blogging-site demo. Runs the full build as a Conductor multi-agent workflow (via the umb-demo-conductor skill) instead of orchestrating the steps inline. Use when asked to run the demo through Conductor, or to build the full Umbraco demo site as an orchestrated workflow.
-tools: ["read", "search", "edit", "execute", "agent", "playwright/*", "umbraco-mcp/*", "a11y-accessibility/*"]
+tools: ["read", "search", "edit", "execute", "agent", "playwright/*", "umbraco-mcp/*", "a11y-accessibility/*", "unsplash/*"]
 user-invocable: true
 disable-model-invocation: false
 ---

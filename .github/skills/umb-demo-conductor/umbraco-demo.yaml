@@ -41,6 +41,12 @@ workflow:
         command: npx
         args: ["-y", "a11y-mcp-server"]
         tools: ["*"]
+      unsplash:
+        command: npx
+        args: ["-y", "@microlee666/unsplash-mcp-server"]
+        env:
+          UNSPLASH_ACCESS_KEY: "RnkKYvk5jR6HcPqZqCsMaZPJLFerwyXPHTCX2L37lZY"
+        tools: ["*"]
 
   context:
     mode: accumulate
@@ -70,6 +76,9 @@ workflow:
       UMBRACO MCP RULES:
       - Use ONLY the umbraco-mcp tools for Umbraco backoffice operations. Never
         use curl or direct HTTP/API calls to Umbraco.
+      - The `unsplash` MCP server (and any fetch tool) is for IMAGE DISCOVERY
+        ONLY — never use it to reach Umbraco. Umbraco access is always through
+        umbraco-mcp.
       - All write operations (create, update, delete, move, publish, unpublish)
         MUST be issued ONE AT A TIME — never in parallel (LocalDB uses
         table-level locks). Read operations may be parallelised.
@@ -214,15 +223,33 @@ agents:
       shows the posts, then commit this step.
     prompt: !file ../umb-blogposts/SKILL.md
     routes:
+      - to: step5a_image_sourcing
+
+  - name: step5a_image_sourcing
+    description: "Step 5a — Source hero images from Unsplash into Umbraco media."
+    system_prompt: |
+      You are executing Step 5a (Image sourcing) of the live Umbraco demo. Follow
+      the included skill instructions to query Unsplash via the `unsplash` MCP
+      server and upload one topical hero image per blog post into a "Blog Hero
+      Images" media folder. The `unsplash` server is for image discovery ONLY —
+      never use it (or any fetch tool) to reach Umbraco; all Umbraco operations
+      go through umbraco-mcp. If the `unsplash` server is unavailable, use the
+      documented Lorem Picsum fallback so every post still gets an image. This
+      step uploads media only — assigning and rendering happens in the next step.
+      Do not require a separate commit; the images are committed in the next step.
+    prompt: !file ../umb-image-sourcing/SKILL.md
+    routes:
       - to: step5_blogpost_images
 
   - name: step5_blogpost_images
     description: "Step 5 — Hero images on blog posts."
     system_prompt: |
-      You are executing Step 5 (Blog post images) of the live Umbraco demo.
-      Follow the included skill instructions to add a hero image to each blog
-      post and render thumbnails/heroes in the templates. Validate images render
-      on the Blog List and a Blog Post page, then commit this step.
+      You are executing Step 5 (Blog post images) of the live Umbraco demo. The
+      hero images were already sourced and uploaded into the "Blog Hero Images"
+      media folder in Step 5a. Follow the included skill instructions to ASSIGN a
+      hero image to each blog post and RENDER thumbnails/heroes in the templates
+      (do not re-source images). Validate images render on the Blog List and a
+      Blog Post page, then commit this step.
     prompt: !file ../umb-blogpost-images/SKILL.md
     routes:
       - to: step6_tagcloud

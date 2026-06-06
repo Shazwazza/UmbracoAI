@@ -10,9 +10,9 @@ This skill runs the complete 8-step Umbraco blogging-site demo as a
 workflow file lives next to this skill at
 [`umbraco-demo.yaml`](./umbraco-demo.yaml) and embeds each existing demo step by
 `!file`-including its `SKILL.md` (`umb-homepage`, `umb-blog-pages`,
-`umb-navigation`, `umb-blogposts`, `umb-blogpost-images`, `umb-tagcloud`,
-`umb-sitemap`, `umb-accessibility`), plus an optional backup/reset and a branch
-setup step.
+`umb-navigation`, `umb-blogposts`, `umb-image-sourcing`, `umb-blogpost-images`,
+`umb-tagcloud`, `umb-sitemap`, `umb-accessibility`), plus an optional
+backup/reset and a branch setup step.
 
 ## ⚠️ Critical browser rule
 
@@ -125,11 +125,15 @@ conductor show .github/skills/umb-demo-conductor/umbraco-demo.yaml
 4. **Step 2 — Blog pages** (`umb-blog-pages`).
 5. **Step 3 — Navigation** (`umb-navigation`).
 6. **Step 4 — Blog posts** (`umb-blogposts`).
-7. **Step 5 — Blog post images** (`umb-blogpost-images`).
-8. **Step 6 — Tag cloud** (`umb-tagcloud`).
-9. **Step 7 — Sitemap** (`umb-sitemap`).
-10. **Step 8 — Accessibility** (`umb-accessibility`).
-11. **Final** — whole-site validation in Playwright and a written summary; the
+7. **Step 5a — Image sourcing** (`umb-image-sourcing`) — query Unsplash via the
+   `unsplash` MCP server and upload one hero image per post into Umbraco media
+   (Lorem Picsum fallback if Unsplash is unavailable).
+8. **Step 5 — Blog post images** (`umb-blogpost-images`) — assign the sourced
+   images to posts and render them in the templates.
+9. **Step 6 — Tag cloud** (`umb-tagcloud`).
+10. **Step 7 — Sitemap** (`umb-sitemap`).
+11. **Step 8 — Accessibility** (`umb-accessibility`).
+12. **Final** — whole-site validation in Playwright and a written summary; the
     browser is left open on the finished site.
 
 Each step validates its page renders (no `#stackpage` error div) and makes its

@@ -10,12 +10,16 @@ description: Add hero images to blog posts and render image previews on list and
 * Each blog post should have a hero image.
 * Ensure the Blog Post document type has a `heroImage` property using the Image Media Picker data type.
 
-## Uploading images
+## Getting the images (prerequisite)
 
-* Search Unsplash for relevant images for each blog post topic.
-* Use `sourceType: "url"` when calling `create-media-multiple` — filePath uploads are disabled by default.
-* Create a "Blog Hero Images" media folder first, then upload all images into it.
-* PNG and JPG formats are supported. No SVG files.
+Image **acquisition** lives in the separate **`umb-image-sourcing`** skill: it
+queries Unsplash via the `unsplash` MCP server, uploads each photo into a "Blog
+Hero Images" media folder, and hands back a mapping of blog post -> media item.
+
+* If you have not run `umb-image-sourcing` yet, do it first — it produces the
+  media items this skill assigns.
+* This skill assumes the hero images already exist in the media library. It only
+  **assigns** and **renders** them.
 
 ## Assigning images to posts
 
@@ -34,13 +38,14 @@ description: Add hero images to blog posts and render image previews on list and
 * Use `?width=600&height=300&mode=crop` for blog list card thumbnails.
 * Update the blog post template to render the hero image below the header.
 * Update the blog list template to show a thumbnail image on each blog card.
+* If `umb-image-sourcing` provided photographer attribution, render a small
+  "Photo by &lt;name&gt; on Unsplash" credit near the hero image (Unsplash ToS).
 
 ## What NOT to do
 
 - DO NOT try to log into the Umbraco backoffice to manually upload images.
-- DO NOT use `sourceType: "filePath"` for media uploads — it is disabled.
 - DO NOT use `MediaWithCrops` type in Razor — use `IPublishedContent` instead.
-- DO NOT upload SVG files — only PNG and JPG are supported.
+- DO NOT re-source or re-upload images here — that is `umb-image-sourcing`'s job.
 
 ## Validation
 
