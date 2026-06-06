@@ -84,8 +84,9 @@ conductor run .github/skills/umb-demo-conductor/umbraco-demo.yaml --workspace-in
   HTTP server pointing at the shared headed browser started in the Prerequisites
   (`http://localhost:8931/mcp`), so a single browser window persists across every
   step. `umbraco-mcp` and `a11y-accessibility` remain stdio.
-- Override the site URL if needed:
-  `--input site_base_url=http://localhost:14737`.
+- Override the site URL if needed (defaults to `SITE_BASE_URL`, see Project
+  Configuration in copilot-instructions.md):
+  `--input site_base_url=<SITE_BASE_URL>`.
 
 ### Human gate (reset prompt)
 

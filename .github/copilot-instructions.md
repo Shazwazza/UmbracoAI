@@ -4,7 +4,7 @@
 |----------|-------|
 | `SITE_BASE_URL` | `http://localhost:14737` |
 
-> **Note:** If `SITE_BASE_URL` changes, also update the `UMBRACO_BASE_URL` env var in `.mcp.json` and the `applicationUrl` entries in `src/MyProject/Properties/launchSettings.json`.
+> **Note:** If `SITE_BASE_URL` changes, also update the `UMBRACO_BASE_URL` env var in `.mcp.json`, the `applicationUrl` entries in `src/MyProject/Properties/launchSettings.json`, and the conductor workflow `.github/skills/umb-demo-conductor/umbraco-demo.yaml` (the `site_base_url` input default and the `UMBRACO_BASE_URL` env mirror).
 
 # Project Overview
 

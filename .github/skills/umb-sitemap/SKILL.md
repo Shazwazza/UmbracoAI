@@ -12,9 +12,9 @@ description: Generate sitemap.xml and validate all site links and navigation pat
    - Call `get-document-urls` with all document IDs to get relative URLs.
 2. Run the sitemap generator script with the collected URLs:
    ```powershell
-   & ".github/skills/umb-sitemap/generate-sitemap.ps1" -BaseUrl "http://localhost:14737" -Urls "/", "/blog/", "/blog/my-post/", ...
+   & ".github/skills/umb-sitemap/generate-sitemap.ps1" -BaseUrl "SITE_BASE_URL" -Urls "/", "/blog/", "/blog/my-post/", ...
    ```
-   The script writes `src/MyProject/wwwroot/sitemap.xml` automatically.
+   Replace `SITE_BASE_URL` with the configured value (see Project Configuration in copilot-instructions.md). The script writes `src/MyProject/wwwroot/sitemap.xml` automatically.
 3. Ensure Umbraco HTML Templates include a reference to this sitemap.
 
 ## Validate page rendering

@@ -2,7 +2,7 @@
 # Generates a well-formed sitemap.xml from a base URL and a list of relative URLs.
 #
 # Usage:
-#   & ".github/skills/umb-sitemap/generate-sitemap.ps1" -BaseUrl "http://localhost:14737" -Urls "/", "/blog/", "/blog/my-post/"
+#   & ".github/skills/umb-sitemap/generate-sitemap.ps1" -BaseUrl "<SITE_BASE_URL>" -Urls "/", "/blog/", "/blog/my-post/"
 #
 # The sitemap is written to src/MyProject/wwwroot/sitemap.xml
 

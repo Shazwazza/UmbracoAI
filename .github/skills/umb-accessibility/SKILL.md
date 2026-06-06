@@ -7,7 +7,7 @@ description: Run accessibility checks and fix issues until passing. Use when ask
 
 ## Testing
 
-Use the `a11y-accessibility-test_accessibility` MCP tool to test each page. Pass the full URL (e.g., `http://localhost:14737/`) as the `url` parameter.
+Use the `a11y-accessibility-test_accessibility` MCP tool to test each page. Pass the full URL (e.g., `SITE_BASE_URL/`, see Project Configuration in copilot-instructions.md) as the `url` parameter.
 
 Pages to test (based on sitemap or content tree):
 1. Home page — `SITE_BASE_URL` (see Project Configuration in copilot-instructions.md)
