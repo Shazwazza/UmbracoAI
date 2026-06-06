@@ -62,8 +62,7 @@ $mcpArgs = @(
     "--host", "127.0.0.1",
     "--allowed-hosts", "localhost,127.0.0.1,localhost:$Port,127.0.0.1:$Port",
     "--shared-browser-context",
-    "--user-data-dir", "$profileDir",
-    "--viewport-size", "1280x720"
+    "--user-data-dir", "$profileDir"
 )
 
 # Resolve a launchable npx. On Windows the PATH entry is often npx.ps1, which
