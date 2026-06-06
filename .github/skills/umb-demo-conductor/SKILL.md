@@ -125,9 +125,10 @@ conductor show .github/skills/umb-demo-conductor/umbraco-demo.yaml
 4. **Step 2 — Blog pages** (`umb-blog-pages`).
 5. **Step 3 — Navigation** (`umb-navigation`).
 6. **Step 4 — Blog posts** (`umb-blogposts`).
-7. **Step 5a — Image sourcing** (`umb-image-sourcing`) — query Unsplash via the
-   `unsplash` MCP server and upload one hero image per post into Umbraco media
-   (Lorem Picsum fallback if Unsplash is unavailable).
+7. **Step 5a — Image sourcing** (`umb-image-sourcing`) — run the
+   `scripts/source-blog-images.ps1` discovery script to find Unsplash photos and
+   upload one hero image per post into Umbraco media (Lorem Picsum fallback if
+   Unsplash is unavailable).
 8. **Step 5 — Blog post images** (`umb-blogpost-images`) — assign the sourced
    images to posts and render them in the templates.
 9. **Step 6 — Tag cloud** (`umb-tagcloud`).

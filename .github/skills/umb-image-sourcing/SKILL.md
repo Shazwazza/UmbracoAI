@@ -1,6 +1,6 @@
 ---
 name: umb-image-sourcing
-description: Query Unsplash for topical photos and upload them into Umbraco media. Use when sourcing/downloading hero images for blog posts before assigning them.
+description: Source topical photos from Unsplash via a discovery script and upload them into Umbraco media. Use when sourcing/downloading hero images for blog posts before assigning them.
 ---
 
 # Source blog hero images from Unsplash
@@ -14,22 +14,22 @@ skill `umb-blogpost-images` then **assigns** those media items to posts and
 
 ## Why this is a separate step
 
-Querying Unsplash needs a real API call — the Unsplash website blocks scraping
-(HTTP 401) and the old keyless `source.unsplash.com` endpoint is gone (HTTP 503).
-So image discovery goes through the dedicated **`unsplash` MCP server**
-(`@microlee666/unsplash-mcp-server`), which holds the access key in its own env
-and exposes a `search_photos` tool. Generic web fetching of the Unsplash site
-will not work.
+Querying Unsplash needs a real API call with a key — the Unsplash website blocks
+scraping (HTTP 401) and the old keyless `source.unsplash.com` endpoint is gone
+(HTTP 503). To keep this out of the model's context, image discovery is done by a
+small script, **`scripts/source-blog-images.ps1`**, which queries the Unsplash API
+and prints a compact JSON mapping. You run it **once** for all posts instead of
+making one Unsplash tool call per post (which would flood the context).
 
-> The `unsplash` MCP server is for **image discovery only**. NEVER use it — or any
-> fetch/HTTP tool — to reach Umbraco. All Umbraco operations go through the
-> `umbraco-mcp` tools.
+> The script does **image discovery only** — it never touches Umbraco. Uploading
+> the returned URLs into the media library is done below via the `umbraco-mcp`
+> tools. NEVER use any fetch/HTTP tool to reach Umbraco.
 
 ## Prerequisites
 
-* The `unsplash` MCP server must be available (it exposes `search_photos`,
-  `get_random_photo`, `track_download`, etc.). If it is **not** in your tool
-  list, do not improvise a scrape — go straight to the **Picsum fallback** below
+* A PowerShell host (`pwsh` or `powershell`) to run the discovery script. The
+  script holds a default Unsplash key and also reads `UNSPLASH_ACCESS_KEY` from
+  the environment; if Unsplash fails it falls back to Lorem Picsum automatically,
   so the demo never stalls.
 * The `umbraco-mcp` media tools must be available for the upload.
 
@@ -39,43 +39,47 @@ Create a single **"Blog Hero Images"** media folder (via `create-media-folder`
 or `create-media`). Upload every hero image into this folder. Do this once,
 before uploading.
 
-## Step 2 — Find one photo per blog post
+## Step 2 — Discover one photo per blog post (run the script once)
 
-For each blog post, derive a short, concrete search query from its topic (e.g.
-"artificial intelligence", "umbraco cms", "developer workflow", "content
-management"). Then:
+Build a small list of `{slug, query}` objects — one per blog post — deriving a
+short, concrete search query from each post's topic (e.g. "artificial
+intelligence", "umbraco cms", "developer workflow", "content management"). Then
+run the discovery script **once** with that list:
 
-1. Call `search_photos` with:
-   * `query`: the topic keywords
-   * `orientation`: `landscape` (hero images are wide)
-   * `per_page`: `3` (gives a few candidates)
-   * `order_by`: `relevant`
-2. From the JSON result, take the first result's image URL. Prefer a crisp,
-   sized JPG:
-   * Use `results[0].urls.raw` and append `&w=1600&q=80&fm=jpg`, **or**
-   * fall back to `results[0].urls.regular` (already ~1080px wide).
-3. Record, for the assign step and attribution:
-   * the photo `id`
-   * the chosen image URL
-   * the photographer's `user.name` and `user.links.html` (profile URL)
+```
+pwsh scripts/source-blog-images.ps1 -Posts '[{"slug":"my-post","query":"artificial intelligence"}, ...]'
+```
 
-> **Attribution (Unsplash API requirement):** after selecting a photo you intend
-> to use, call `track_download` with that photo `id`. This pings Unsplash's
-> required download endpoint. Keep the photographer name/profile so the
-> `umb-blogpost-images` step can show a small "Photo by <name> on Unsplash"
-> credit.
+(For a long list, write the JSON to a temp file and pass `-InputFile <path>`
+instead of `-Posts`.)
 
-Keep total searches modest — the demo key is rate-limited (~50 requests/hour),
-which is plenty for ~10 posts at one search each.
+The script prints a single compact JSON array — one object per post — that you
+read back directly:
+
+```json
+[{ "slug": "...", "query": "...", "url": "https://images.unsplash.com/...",
+   "source": "unsplash", "photographer": "...", "profile": "https://unsplash.com/@...",
+   "photoId": "..." }]
+```
+
+For each post it picks the most relevant landscape photo, builds a sized JPG CDN
+URL, records the photographer name + profile for attribution, and pings
+Unsplash's required download endpoint — all internally. If Unsplash is
+unavailable, returns nothing, or is rate-limited, that post's `url` falls back to
+a stable Lorem Picsum image and `source` is `"picsum"`.
+
+> **Attribution:** keep each post's `photographer` and `profile` so the
+> `umb-blogpost-images` step can show a small "Photo by &lt;name&gt; on Unsplash"
+> credit near the hero. Picsum entries have no photographer and need no credit.
 
 ## Step 3 — Upload the images to Umbraco
 
-Upload all chosen URLs into the **Blog Hero Images** folder using
-`create-media-multiple`:
+Upload every `url` from the script output into the **Blog Hero Images** folder
+using `create-media-multiple`:
 
 * Use `sourceType: "url"` — `filePath` uploads are disabled by default.
-* Pass the direct `images.unsplash.com` URL from Step 2 (Umbraco downloads it
-  server-side; these CDN URLs are publicly fetchable).
+* Pass the URL exactly as returned (Umbraco downloads it server-side; both the
+  `images.unsplash.com` and `picsum.photos` URLs are publicly fetchable).
 * Only **PNG/JPG**. No SVG.
 * Give each media item a clear name tied to its blog post (e.g.
   `hero-<post-slug>`), so the assign step can match them up.
@@ -83,20 +87,12 @@ Upload all chosen URLs into the **Blog Hero Images** folder using
 **Sequential writes only:** issue `create-media`/`create-media-multiple` calls
 one at a time — never in parallel (LocalDB uses table-level locks).
 
-## Picsum fallback (so the live demo never breaks)
+## Fallback note
 
-If the `unsplash` MCP server is unavailable, a search returns nothing, or a URL
-fails to upload, fall back to **Lorem Picsum**, which needs no key and always
-resolves:
-
-```
-https://picsum.photos/seed/<post-slug>/1200/800
-```
-
-Use the blog post's slug as the `<seed>` so each post gets a stable, distinct
-image. Upload these via `create-media-multiple` with `sourceType: "url"` exactly
-as above. Picsum images are not topical, but they guarantee every post has a
-working hero. Mention in your summary if the fallback was used.
+The script already falls back to Lorem Picsum
+(`https://picsum.photos/seed/<slug>/1200/800`) per post whenever Unsplash cannot
+serve an image, so every post always has a working hero. Mention in your summary
+if any posts used the Picsum fallback (`source: "picsum"`).
 
 ## Output of this step
 
@@ -107,8 +103,9 @@ attribution, also hand over photographer name + profile URL per post.
 ## What NOT to do
 
 - DO NOT scrape `unsplash.com` search pages or use `source.unsplash.com` — both
-  fail. Use the `unsplash` MCP `search_photos` tool (or the Picsum fallback).
-- DO NOT use the `unsplash`/fetch tools to reach Umbraco — only `umbraco-mcp`.
+  fail. Use `scripts/source-blog-images.ps1` for discovery (it falls back to
+  Picsum automatically).
+- DO NOT use any fetch/HTTP tool to reach Umbraco — only `umbraco-mcp`.
 - DO NOT log into the Umbraco backoffice to upload images manually.
 - DO NOT use `sourceType: "filePath"` — it is disabled.
 - DO NOT upload SVG files — only PNG and JPG.

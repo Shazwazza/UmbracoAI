@@ -13,8 +13,9 @@ description: Add hero images to blog posts and render image previews on list and
 ## Getting the images (prerequisite)
 
 Image **acquisition** lives in the separate **`umb-image-sourcing`** skill: it
-queries Unsplash via the `unsplash` MCP server, uploads each photo into a "Blog
-Hero Images" media folder, and hands back a mapping of blog post -> media item.
+runs the `scripts/source-blog-images.ps1` discovery script to find Unsplash
+photos, uploads each into a "Blog Hero Images" media folder, and hands back a
+mapping of blog post -> media item.
 
 * If you have not run `umb-image-sourcing` yet, do it first — it produces the
   media items this skill assigns.

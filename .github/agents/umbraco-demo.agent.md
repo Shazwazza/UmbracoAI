@@ -1,7 +1,7 @@
 ---
 name: umbraco-demo
 description: End-to-end Umbraco blogging site demo orchestrator. Builds the full site step-by-step, validates each step with Playwright, and is designed to run as a live conference demonstration. Use when asked to build the full Umbraco demo site, run the end-to-end demo, or automate the full blogging site creation.
-tools: ["read", "search", "edit", "execute", "agent", "playwright/*", "umbraco-mcp/*", "a11y-accessibility/*", "unsplash/*"]
+tools: ["read", "search", "edit", "execute", "agent", "playwright/*", "umbraco-mcp/*", "a11y-accessibility/*"]
 user-invocable: true
 disable-model-invocation: false
 ---
@@ -88,7 +88,7 @@ Work through each step in order. After completing each step, use the Playwright 
 <step order="5" skill="umb-image-sourcing,umb-blogpost-images">
   <name>Blog post images</name>
   <actions>
-    <action>FIRST run `umb-image-sourcing`: query Unsplash via the `unsplash` MCP server for one topical photo per post and upload them into a "Blog Hero Images" media folder. The `unsplash` server is for image discovery only — never use it to reach Umbraco. If it is unavailable, use the documented Lorem Picsum fallback so every post still gets an image.</action>
+    <action>FIRST run `umb-image-sourcing`: run `scripts/source-blog-images.ps1` once to get a compact slug→image mapping from Unsplash, then upload one topical photo per post into a "Blog Hero Images" media folder. The script is for image discovery only — never use it to reach Umbraco. It automatically falls back to Lorem Picsum so every post still gets an image.</action>
     <action>Then run `umb-blogpost-images`: assign a hero image to each blog post.</action>
     <action>Update the blog post template to render the hero image.</action>
     <action>Update the blog list template to show image thumbnails.</action>

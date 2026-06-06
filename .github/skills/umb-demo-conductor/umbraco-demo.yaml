@@ -41,12 +41,6 @@ workflow:
         command: npx
         args: ["-y", "a11y-mcp-server"]
         tools: ["*"]
-      unsplash:
-        command: npx
-        args: ["-y", "@microlee666/unsplash-mcp-server"]
-        env:
-          UNSPLASH_ACCESS_KEY: "RnkKYvk5jR6HcPqZqCsMaZPJLFerwyXPHTCX2L37lZY"
-        tools: ["*"]
 
   context:
     mode: accumulate
@@ -76,9 +70,10 @@ workflow:
       UMBRACO MCP RULES:
       - Use ONLY the umbraco-mcp tools for Umbraco backoffice operations. Never
         use curl or direct HTTP/API calls to Umbraco.
-      - The `unsplash` MCP server (and any fetch tool) is for IMAGE DISCOVERY
-        ONLY — never use it to reach Umbraco. Umbraco access is always through
-        umbraco-mcp.
+      - The blog hero images are sourced by a script
+        (`scripts/source-blog-images.ps1`) which queries Unsplash and prints a
+        compact mapping. That script — and any fetch tool — is for IMAGE
+        DISCOVERY ONLY. Umbraco access is always through umbraco-mcp.
       - All write operations (create, update, delete, move, publish, unpublish)
         MUST be issued ONE AT A TIME — never in parallel (LocalDB uses
         table-level locks). Read operations may be parallelised.
@@ -229,14 +224,15 @@ agents:
     description: "Step 5a — Source hero images from Unsplash into Umbraco media."
     system_prompt: |
       You are executing Step 5a (Image sourcing) of the live Umbraco demo. Follow
-      the included skill instructions to query Unsplash via the `unsplash` MCP
-      server and upload one topical hero image per blog post into a "Blog Hero
-      Images" media folder. The `unsplash` server is for image discovery ONLY —
-      never use it (or any fetch tool) to reach Umbraco; all Umbraco operations
-      go through umbraco-mcp. If the `unsplash` server is unavailable, use the
-      documented Lorem Picsum fallback so every post still gets an image. This
-      step uploads media only — assigning and rendering happens in the next step.
-      Do not require a separate commit; the images are committed in the next step.
+      the included skill instructions to run the discovery script
+      (`scripts/source-blog-images.ps1`) ONCE to get a compact slug->image mapping
+      from Unsplash, then upload one topical hero image per blog post into a "Blog
+      Hero Images" media folder. The script is for image discovery ONLY — never
+      use it (or any fetch tool) to reach Umbraco; all Umbraco operations go
+      through umbraco-mcp. The script automatically falls back to Lorem Picsum so
+      every post still gets an image. This step uploads media only — assigning and
+      rendering happens in the next step. Do not require a separate commit; the
+      images are committed in the next step.
     prompt: !file ../umb-image-sourcing/SKILL.md
     routes:
       - to: step5_blogpost_images
