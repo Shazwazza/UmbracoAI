@@ -115,27 +115,3 @@ conductor show .github/skills/umb-demo-conductor/umbraco-demo.yaml
 > skill is the orchestrated, multi-agent run. Likewise, if an Umbraco MCP tool
 > is unavailable or failing, stop and notify the user rather than substituting a
 > direct API call.
-
-## What the workflow does
-
-1. **Human gate** — optionally back up (`umb-backup`) and reset (`umb-reset`).
-2. **Step 0 — Branch setup** — ensure work is on a `develop/*` branch.
-3. **Step 1 — Home page** (`umb-homepage`) — opens the browser on the empty
-   site first, then builds the home page with a fresh visual identity.
-4. **Step 2 — Blog pages** (`umb-blog-pages`).
-5. **Step 3 — Navigation** (`umb-navigation`).
-6. **Step 4 — Blog posts** (`umb-blogposts`).
-7. **Step 5a — Image sourcing** (`umb-image-sourcing`) — run the
-   `scripts/source-blog-images.ps1` discovery script to find Unsplash photos and
-   upload one hero image per post into Umbraco media (Lorem Picsum fallback if
-   Unsplash is unavailable).
-8. **Step 5 — Blog post images** (`umb-blogpost-images`) — assign the sourced
-   images to posts and render them in the templates.
-9. **Step 6 — Tag cloud** (`umb-tagcloud`).
-10. **Step 7 — Sitemap** (`umb-sitemap`).
-11. **Step 8 — Accessibility** (`umb-accessibility`).
-12. **Final** — a written summary of what was built; the browser is left open on
-    the finished site.
-
-Each step validates its page renders (no `#stackpage` error div) and makes its
-own git commit before the next step begins.
