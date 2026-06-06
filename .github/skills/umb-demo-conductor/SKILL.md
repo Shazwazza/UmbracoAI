@@ -133,8 +133,8 @@ conductor show .github/skills/umb-demo-conductor/umbraco-demo.yaml
 9. **Step 6 — Tag cloud** (`umb-tagcloud`).
 10. **Step 7 — Sitemap** (`umb-sitemap`).
 11. **Step 8 — Accessibility** (`umb-accessibility`).
-12. **Final** — whole-site validation in Playwright and a written summary; the
-    browser is left open on the finished site.
+12. **Final** — a written summary of what was built; the browser is left open on
+    the finished site.
 
 Each step validates its page renders (no `#stackpage` error div) and makes its
 own git commit before the next step begins.
