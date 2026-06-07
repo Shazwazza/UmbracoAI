@@ -25,20 +25,21 @@ close the browser at any point.
 
 ## Prerequisites
 
-1. **Start the shared Playwright MCP server FIRST.** Both this Copilot CLI
-   session and the Conductor workflow connect to a single headed Playwright
-   server over HTTP, so they drive the **same** visible browser window. Without
-   this, each consumer spawns its own browser and later steps appear to run
-   "behind the scenes" in a window nobody is watching. From the repo root:
+1. **Start the Conductor's Playwright MCP server FIRST.** The Conductor workflow
+   connects to a headed Playwright server over HTTP on **port 8932**, separate
+   from the traditional demo agent's server (port 8931). This gives the workflow
+   its **own** visible browser window, so it can run at the same time as the
+   traditional demo agent without sharing a window. From the repo root:
    ```powershell
-   powershell -ExecutionPolicy Bypass -File scripts/start-playwright-mcp.ps1
+   powershell -ExecutionPolicy Bypass -File scripts/start-playwright-mcp.ps1 -Port 8932
    ```
-   This launches one detached, headed `@playwright/mcp` server with
-   `--shared-browser-context` on `http://localhost:8931/mcp`. It is idempotent
-   (reuses an already-running server) and detached (the browser stays open after
-   the run). **It must be up before the Copilot CLI session starts**, because the
-   CLI reads `.mcp.json` at launch — both `.mcp.json` and the workflow point
-   `playwright` at this HTTP endpoint.
+   This launches a detached, headed `@playwright/mcp` server with
+   `--shared-browser-context` on `http://localhost:8932/mcp` (and a per-port
+   browser profile). It is idempotent (reuses an already-running server) and
+   detached (the browser stays open after the run). The workflow's `playwright`
+   MCP server points at this `http://localhost:8932/mcp` endpoint. (The
+   traditional demo agent uses the port-8931 server from `.mcp.json`; if you are
+   only running the Conductor flow you still use 8932 here.)
 2. The Umbraco site must be running at `CONDUCTOR_SITE_BASE_URL` (see Project
    Configuration in `copilot-instructions.md`). This is the dedicated Conductor
    environment site (separate database from the traditional demo site, so both
@@ -50,10 +51,11 @@ close the browser at any point.
 
 ### Launch order (important)
 
-1. `scripts/start-playwright-mcp.ps1` — start the shared headed browser server.
+1. `scripts/start-playwright-mcp.ps1 -Port 8932` — start the Conductor's headed browser server.
 2. Start the Copilot CLI session — it connects to the server via HTTP.
-3. Run the conductor workflow (below) — it connects to the **same** server, so
-   every step drives the one visible window.
+3. Run the conductor workflow (below) — it connects to the port-8932 server, so
+   every step drives the Conductor's own visible window (separate from the
+   traditional demo agent's port-8931 window).
 
 ## Running the workflow
 
@@ -86,9 +88,11 @@ conductor run .github/skills/umb-demo-conductor/umbraco-demo.yaml --workspace-in
   duplicate them.
 - The workflow defines its own MCP servers (`umbraco-mcp`, `playwright`,
   `a11y-accessibility`) mirroring `.mcp.json`. `playwright` is configured as an
-  HTTP server pointing at the shared headed browser started in the Prerequisites
-  (`http://localhost:8931/mcp`), so a single browser window persists across every
-  step. `umbraco-mcp` and `a11y-accessibility` remain stdio.
+  HTTP server pointing at the Conductor's headed browser started in the
+  Prerequisites (`http://localhost:8932/mcp`), so the workflow drives its own
+  browser window — separate from the traditional demo agent's port-8931 window —
+  and that single window persists across every step. `umbraco-mcp` and
+  `a11y-accessibility` remain stdio.
 - Override the site URL if needed (defaults to `CONDUCTOR_SITE_BASE_URL`, see
   Project Configuration in copilot-instructions.md):
   `--input site_base_url=<CONDUCTOR_SITE_BASE_URL>`.

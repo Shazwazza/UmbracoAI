@@ -28,14 +28,15 @@ Closing it ruins the demo.
 
 ## How to run
 
-1. Confirm the **shared Playwright MCP server** is running. Both this session and
-   the workflow connect to one headed Playwright server over HTTP
-   (`http://localhost:8931/mcp`) so they share a single, audience-visible browser
-   window. If it is not already up, start it from the repo root:
-   `powershell -ExecutionPolicy Bypass -File scripts/start-playwright-mcp.ps1`
-   (detached, idempotent, headed, `--shared-browser-context`). It must be running
-   before the Copilot CLI session was started, since `.mcp.json` points
-   `playwright` at this endpoint.
+1. Confirm the **Conductor's Playwright MCP server** is running on **port 8932**.
+   The workflow connects to a headed Playwright server over HTTP
+   (`http://localhost:8932/mcp`) so it drives its **own** audience-visible browser
+   window — separate from the traditional demo agent's port-8931 window, so both
+   demos can run at the same time. If it is not already up, start it from the repo
+   root:
+   `powershell -ExecutionPolicy Bypass -File scripts/start-playwright-mcp.ps1 -Port 8932`
+   (detached, idempotent, headed, `--shared-browser-context`, per-port profile).
+   The workflow's `playwright` MCP server points at this endpoint.
 2. Confirm the Umbraco site is running at `CONDUCTOR_SITE_BASE_URL` (see Project
    Configuration in `copilot-instructions.md`). This is the dedicated Conductor
    environment site (separate database from the traditional demo site, so both

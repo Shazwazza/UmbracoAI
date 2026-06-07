@@ -104,10 +104,19 @@ credentials in `/.mcp.json` (traditional) and `umbraco-demo.yaml` (Conductor).
 You only need the second site if you intend to run the Conductor workflow; running
 just the traditional demo only needs the default `Umbraco.Web.UI` profile.
 
-> **Note:** Both flows point their `playwright` MCP server at the same shared
-> server (`http://localhost:8931/mcp`). If you run both demos at the exact same
-> time and want a separate visible browser window for each, start a second
-> Playwright MCP server on a different port and update one consumer to use it.
+> **Two browser windows:** each flow uses its own Playwright MCP server so the
+> two demos show in **separate** visible browser windows running at the same time:
+> the traditional demo agent uses `http://localhost:8931/mcp` (from `/.mcp.json`)
+> and the Conductor workflow uses `http://localhost:8932/mcp` (from
+> `umbraco-demo.yaml`). Start one server per window (the browser profile is
+> per-port, so they don't clash):
+>
+> ```powershell
+> # Window 1 — traditional demo agent (port 8931, the default)
+> powershell -ExecutionPolicy Bypass -File scripts/start-playwright-mcp.ps1
+> # Window 2 — Conductor workflow (port 8932)
+> powershell -ExecutionPolicy Bypass -File scripts/start-playwright-mcp.ps1 -Port 8932
+> ```
 
 ### "YOLO mode"
 
@@ -153,16 +162,16 @@ The Conductor workflow runs against its **own** Umbraco site (the `Conductor` la
 dotnet run --project src/MyProject/MyProject.csproj --launch-profile Conductor
 ```
 
-**Before running, start the shared Playwright browser server** so the main CLI session and the workflow drive the *same* visible window (otherwise later steps run in a hidden browser). From the repo root, in this order:
+**Before running, start the Conductor's Playwright browser server (port 8932)** so the workflow drives its *own* visible window — separate from the traditional demo agent's port-8931 window, so both can run at once (otherwise later steps run in a hidden browser). From the repo root, in this order:
 
 ```powershell
-# 1. Start the shared, headed Playwright MCP server (detached, idempotent)
-powershell -ExecutionPolicy Bypass -File scripts/start-playwright-mcp.ps1
+# 1. Start the Conductor's headed Playwright MCP server on port 8932 (detached, idempotent)
+powershell -ExecutionPolicy Bypass -File scripts/start-playwright-mcp.ps1 -Port 8932
 # 2. Start your Copilot CLI session (it reads .mcp.json -> connects over HTTP)
-# 3. Run the workflow (connects to the SAME server)
+# 3. Run the workflow (connects to the port-8932 server)
 ```
 
-Both `.mcp.json` and the workflow point their `playwright` MCP server at `http://localhost:8931/mcp`, a single headed `@playwright/mcp` instance launched with `--shared-browser-context`. The server is detached, so the browser stays open after the run.
+The workflow points its `playwright` MCP server at `http://localhost:8932/mcp`, while `.mcp.json` (the traditional demo agent) points at `http://localhost:8931/mcp` — two separate headed `@playwright/mcp` instances launched with `--shared-browser-context` and per-port profiles. Each server is detached, so the browser stays open after the run.
 
 Or run the workflow directly from the repo root. Always pass `--web` so the live dashboard is visible; add `--skip-gates --no-interactive` for a hands-off run (auto-accepts the gate's first option — back up + reset — and avoids blocking on stdin in a non-interactive shell):
 
