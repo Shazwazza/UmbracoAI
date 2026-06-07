@@ -125,6 +125,8 @@ agents:
 
   - name: backup
     description: Back up the Umbraco LocalDB database before destructive changes.
+    # Trivial shell step — a fast model is plenty.
+    model: claude-haiku-4.5
     system_prompt: |
       You are performing the database BACKUP step of the demo, before any
       reset. Follow the included skill instructions exactly. This step does not
@@ -147,6 +149,8 @@ agents:
 
   - name: branch_setup
     description: "Step 0 — ensure work happens on a develop branch."
+    # A few git commands — use a fast model.
+    model: claude-haiku-4.5
     system_prompt: |
       You are performing Step 0 (Branch Setup) of the demo. Do not build any
       content in this step and do not commit anything.
@@ -365,6 +369,8 @@ agents:
   # ---------------------------------------------------------------------------
   - name: final
     description: Demo wrap-up summary.
+    # Plain summary text — a fast model is plenty.
+    model: claude-haiku-4.5
     system_prompt: |
       You are wrapping up the live Umbraco demo. Do NOT close the browser —
       leave it OPEN on the finished site for the presenter.
