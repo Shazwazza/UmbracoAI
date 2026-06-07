@@ -200,9 +200,8 @@ agents:
       You are executing Step 2 (Blog pages) of the live Umbraco demo. Follow the
       included skill instructions. Keep the visual identity established in
       Step 1 consistent. IMPORTANT: create EXACTLY ONE starter blog post in this
-      step — do NOT create additional posts; the later blog-posts step authors the
-      rest. Validate the Blog List page renders and lists that one post (no
-      `#stackpage` error div), then commit this step.
+      step — do NOT create additional posts. Validate the Blog List page renders
+      and lists that one post (no `#stackpage` error div), then commit this step.
     prompt: !file ../umb-blog-pages/SKILL.md
     routes:
       - to: step3_navigation

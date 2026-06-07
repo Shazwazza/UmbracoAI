@@ -9,9 +9,7 @@ description: Create Blog List and Blog page document types and templates, plus e
 
 > **Scope — read first:** This step builds the blog *structure* (document types
 > and templates) and **exactly ONE** starter blog post to prove it renders. Do
-> **NOT** create more than one blog post here. The remaining posts are created
-> later by the `umb-blogposts` step — creating them now would duplicate work and
-> overshoot the 10-post total.
+> **NOT** create more than one blog post in this step.
 
 * Ensure the Document Type structure to support a Blog List page that can exist under the Home page.
   * Ensure there is a Template assigned for this Document Type.
@@ -22,7 +20,7 @@ description: Create Blog List and Blog page document types and templates, plus e
   * Blog posts should be authored in Markdown so choose an appropriate property editor to allow for this.
   * Ensure there is a Template assigned for this Document Type.
   * Produce the HTML, Razor and CSS to render the Blog page.
-  * Create and publish **exactly one** Blog page (a single starter post). Do **not** create a second post — the `umb-blogposts` step creates the rest later.
+  * Create and publish **exactly one** Blog page (a single starter post). Do **not** create a second post.
 
 ## Validation
 
