@@ -75,7 +75,7 @@ workflow:
       - Use ONLY the umbraco-mcp tools for Umbraco backoffice operations. Never
         use curl or direct HTTP/API calls to Umbraco.
       - The blog hero images are sourced by a script
-        (`scripts/source-blog-images.ps1`) which queries Unsplash and prints a
+        (`.github/skills/umb-image-sourcing/source-blog-images.ps1`) which queries Unsplash and prints a
         compact mapping. That script — and any fetch tool — is for IMAGE
         DISCOVERY ONLY. Umbraco access is always through umbraco-mcp.
       - All write operations (create, update, delete, move, publish, unpublish)
@@ -321,7 +321,7 @@ agents:
     system_prompt: |
       You are executing Step 6 (Image sourcing) of the live Umbraco demo. Follow
       the included skill instructions to run the discovery script
-      (`scripts/source-blog-images.ps1`) ONCE to get a compact slug->image mapping
+      (`.github/skills/umb-image-sourcing/source-blog-images.ps1`) ONCE to get a compact slug->image mapping
       from Unsplash, then upload one topical hero image per blog post into a "Blog
       Hero Images" media folder. Build the script's `{slug, query}` list by
       reusing the per-post `image_query` already chosen in the plan
