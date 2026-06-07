@@ -15,8 +15,8 @@ In this demo, the premise is to have an AI Agent automatically create an Umbraco
 1. Install Playwright as admin with `npx playwright install`
 1. Clone/Fork this repo and open in your Copilot-enabled editor.
 1. The Umbraco website needs to be running/installed: `dotnet run --project src/MyProject/MyProject.csproj`
-1. Configure MCP servers in `/.copilot/mcp-config.json`
-1. [Create an Umbraco API User](https://docs.umbraco.com/umbraco-cms/fundamentals/data/users/api-users), with credentials matching `/.copilot/mcp-config.json`
+1. Configure MCP servers in `/.mcp.json`
+1. [Create an Umbraco API User](https://docs.umbraco.com/umbraco-cms/fundamentals/data/users/api-users), with credentials matching `/.mcp.json`
 1. Start Copilot CLI and run the end-to-end demo with `Use the umbraco-demo agent`
 1. Or run individual skills such as `/umb-homepage`, `/umb-blog-pages`, and `/umb-navigation`
 
@@ -36,7 +36,7 @@ This repository is configured for **Copilot CLI**:
 * Modular instructions: `/.github/instructions/*.instructions.md`
 * Reusable skills: `/.github/skills/*/SKILL.md`
 * Agents: `/.github/agents/*.agent.md`
-* MCP servers: `/.copilot/mcp-config.json`
+* MCP servers: `/.mcp.json`
 
 ### Copilot CLI plugin + marketplace
 
@@ -51,7 +51,7 @@ Install the plugin directly from this repository:
 copilot plugin install Shazwazza/UmbracoAI
 ```
 
-Or register this repository as a marketplace, then install the published plugin entry:
+Or register this repository as a marketplace, then install the `umbracoai-demo` plugin from the `umbracoai-marketplace` marketplace:
 
 ```bash
 copilot plugin marketplace add Shazwazza/UmbracoAI
@@ -62,12 +62,12 @@ copilot plugin install umbracoai-demo@umbracoai-marketplace
 
 1. The Umbraco website will need to be run/installed first: `dotnet run --project src/MyProject/MyProject.csproj`
 1. Read and configure Umbraco MCP: https://github.com/umbraco/Umbraco-CMS-MCP-Dev including the user information.
-1. Edit `/.copilot/mcp-config.json` to update your Umbraco settings.
+1. Edit `/.mcp.json` to update your Umbraco settings.
 1. NOTE: ALL Umbraco MCP commands are marked as 'always allow', however there is this filter applied to the MCP server: "UMBRACO_INCLUDE_TOOL_COLLECTIONS": "document,media,document-type,data-type".
 
 ### "YOLO mode"
 
-Part of the presentation was to showcase that an AI Agent can autonomously do all of the work without user interaction once the rules and skills are setup. As such, several MCP tools are pre-installed in `/.copilot/mcp-config.json` with 'always allow' configured.
+Part of the presentation was to showcase that an AI Agent can autonomously do all of the work without user interaction once the rules and skills are setup. As such, several MCP tools are pre-installed in `/.mcp.json` with 'always allow' configured.
 
 ![YOLO Tools](image-3.png)
 
