@@ -9,6 +9,14 @@ description: Build a tag cloud on the blog list page based on blog post tag freq
 
 For the Blog List page template, render a tag cloud that shows all tags used by blog posts, where each tag's visual size is determined by how many times the tag occurs.
 
+## Accessibility
+
+Accessibility is validated earlier in the build, so keep the tag cloud markup accessible — do not regress it:
+
+* Render each tag as a real, keyboard-focusable link (`<a>`) with discernible text content (the tag name).
+* Do not convey meaning through size or colour alone; the tag text must always be readable.
+* Ensure tag text keeps sufficient colour contrast against the background at every size.
+
 ## Validation
 
 Use Playwright to navigate to the Blog List page. Confirm:

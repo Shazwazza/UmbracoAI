@@ -76,7 +76,18 @@ Work through each step in order. After completing each step, use the Playwright 
   <commit>true</commit>
 </step>
 
-<step order="4" skill="umb-blogposts">
+<step order="4" skill="umb-accessibility">
+  <name>Accessibility</name>
+  <actions>
+    <action>Run the a11y-accessibility MCP tool against the site. The design (home, blog list, a starter post, navigation) is locked at this point, so validate accessibility now before bulk content is added.</action>
+    <action>Fix any accessibility issues found.</action>
+    <action>Repeat until all checks pass.</action>
+  </actions>
+  <validate>All accessibility checks must pass before moving on.</validate>
+  <commit>true</commit>
+</step>
+
+<step order="5" skill="umb-blogposts">
   <name>Blog posts</name>
   <actions>
     <action>Ensure exactly 10 blog posts exist in total, each with meaningful content. Top up to 10 — do not exceed 10.</action>
@@ -85,46 +96,37 @@ Work through each step in order. After completing each step, use the Playwright 
   <commit>true</commit>
 </step>
 
-<step order="5" skill="umb-image-sourcing,umb-blogpost-images">
+<step order="6" skill="umb-image-sourcing,umb-blogpost-images">
   <name>Blog post images</name>
   <actions>
     <action>FIRST run `umb-image-sourcing`: run `scripts/source-blog-images.ps1` once to get a compact slug→image mapping from Unsplash, then upload one topical photo per post into a "Blog Hero Images" media folder. The script is for image discovery only — never use it to reach Umbraco. It automatically falls back to Lorem Picsum so every post still gets an image.</action>
     <action>Then run `umb-blogpost-images`: assign a hero image to each blog post.</action>
     <action>Update the blog post template to render the hero image.</action>
     <action>Update the blog list template to show image thumbnails.</action>
+    <action>Give every hero image and thumbnail meaningful `alt` text (the post title) so the markup stays accessible — accessibility was validated in step 4, do not regress it.</action>
   </actions>
   <validate>Use Playwright to open the Blog List page and at least one Blog Post page. Confirm images are rendered.</validate>
   <commit>true</commit>
 </step>
 
-<step order="6" skill="umb-tagcloud">
+<step order="7" skill="umb-tagcloud">
   <name>Tag cloud</name>
   <actions>
     <action>Add a tag cloud widget to the Blog List page template.</action>
     <action>Tag sizes should reflect how frequently each tag appears across blog posts.</action>
+    <action>Render tags as real, keyboard-focusable links with discernible text (do not rely on size or colour alone) to keep the markup accessible.</action>
   </actions>
   <validate>Use Playwright to open the Blog List page. Confirm a tag cloud section is rendered.</validate>
   <commit>true</commit>
 </step>
 
-<step order="7" skill="umb-sitemap">
+<step order="8" skill="umb-sitemap">
   <name>Sitemap</name>
   <actions>
     <action>Generate `/sitemap.xml` from all published content (including all blog posts and images added in earlier steps).</action>
     <action>Crawl each URL in the sitemap with Playwright to verify pages render without errors.</action>
   </actions>
   <validate>Open `SITE_BASE_URL/sitemap.xml` in Playwright. Confirm it contains entries for all published pages.</validate>
-  <commit>true</commit>
-</step>
-
-<step order="8" skill="umb-accessibility">
-  <name>Accessibility</name>
-  <actions>
-    <action>Run the a11y-accessibility MCP tool against the site.</action>
-    <action>Fix any accessibility issues found.</action>
-    <action>Repeat until all checks pass.</action>
-  </actions>
-  <validate>All accessibility checks must pass before moving on.</validate>
   <commit>true</commit>
 </step>
 
