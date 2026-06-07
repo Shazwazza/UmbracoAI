@@ -41,10 +41,10 @@
     where source is "unsplash" or "picsum".
 
 .EXAMPLE
-    pwsh scripts/source-blog-images.ps1 -InputFile posts.json
+    pwsh .github/skills/umb-image-sourcing/source-blog-images.ps1 -InputFile posts.json
 
 .EXAMPLE
-    pwsh scripts/source-blog-images.ps1 -Posts '[{"slug":"hello-ai","query":"artificial intelligence"}]'
+    pwsh .github/skills/umb-image-sourcing/source-blog-images.ps1 -Posts '[{"slug":"hello-ai","query":"artificial intelligence"}]'
 #>
 [CmdletBinding()]
 param(

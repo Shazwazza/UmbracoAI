@@ -38,6 +38,26 @@ This repository is configured for **Copilot CLI**:
 * Agents: `/.github/agents/*.agent.md`
 * MCP servers: `/.copilot/mcp-config.json`
 
+### Copilot CLI plugin + marketplace
+
+This repo now includes a first-class Copilot CLI plugin and marketplace manifests:
+
+* Plugin manifest: `/.github/plugin/plugin.json`
+* Marketplace manifest: `/.github/plugin/marketplace.json`
+
+Install the plugin directly from this repository:
+
+```bash
+copilot plugin install Shazwazza/UmbracoAI
+```
+
+Or register this repository as a marketplace, then install the published plugin entry:
+
+```bash
+copilot plugin marketplace add Shazwazza/UmbracoAI
+copilot plugin install umbracoai-demo@umbracoai-marketplace
+```
+
 ### Umbraco website & Umbraco MCP
 
 1. The Umbraco website will need to be run/installed first: `dotnet run --project src/MyProject/MyProject.csproj`

@@ -17,7 +17,7 @@ skill `umb-blogpost-images` then **assigns** those media items to posts and
 Querying Unsplash needs a real API call with a key — the Unsplash website blocks
 scraping (HTTP 401) and the old keyless `source.unsplash.com` endpoint is gone
 (HTTP 503). To keep this out of the model's context, image discovery is done by a
-small script, **`scripts/source-blog-images.ps1`**, which queries the Unsplash API
+small script, **`.github/skills/umb-image-sourcing/source-blog-images.ps1`**, which queries the Unsplash API
 and prints a compact JSON mapping. You run it **once** for all posts instead of
 making one Unsplash tool call per post (which would flood the context).
 
@@ -47,7 +47,7 @@ intelligence", "umbraco cms", "developer workflow", "content management"). Then
 run the discovery script **once** with that list:
 
 ```
-pwsh scripts/source-blog-images.ps1 -Posts '[{"slug":"my-post","query":"artificial intelligence"}, ...]'
+pwsh .github/skills/umb-image-sourcing/source-blog-images.ps1 -Posts '[{"slug":"my-post","query":"artificial intelligence"}, ...]'
 ```
 
 (For a long list, write the JSON to a temp file and pass `-InputFile <path>`
@@ -103,7 +103,7 @@ attribution, also hand over photographer name + profile URL per post.
 ## What NOT to do
 
 - DO NOT scrape `unsplash.com` search pages or use `source.unsplash.com` — both
-  fail. Use `scripts/source-blog-images.ps1` for discovery (it falls back to
+  fail. Use `.github/skills/umb-image-sourcing/source-blog-images.ps1` for discovery (it falls back to
   Picsum automatically).
 - DO NOT use any fetch/HTTP tool to reach Umbraco — only `umbraco-mcp`.
 - DO NOT log into the Umbraco backoffice to upload images manually.

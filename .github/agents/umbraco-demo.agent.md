@@ -99,7 +99,7 @@ Work through each step in order. After completing each step, use the Playwright 
 <step order="6" skill="umb-image-sourcing,umb-blogpost-images">
   <name>Blog post images</name>
   <actions>
-    <action>FIRST run `umb-image-sourcing`: run `scripts/source-blog-images.ps1` once to get a compact slug→image mapping from Unsplash, then upload one topical photo per post into a "Blog Hero Images" media folder. The script is for image discovery only — never use it to reach Umbraco. It automatically falls back to Lorem Picsum so every post still gets an image.</action>
+    <action>FIRST run `umb-image-sourcing`: run `.github/skills/umb-image-sourcing/source-blog-images.ps1` once to get a compact slug→image mapping from Unsplash, then upload one topical photo per post into a "Blog Hero Images" media folder. The script is for image discovery only — never use it to reach Umbraco. It automatically falls back to Lorem Picsum so every post still gets an image.</action>
     <action>Then run `umb-blogpost-images`: assign a hero image to each blog post.</action>
     <action>Update the blog post template to render the hero image.</action>
     <action>Update the blog list template to show image thumbnails.</action>
