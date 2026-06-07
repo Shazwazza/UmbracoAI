@@ -10,7 +10,9 @@ builder.CreateUmbracoBuilder()
 
 // Allow HTTP for local dev so Cloudflare Workers (workerd) can reach
 // Umbraco's token endpoint without needing to trust a self-signed cert.
-if (builder.Environment.IsDevelopment())
+// The "Conductor" environment is a second local site (see appsettings.Conductor.json)
+// used to run the Conductor workflow alongside the default Development site.
+if (builder.Environment.IsDevelopment() || builder.Environment.IsEnvironment("Conductor"))
 {
     builder.Services.Configure<OpenIddictServerAspNetCoreOptions>(options =>
     {

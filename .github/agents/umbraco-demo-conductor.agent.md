@@ -36,10 +36,12 @@ Closing it ruins the demo.
    (detached, idempotent, headed, `--shared-browser-context`). It must be running
    before the Copilot CLI session was started, since `.mcp.json` points
    `playwright` at this endpoint.
-2. Confirm the Umbraco site is running at `SITE_BASE_URL` (see Project
-   Configuration in `copilot-instructions.md`). If it is not, start it with
-   `dotnet run --project src/MyProject/MyProject.csproj` and wait for it to come
-   up.
+2. Confirm the Umbraco site is running at `CONDUCTOR_SITE_BASE_URL` (see Project
+   Configuration in `copilot-instructions.md`). This is the dedicated Conductor
+   environment site (separate database from the traditional demo site, so both
+   can run at once). If it is not, start it with
+   `dotnet run --project src/MyProject/MyProject.csproj --launch-profile Conductor`
+   and wait for it to come up.
 3. Confirm the `conductor` CLI is available (`conductor --version`). If it is
    missing, install it per the Conductor skill's setup guide.
 4. **Invoke the `/umb-demo-conductor` skill** and follow its instructions to run

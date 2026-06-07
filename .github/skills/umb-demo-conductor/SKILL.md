@@ -39,9 +39,11 @@ close the browser at any point.
    the run). **It must be up before the Copilot CLI session starts**, because the
    CLI reads `.mcp.json` at launch — both `.mcp.json` and the workflow point
    `playwright` at this HTTP endpoint.
-2. The Umbraco site must be running at `SITE_BASE_URL` (see Project
-   Configuration in `copilot-instructions.md`). If not, start it with:
-   `dotnet run --project src/MyProject/MyProject.csproj`.
+2. The Umbraco site must be running at `CONDUCTOR_SITE_BASE_URL` (see Project
+   Configuration in `copilot-instructions.md`). This is the dedicated Conductor
+   environment site (separate database from the traditional demo site, so both
+   can run at once). If not running, start it with:
+   `dotnet run --project src/MyProject/MyProject.csproj --launch-profile Conductor`.
 3. The `conductor` CLI must be installed. Check with `conductor --version`.
    - If it is missing, install it per the Conductor skill's setup guide
      (`/.copilot/installed-plugins/conductor/.../references/setup.md`).
@@ -87,9 +89,9 @@ conductor run .github/skills/umb-demo-conductor/umbraco-demo.yaml --workspace-in
   HTTP server pointing at the shared headed browser started in the Prerequisites
   (`http://localhost:8931/mcp`), so a single browser window persists across every
   step. `umbraco-mcp` and `a11y-accessibility` remain stdio.
-- Override the site URL if needed (defaults to `SITE_BASE_URL`, see Project
-  Configuration in copilot-instructions.md):
-  `--input site_base_url=<SITE_BASE_URL>`.
+- Override the site URL if needed (defaults to `CONDUCTOR_SITE_BASE_URL`, see
+  Project Configuration in copilot-instructions.md):
+  `--input site_base_url=<CONDUCTOR_SITE_BASE_URL>`.
 
 ### Human gate (reset prompt)
 

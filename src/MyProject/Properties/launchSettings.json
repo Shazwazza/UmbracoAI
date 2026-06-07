@@ -24,6 +24,15 @@
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       }      
+    },
+    "Conductor": {
+      "commandName": "Project",
+      "dotnetRunMessages": true,
+      "launchBrowser": true,
+      "applicationUrl": "https://localhost:44370;http://localhost:14738",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Conductor"
+      }
     }
   }
 }
