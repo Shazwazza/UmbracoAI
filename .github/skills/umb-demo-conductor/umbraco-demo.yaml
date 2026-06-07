@@ -2,11 +2,14 @@ workflow:
   name: umbraco-demo
   description: >-
     End-to-end Umbraco blogging-site demo expressed as a Conductor multi-agent
-    workflow. Mirrors the 8-step umbraco-demo agent: optional reset, branch
-    setup, then one agent per step (home page, blog pages, navigation, blog
-    posts, images, tag cloud, sitemap, accessibility), validating each step in
-    Playwright and committing per step. Designed to run as a live conference
-    demonstration with a single, persistent Playwright browser window.
+    workflow. Covers the umbraco-demo steps: optional reset, branch setup, then
+    home page, blog pages, navigation, blog posts, images, tag cloud, sitemap and
+    accessibility — validating each step in Playwright and committing per step.
+    The blog-posts step is parallelised to show Conductor's strengths: a
+    deterministic plan agent, a for_each fan-out that authors every post body
+    concurrently, then a serial join that persists them to Umbraco one at a time.
+    Designed to run as a live conference demonstration with a single, persistent
+    Playwright browser window.
   version: "1.0.0"
   entry_point: gate_reset
 
@@ -46,7 +49,8 @@ workflow:
     mode: accumulate
 
   limits:
-    # 8 steps + gate + backup + reset + branch setup + final, with headroom.
+    # Steps + gate + backup + reset + branch setup + plan/fan-out/join +
+    # final, with headroom.
     max_iterations: 50
 
   # Shared orchestration preamble prepended to every agent. The full repository
@@ -206,18 +210,86 @@ agents:
       `#stackpage` error div), then commit this step.
     prompt: !file ../umb-navigation/SKILL.md
     routes:
-      - to: step4_blogposts
+      - to: step4_plan_posts
 
-  - name: step4_blogposts
-    description: "Step 4 — Blog posts (10 total)."
+  # Step 4 is split into three nodes to showcase Conductor's strengths:
+  #   4)  a deterministic PLAN agent emits a typed JSON contract,
+  #   4·) a for_each FAN-OUT authors every post body concurrently (pure text —
+  #       no Umbraco writes, no browser, so it is safe to parallelise), then
+  #   4b) a serial JOIN agent persists them one-at-a-time (Umbraco serialises all
+  #       content writes behind a single content-tree write lock, so creation
+  #       MUST stay sequential — parallel writes deadlock).
+  - name: step4_plan_posts
+    description: "Step 4 — Plan the remaining blog posts (deterministic contract)."
     system_prompt: |
-      You are executing Step 4 (Blog posts) of the live Umbraco demo. Follow the
-      included skill instructions to reach exactly 10 blog posts in total (Step 2
-      already created one — top up to 10, do not exceed 10), authored from your
-      first-person perspective as the AI agent that built this site, with
-      original topics for this run. Validate the Blog List shows the posts, then
-      commit this step.
-    prompt: !file ../umb-blogposts/SKILL.md
+      You are executing Step 4 (Plan posts) of the live Umbraco demo. You do NOT
+      author full post bodies here and you do NOT create anything in Umbraco yet.
+
+      Goal: decide the set of blog posts so the site ends with EXACTLY 10 total.
+      Step 2 already created one starter post, so first COUNT the existing
+      published blog posts under the Blog List page using the umbraco-mcp read
+      tools, then plan only enough NEW posts to reach 10 (typically 9). Do not
+      plan posts that would exceed 10.
+
+      For each new post, invent an ORIGINAL topic for THIS run, written from your
+      first-person perspective as the AI agent that built this site (something you
+      struggled with, a design decision, a technique that impressed you, a
+      reflection for the Codegarden audience, etc.). Do NOT reuse topics or
+      wording from previous runs.
+
+      Emit a deterministic, machine-readable plan: one object per NEW post with a
+      url-safe `slug`, a `title`, a `subtitle`, 2–4 relevant `tags`, and a short,
+      concrete `image_query` (2–4 words for an Unsplash photo search, e.g.
+      "artificial intelligence", "developer workflow"). This array is the
+      contract the next steps consume — return it exactly via the `posts` output.
+    prompt: |
+      Produce the plan for the remaining blog posts now, as described in your
+      instructions. Return ONLY the structured `posts` array — no prose, no
+      Umbraco changes, no browser navigation, and no git commit in this step.
+    output:
+      posts:
+        type: array
+        description: One entry per NEW blog post to author and publish.
+        items:
+          type: object
+          properties:
+            slug: { type: string }
+            title: { type: string }
+            subtitle: { type: string }
+            tags:
+              type: array
+              items: { type: string }
+            image_query: { type: string }
+    routes:
+      - to: author_posts
+
+  - name: step4b_persist_posts
+    description: "Step 4b — Persist the authored posts to Umbraco (serial join)."
+    system_prompt: |
+      You are executing Step 4b (Persist posts) of the live Umbraco demo. The post
+      bodies were authored CONCURRENTLY in the previous fan-out step. The plan is
+      in `{{ step4_plan_posts.output.posts }}` and the authored bodies are in
+      `{{ author_posts.outputs }}` (a map keyed by slug, each with `content` and
+      `excerpt`). Any posts that failed to author appear in
+      `{{ author_posts.errors }}` — if a slug is missing a body, author a short one
+      inline so every planned post is still created.
+
+      For EACH planned post, create it under the Blog List page and publish it.
+      Match the authored body/excerpt to the plan entry by `slug`. Use
+      `Umbraco.TextBox` for title/subtitle, `Umbraco.MarkdownEditor` for content,
+      `Umbraco.TextArea` for excerpt, and `Umbraco.Tags` for tags.
+
+      CRITICAL: issue every create/publish ONE AT A TIME (never in parallel) —
+      Umbraco serialises content writes behind a single content-tree lock, so
+      parallel writes deadlock. After creating each document, immediately
+      `publish-document`.
+
+      When all posts are published, validate in Playwright that the Blog List
+      shows exactly 10 posts (each with a title, date, and excerpt; no
+      `#stackpage` error div), then commit this step.
+    prompt: |
+      Persist and publish every planned blog post to Umbraco now (sequentially),
+      then validate the Blog List shows 10 posts and commit.
     routes:
       - to: step5a_image_sourcing
 
@@ -228,12 +300,15 @@ agents:
       the included skill instructions to run the discovery script
       (`scripts/source-blog-images.ps1`) ONCE to get a compact slug->image mapping
       from Unsplash, then upload one topical hero image per blog post into a "Blog
-      Hero Images" media folder. The script is for image discovery ONLY — never
-      use it (or any fetch tool) to reach Umbraco; all Umbraco operations go
-      through umbraco-mcp. The script automatically falls back to Lorem Picsum so
-      every post still gets an image. This step uploads media only — assigning and
-      rendering happens in the next step. Do not require a separate commit; the
-      images are committed in the next step.
+      Hero Images" media folder. Build the script's `{slug, query}` list by
+      reusing the per-post `image_query` already chosen in the plan
+      (`{{ step4_plan_posts.output.posts }}`), falling back to a query derived from
+      the post topic for the Step 2 starter post. The script is for image
+      discovery ONLY — never use it (or any fetch tool) to reach Umbraco; all
+      Umbraco operations go through umbraco-mcp. The script automatically falls
+      back to Lorem Picsum so every post still gets an image. This step uploads
+      media only — assigning and rendering happens in the next step. Do not
+      require a separate commit; the images are committed in the next step.
     prompt: !file ../umb-image-sourcing/SKILL.md
     routes:
       - to: step5_blogpost_images
@@ -304,6 +379,65 @@ agents:
         description: Human-readable summary of everything the demo produced.
     routes:
       - to: $end
+
+# -----------------------------------------------------------------------------
+# Dynamic parallel fan-out: author every planned post body concurrently.
+# This is the headline parallelism — pure Markdown generation with NO Umbraco
+# writes and NO browser, so it is safe to run many at once. The serial
+# step4b_persist_posts join then writes them to Umbraco one at a time.
+# -----------------------------------------------------------------------------
+for_each:
+  - name: author_posts
+    description: "Step 4· — Author each blog post body in parallel."
+    type: for_each
+    source: step4_plan_posts.output.posts
+    as: post
+    key_by: post.slug
+    # Posts authored concurrently per batch. Each item is an independent Copilot
+    # session, so keep this modest for a smooth live run; raise for more drama.
+    max_concurrent: 4
+    # One flaky post must not abort the demo; the join step backfills any gaps.
+    failure_mode: continue_on_error
+    agent:
+      name: author_post
+      description: "Author a single blog post body from its plan entry."
+      system_prompt: |
+        You are one of several agents authoring blog posts CONCURRENTLY for a live
+        Umbraco demo. You write text ONLY.
+
+        STRICT RULES:
+        - Do NOT call any Umbraco (umbraco-mcp) tool, any Playwright/browser tool,
+          or git. Do NOT create, publish, or validate anything. Another agent
+          persists your output afterwards.
+        - The shared per-step validation/commit rules in the preamble do NOT apply
+          to you — you are a text-only sub-task that just returns Markdown.
+        - Output ONLY the structured fields below.
+
+        Write the post in the first person, as the AI agent that built this site —
+        friendly, concrete, and original. Use the plan entry for this post:
+        - slug: {{ post.slug }}
+        - title: {{ post.title }}
+        - subtitle: {{ post.subtitle }}
+        - tags: {{ post.tags }}
+
+        Produce well-structured GitHub-flavoured Markdown for `content` (a few
+        short sections with headings, ~300–600 words, no H1 — the title is
+        rendered separately) and a single-sentence plain-text `excerpt`.
+      prompt: |
+        Author the Markdown body and excerpt for the post "{{ post.title }}"
+        (slug {{ post.slug }}) now. Return only the structured output.
+      output:
+        slug:
+          type: string
+          description: Echo of {{ post.slug }} so the join can match it.
+        content:
+          type: string
+          description: GitHub-flavoured Markdown body (no H1 title).
+        excerpt:
+          type: string
+          description: One-sentence plain-text summary.
+    routes:
+      - to: step4b_persist_posts
 
 output:
   summary: "{{ final.output.summary }}"

@@ -5,14 +5,17 @@ description: Run the end-to-end Umbraco blogging-site demo as a Conductor multi-
 
 # Run the Umbraco demo as a Conductor workflow
 
-This skill runs the complete 8-step Umbraco blogging-site demo as a
+This skill runs the complete Umbraco blogging-site demo as a
 [Conductor](https://github.com/github/conductor) multi-agent workflow. The
 workflow file lives next to this skill at
-[`umbraco-demo.yaml`](./umbraco-demo.yaml) and embeds each existing demo step by
-`!file`-including its `SKILL.md` (`umb-homepage`, `umb-blog-pages`,
-`umb-navigation`, `umb-blogposts`, `umb-image-sourcing`, `umb-blogpost-images`,
-`umb-tagcloud`, `umb-sitemap`, `umb-accessibility`), plus an optional
-backup/reset and a branch setup step.
+[`umbraco-demo.yaml`](./umbraco-demo.yaml) and embeds most demo steps by
+`!file`-including their `SKILL.md` (`umb-homepage`, `umb-blog-pages`,
+`umb-navigation`, `umb-image-sourcing`, `umb-blogpost-images`, `umb-tagcloud`,
+`umb-sitemap`, `umb-accessibility`), plus an optional backup/reset and a branch
+setup step. The blog-posts step is purpose-built inline to showcase Conductor:
+a deterministic **plan** agent emits a typed post contract, a **`for_each`
+fan-out** authors every post body concurrently, then a serial **join** agent
+persists them to Umbraco one at a time (content writes must stay sequential).
 
 ## ⚠️ Critical browser rule
 
