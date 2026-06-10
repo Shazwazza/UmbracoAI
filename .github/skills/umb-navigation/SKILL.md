@@ -17,9 +17,37 @@ description: Implement shared site navigation and validate rendering with Playwr
 * Since page navigation is a shared component, a razor partial view can be used which is stored under `src/MyProject/Views/Partials`.
 * Render the navigation partial **once** from the master `_Layout.cshtml` (created in the home-page step), not separately inside each page template. Because every page already inherits `_Layout.cshtml`, adding the nav to the layout makes it appear on all pages automatically — do not paste the nav markup or `Html.PartialAsync("Navigation")` call into individual templates.
 
+### Known-good Navigation partial (copy this — do NOT trial-and-error)
+
+Use this exact shape for `src/MyProject/Views/Partials/Navigation.cshtml`. It compiles first time. Re-style the markup/classes/labels to match your theme, but keep the data-access pattern identical:
+
+```razor
+@inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage
+@{
+    var home = Model.Root();
+    var blogList = home.Children().FirstOrDefault(x => x.ContentType.Alias == "blogList");
+}
+<nav>
+    <a href="@home.Url()" class="@(Model.Id == home.Id ? "active" : "")">Home</a>
+    @if (blogList != null)
+    {
+        <a href="@blogList.Url()" class="@(Model.Id == blogList.Id || Model.Parent?.Id == blogList.Id ? "active" : "")">Blog</a>
+    }
+</nav>
+```
+
+**Avoid these compile traps that have cost ~5 minutes of failed iteration on past runs (they throw a Razor _compilation exception_ → site returns HTTP 500 / shows `div#stackpage`):**
+* The partial MUST start with `@inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage`. Without it `Model.Root()`/`Model.Id` won't resolve.
+* Use `home.Children()` (the **method**, an `Umbraco.Extensions` extension) — NOT `home.Children` as a property.
+* `System.Linq` (`FirstOrDefault`, `Where`) and `Umbraco.Extensions` are already globally available via `_ViewImports.cshtml` + implicit usings — do NOT add extra `@using` directives hunting for them; that is not the cause of compile errors.
+* Null-guard the root/children (`Model.Root()` can be null very early; `blogList` may not exist yet) with `?.` and an `@if` as shown — unguarded access is the usual real cause of the 500.
+* Active-state is determined by comparing `Model.Id`/`Model.Parent?.Id` to the nav node id (URL/string parsing is unnecessary and fragile).
+
 ## Testing
 
 * Once the navigation has been created or updated, test that it renders correctly using the Playwright MCP tool.
+* **Do NOT restart the site after editing a `.cshtml`** — Razor views compile at runtime, so a save + browser refresh is enough. Restarting the dotnet site repeatedly wastes minutes per run.
+* If a page returns HTTP 500 / shows `div#stackpage` after a nav change, it is almost always a Razor **compilation exception** in the partial. Read the actual error from the newest Umbraco log file at `src/MyProject/umbraco/Logs/UmbracoTraceLog.*.json` (look for the compilation error line + line number) instead of guessing-and-re-editing. The known-good partial above avoids the common causes.
 * Navigate to `SITE_BASE_URL` and verify:
   1. Navigation links are visible on all pages (Home, Blog List, Blog Post).
   2. Clicking each nav link loads the correct page without errors.
