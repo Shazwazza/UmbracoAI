@@ -53,4 +53,4 @@ When writing content for the website:
 * Umbraco structure and schema defined and created.
 * Umbraco content created.
 * Umbraco media created.
-* Minimum of 5 blog posts.
+* Blog posts created.
