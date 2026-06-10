@@ -38,8 +38,8 @@ mapping of blog post -> media item.
 * Use `?width=1200&height=500&mode=crop` for blog post hero images.
 * Use `?width=600&height=300&mode=crop` for blog list card thumbnails.
 * Every `<img>` (hero and thumbnail) MUST have a meaningful `alt` attribute —
-  use the blog post title. Accessibility is validated earlier in the build, so
-  do not introduce images without alt text (it would regress a11y).
+  use the blog post title. Accessibility is validated later in the build, so
+  do not introduce images without alt text (it would fail a11y).
 * Update the blog post template to render the hero image below the header.
 * Update the blog list template to show a thumbnail image on each blog card.
 * If `umb-image-sourcing` provided photographer attribution, render a small

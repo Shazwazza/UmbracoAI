@@ -3,8 +3,8 @@ workflow:
   description: >-
     End-to-end Umbraco blogging-site demo expressed as a Conductor multi-agent
     workflow. Covers the umbraco-demo steps: optional reset, branch setup, then
-    home page, blog pages, navigation, accessibility, blog posts, images, tag cloud
-    and sitemap — validating each step in Playwright and committing per step.
+    home page, blog pages, navigation, blog posts, images, tag cloud, sitemap and
+    accessibility — validating each step in Playwright and committing per step.
     The blog-posts step is parallelised to show Conductor's strengths: a
     deterministic plan agent, a for_each fan-out that authors every post body
     concurrently, then a serial join that persists them to Umbraco one at a time.
@@ -240,37 +240,19 @@ agents:
       `#stackpage` error div), then commit this step.
     prompt: !file ../umb-navigation/SKILL.md
     routes:
-      - to: step4_accessibility
+      - to: step4_plan_posts
 
-  - name: step4_accessibility
-    description: "Step 4 — Accessibility checks and fixes (design is now locked)."
-    system_prompt: |
-      You are executing Step 4 (Accessibility) of the live Umbraco demo. The site
-      design — templates and CSS — is essentially complete now (home page, blog
-      list, a starter blog post, and navigation), so this is the right moment to
-      validate accessibility ONCE against the finished design before bulk content
-      is added. Follow the included skill instructions to run the a11y-accessibility
-      MCP tool on each page, fix issues in the templates/CSS, and repeat until every
-      page reports zero violations. When fixing a page, navigate/refresh it in
-      Playwright so the audience sees the change. Then commit this step.
-
-      Note: later steps add hero images and a tag cloud; those steps are
-      responsible for keeping their own markup accessible (e.g. image alt text).
-    prompt: !file ../umb-accessibility/SKILL.md
-    routes:
-      - to: step5_plan_posts
-
-  # Step 5 is split into three nodes to showcase Conductor's strengths:
-  #   5)  a deterministic PLAN agent emits a typed JSON contract,
-  #   5·) a for_each FAN-OUT authors every post body concurrently (pure text —
+  # Step 4 is split into three nodes to showcase Conductor's strengths:
+  #   4)  a deterministic PLAN agent emits a typed JSON contract,
+  #   4·) a for_each FAN-OUT authors every post body concurrently (pure text —
   #       no Umbraco writes, no browser, so it is safe to parallelise), then
-  #   5b) a serial JOIN agent persists them one-at-a-time (Umbraco serialises all
+  #   4b) a serial JOIN agent persists them one-at-a-time (Umbraco serialises all
   #       content writes behind a single content-tree write lock, so creation
   #       MUST stay sequential — parallel writes deadlock).
-  - name: step5_plan_posts
-    description: "Step 5 — Plan the remaining blog posts (deterministic contract)."
+  - name: step4_plan_posts
+    description: "Step 4 — Plan the remaining blog posts (deterministic contract)."
     system_prompt: |
-      You are executing Step 5 (Plan posts) of the live Umbraco demo. You do NOT
+      You are executing Step 4 (Plan posts) of the live Umbraco demo. You do NOT
       author full post bodies here and you do NOT create anything in Umbraco yet.
 
       Goal: decide the set of blog posts so the site ends with EXACTLY 10 total.
@@ -311,12 +293,12 @@ agents:
     routes:
       - to: author_posts
 
-  - name: step5b_persist_posts
-    description: "Step 5b — Persist the authored posts to Umbraco (serial join)."
+  - name: step4b_persist_posts
+    description: "Step 4b — Persist the authored posts to Umbraco (serial join)."
     system_prompt: |
-      You are executing Step 5b (Persist posts) of the live Umbraco demo. The post
+      You are executing Step 4b (Persist posts) of the live Umbraco demo. The post
       bodies were authored CONCURRENTLY in the previous fan-out step. The plan is
-      in `{{ step5_plan_posts.output.posts }}` and the authored bodies are in
+      in `{{ step4_plan_posts.output.posts }}` and the authored bodies are in
       `{{ author_posts.outputs }}` (a map keyed by slug, each with `content` and
       `excerpt`). Any posts that failed to author appear in
       `{{ author_posts.errors }}` — if a slug is missing a body, author a short one
@@ -339,18 +321,18 @@ agents:
       Persist and publish every planned blog post to Umbraco now (sequentially),
       then validate the Blog List shows 10 posts and commit.
     routes:
-      - to: step6_image_sourcing
+      - to: step5a_image_sourcing
 
-  - name: step6_image_sourcing
-    description: "Step 6 — Source hero images from Unsplash into Umbraco media."
+  - name: step5a_image_sourcing
+    description: "Step 5a — Source hero images from Unsplash into Umbraco media."
     system_prompt: |
-      You are executing Step 6 (Image sourcing) of the live Umbraco demo. Follow
+      You are executing Step 5a (Image sourcing) of the live Umbraco demo. Follow
       the included skill instructions to run the discovery script
       (`.github/skills/umb-image-sourcing/source-blog-images.ps1`) ONCE to get a compact slug->image mapping
       from Unsplash, then upload one topical hero image per blog post into a "Blog
       Hero Images" media folder. Build the script's `{slug, query}` list by
       reusing the per-post `image_query` already chosen in the plan
-      (`{{ step5_plan_posts.output.posts }}`), falling back to a query derived from
+      (`{{ step4_plan_posts.output.posts }}`), falling back to a query derived from
       the post topic for the Step 2 starter post. The script is for image
       discovery ONLY — never use it (or any fetch tool) to reach Umbraco; all
       Umbraco operations go through umbraco-mcp. The script automatically falls
@@ -359,44 +341,60 @@ agents:
       require a separate commit; the images are committed in the next step.
     prompt: !file ../umb-image-sourcing/SKILL.md
     routes:
-      - to: step7_blogpost_images
+      - to: step5_blogpost_images
 
-  - name: step7_blogpost_images
-    description: "Step 7 — Hero images on blog posts."
+  - name: step5_blogpost_images
+    description: "Step 5 — Hero images on blog posts."
     system_prompt: |
-      You are executing Step 7 (Blog post images) of the live Umbraco demo. The
+      You are executing Step 5 (Blog post images) of the live Umbraco demo. The
       hero images were already sourced and uploaded into the "Blog Hero Images"
-      media folder in Step 6. Follow the included skill instructions to ASSIGN a
+      media folder in Step 5a. Follow the included skill instructions to ASSIGN a
       hero image to each blog post and RENDER thumbnails/heroes in the templates
       (do not re-source images). Every hero image and list thumbnail MUST have
       meaningful `alt` text (use the post title) so the markup stays accessible —
-      accessibility was already validated earlier, so do not regress it. Validate
-      images render on the Blog List and a Blog Post page, then commit this step.
+      accessibility is validated in a later step, so do not introduce images
+      without alt text. Validate images render on the Blog List and a Blog Post
+      page, then commit this step.
     prompt: !file ../umb-blogpost-images/SKILL.md
     routes:
-      - to: step8_tagcloud
+      - to: step6_tagcloud
 
-  - name: step8_tagcloud
-    description: "Step 8 — Tag cloud on the Blog List page."
+  - name: step6_tagcloud
+    description: "Step 6 — Tag cloud on the Blog List page."
     system_prompt: |
-      You are executing Step 8 (Tag cloud) of the live Umbraco demo. Follow the
+      You are executing Step 6 (Tag cloud) of the live Umbraco demo. Follow the
       included skill instructions to add a tag cloud whose tag sizes reflect how
       frequently each tag appears across posts. Keep the markup accessible —
       tags must be real, keyboard-focusable links with discernible text (do not
-      rely on size/colour alone) — since accessibility was validated earlier.
-      Validate the tag cloud renders on the Blog List page, then commit this step.
+      rely on size/colour alone) — since accessibility is validated in a later
+      step. Validate the tag cloud renders on the Blog List page, then commit
+      this step.
     prompt: !file ../umb-tagcloud/SKILL.md
     routes:
-      - to: step9_sitemap
+      - to: step7_sitemap
 
-  - name: step9_sitemap
-    description: "Step 9 — sitemap.xml generation and crawl."
+  - name: step7_sitemap
+    description: "Step 7 — sitemap.xml generation and crawl."
     system_prompt: |
-      You are executing Step 9 (Sitemap) of the live Umbraco demo. Follow the
+      You are executing Step 7 (Sitemap) of the live Umbraco demo. Follow the
       included skill instructions to generate sitemap.xml from all published
       content and crawl each URL in Playwright to confirm it renders without
       errors. Then commit this step.
     prompt: !file ../umb-sitemap/SKILL.md
+    routes:
+      - to: step8_accessibility
+
+  - name: step8_accessibility
+    description: "Step 8 — Accessibility checks and fixes."
+    system_prompt: |
+      You are executing Step 8 (Accessibility) of the live Umbraco demo. All
+      content (blog posts, hero images, tag cloud) is in place now, so this is the
+      right moment to validate accessibility across the finished site. Follow the
+      included skill instructions to run the a11y-accessibility MCP tool on each
+      page, fix issues in the templates/CSS, and repeat until every page reports
+      zero violations. When fixing a page, navigate/refresh it in Playwright so the
+      audience sees the change. Then commit this step.
+    prompt: !file ../umb-accessibility/SKILL.md
     routes:
       - to: final
 
@@ -426,13 +424,13 @@ agents:
 # Dynamic parallel fan-out: author every planned post body concurrently.
 # This is the headline parallelism — pure Markdown generation with NO Umbraco
 # writes and NO browser, so it is safe to run many at once. The serial
-# step5b_persist_posts join then writes them to Umbraco one at a time.
+# step4b_persist_posts join then writes them to Umbraco one at a time.
 # -----------------------------------------------------------------------------
 for_each:
   - name: author_posts
-    description: "Step 5· — Author each blog post body in parallel."
+    description: "Step 4· — Author each blog post body in parallel."
     type: for_each
-    source: step5_plan_posts.output.posts
+    source: step4_plan_posts.output.posts
     as: post
     key_by: post.slug
     # Posts authored concurrently per batch. Each item is an independent Copilot
@@ -479,7 +477,7 @@ for_each:
           type: string
           description: One-sentence plain-text summary.
     routes:
-      - to: step5b_persist_posts
+      - to: step4b_persist_posts
 
 output:
   summary: "{{ final.output.summary }}"

@@ -11,7 +11,7 @@ For the Blog List page template, render a tag cloud that shows all tags used by 
 
 ## Accessibility
 
-Accessibility is validated earlier in the build, so keep the tag cloud markup accessible — do not regress it:
+Accessibility is validated later in the build, so keep the tag cloud markup accessible from the start:
 
 * Render each tag as a real, keyboard-focusable link (`<a>`) with discernible text content (the tag name).
 * Do not convey meaning through size or colour alone; the tag text must always be readable.
