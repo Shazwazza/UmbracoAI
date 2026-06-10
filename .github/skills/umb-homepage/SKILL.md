@@ -13,6 +13,14 @@ description: Create the Umbraco home page structure, template, styling, and publ
 * **Design creativity**: Invent a unique visual theme for this run — pick an original color palette, typography feel, and layout style. Do NOT reuse themes from previous builds.
 * Ensure there is a Home page at the root of the content tree and it is published.
 
+## Shared master layout (do this first — it saves time on every later step)
+
+Create a single master Razor layout at `src/MyProject/Views/_Layout.cshtml` that holds the shared page shell — `<!DOCTYPE html>`, `<head>` (meta, `<title>`, the `/css/site.css` link, sitemap link), the navigation/header, the footer, and `@RenderBody()` for the page-specific content. Every page template (`home.cshtml`, `blogList.cshtml`, `blog.cshtml`, etc.) must then set `Layout = "_Layout.cshtml";` and contain **only** its unique content — never its own `<!DOCTYPE>`/`<head>`/`<body>`/nav/footer.
+
+> Do NOT use `Layout = null;` per page and copy the HTML shell into each template. Duplicating the shell forces you to re-edit the same `<head>`, CSS link, nav, and footer in 3+ files on the navigation, tag-cloud, sitemap, and accessibility steps — a large, avoidable time sink. Define the chrome once in `_Layout.cshtml`.
+
+The `_Layout.cshtml` is a plain Razor layout authored directly on the filesystem (not an Umbraco template created via MCP). It should still start with `@inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage` so Umbraco helpers (e.g. `Model.Root()`) work inside it.
+
 ## Validation
 
 Use Playwright to navigate to `SITE_BASE_URL`. Confirm:

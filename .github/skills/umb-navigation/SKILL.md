@@ -15,6 +15,7 @@ description: Implement shared site navigation and validate rendering with Playwr
 ## Razor
 
 * Since page navigation is a shared component, a razor partial view can be used which is stored under `src/MyProject/Views/Partials`.
+* Render the navigation partial **once** from the master `_Layout.cshtml` (created in the home-page step), not separately inside each page template. Because every page already inherits `_Layout.cshtml`, adding the nav to the layout makes it appear on all pages automatically — do not paste the nav markup or `Html.PartialAsync("Navigation")` call into individual templates.
 
 ## Testing
 
