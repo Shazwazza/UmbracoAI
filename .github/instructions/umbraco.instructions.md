@@ -21,7 +21,7 @@ applyTo: '**'
 
 ## Running the website
 
-* The web application will normally already be running at `SITE_BASE_URL` (see Project Configuration in copilot-instructions.md). If its not, it can be started by running `dotnet run --project src/MyProject/MyProject.csproj` from the root of this workspace.
+* The web application will normally already be running at `SITE_BASE_URL` (see Project Configuration in copilot-instructions.md). If its not, it can be started by running `dotnet run --project src/MyProject/MyProject.csproj --launch-profile Umbraco.Web.UI -p:SiteEnv=Development` from the root of this workspace. The `-p:SiteEnv=Development` global property redirects the build output to `bin\Development\` so it never locks the Conductor site's `MyProject.exe` when both run at once.
 
 ## Database backup
 

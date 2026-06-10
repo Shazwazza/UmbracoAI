@@ -14,7 +14,7 @@ In this demo, the premise is to have an AI Agent automatically create an Umbraco
 
 1. Install Playwright as admin with `npx playwright install`
 1. Clone/Fork this repo and open in your Copilot-enabled editor.
-1. The Umbraco website needs to be running/installed: `dotnet run --project src/MyProject/MyProject.csproj`
+1. The Umbraco website needs to be running/installed: `dotnet run --project src/MyProject/MyProject.csproj --launch-profile Umbraco.Web.UI -p:SiteEnv=Development`
 1. Configure MCP servers in `/.mcp.json`
 1. [Create an Umbraco API User](https://docs.umbraco.com/umbraco-cms/fundamentals/data/users/api-users), with credentials matching `/.mcp.json`
 1. Start Copilot CLI and run the end-to-end demo with `Use the umbraco-demo agent`
@@ -60,7 +60,7 @@ copilot plugin install umbracoai-demo@umbracoai-marketplace
 
 ### Umbraco website & Umbraco MCP
 
-1. The Umbraco website will need to be run/installed first: `dotnet run --project src/MyProject/MyProject.csproj`
+1. The Umbraco website will need to be run/installed first: `dotnet run --project src/MyProject/MyProject.csproj --launch-profile Umbraco.Web.UI -p:SiteEnv=Development`
 1. Read and configure Umbraco MCP: https://github.com/umbraco/Umbraco-CMS-MCP-Dev including the user information.
 1. Edit `/.mcp.json` to update your Umbraco settings.
 1. NOTE: ALL Umbraco MCP commands are marked as 'always allow', however there is this filter applied to the MCP server: "UMBRACO_INCLUDE_TOOL_COLLECTIONS": "document,media,document-type,data-type".
@@ -80,10 +80,10 @@ Start each one in its own terminal from the repo root:
 
 ```bash
 # Terminal 1 — traditional demo site
-dotnet run --project src/MyProject/MyProject.csproj --launch-profile Umbraco.Web.UI
+dotnet run --project src/MyProject/MyProject.csproj --launch-profile Umbraco.Web.UI -p:SiteEnv=Development
 
 # Terminal 2 — Conductor workflow site
-dotnet run --project src/MyProject/MyProject.csproj --launch-profile Conductor
+dotnet run --project src/MyProject/MyProject.csproj --launch-profile Conductor -p:SiteEnv=Conductor
 ```
 
 How it works:
@@ -91,6 +91,11 @@ How it works:
 * Each profile sets `ASPNETCORE_ENVIRONMENT`, so the second site loads
   `src/MyProject/appsettings.Conductor.json`, which points `umbracoDbDSN` at a
   separate LocalDB database (`UmbracoConductor.mdf`).
+* The `-p:SiteEnv=...` global property redirects each site's build output to
+  `bin\<SiteEnv>\` / `obj\<SiteEnv>\` (see `src/MyProject/Directory.Build.props`),
+  so the two builds never lock each other's `MyProject.exe`. It MUST be passed on
+  the command line because launch-profile environment variables do not reach the
+  build phase of `dotnet run`.
 * The second site uses `LocalTempStorageLocation: EnvironmentTemp` with a unique
   `SiteName`, so its Examine indexes and content cache live in a separate temp
   folder and do not clash with the default site.
@@ -159,7 +164,7 @@ Use the umbraco-demo-conductor agent to build the full Umbraco blogging site
 The Conductor workflow runs against its **own** Umbraco site (the `Conductor` launch profile / environment at `http://localhost:14738`) so it can run at the same time as the traditional demo agent without sharing a database — see [Running two sites at once](#running-two-sites-at-once). Start it with:
 
 ```
-dotnet run --project src/MyProject/MyProject.csproj --launch-profile Conductor
+dotnet run --project src/MyProject/MyProject.csproj --launch-profile Conductor -p:SiteEnv=Conductor
 ```
 
 **Before running, start the Conductor's Playwright browser server (port 8932)** so the workflow drives its *own* visible window — separate from the traditional demo agent's port-8931 window, so both can run at once (otherwise later steps run in a hidden browser). From the repo root, in this order:

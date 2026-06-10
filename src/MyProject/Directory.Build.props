@@ -1,20 +1,26 @@
 <Project>
 
   <!--
-    Separate build output per environment so the two sites (Development and Conductor)
+    Separate build output per site so the two instances (Development and Conductor)
     can build and run concurrently without locking each other's MyProject.exe.
 
-    ASPNETCORE_ENVIRONMENT is supplied by the launch profile (see Properties/launchSettings.json)
-    and is read here as an MSBuild property. These paths MUST be set in Directory.Build.props
-    (imported before Microsoft.Common.props) so that BaseIntermediateOutputPath takes effect;
-    setting it in the .csproj is too late and corrupts the intermediate (obj) output.
+    The site is selected with an MSBuild global property, SiteEnv, passed on the command
+    line (-p:SiteEnv=...) so it reaches the *build* phase of `dotnet run`. Launch-profile
+    environmentVariables such as ASPNETCORE_ENVIRONMENT do NOT flow into the build, which is
+    why keying on ASPNETCORE_ENVIRONMENT did not work. Example invocations (one per site):
 
-    When ASPNETCORE_ENVIRONMENT is not set (e.g. plain `dotnet build`) the default
-    bin\/obj\ paths are used.
+        dotnet run (launch profile Umbraco.Web.UI) with -p:SiteEnv=Development
+        dotnet run (launch profile Conductor)      with -p:SiteEnv=Conductor
+
+    These paths MUST be set in Directory.Build.props (imported before Microsoft.Common.props)
+    so that BaseIntermediateOutputPath takes effect; setting it in the .csproj is too late and
+    corrupts the intermediate (obj) output.
+
+    When SiteEnv is not supplied (e.g. plain `dotnet build`) the default bin\/obj\ paths are used.
   -->
-  <PropertyGroup Condition="'$(ASPNETCORE_ENVIRONMENT)' != ''">
-    <BaseOutputPath>bin\$(ASPNETCORE_ENVIRONMENT)\</BaseOutputPath>
-    <BaseIntermediateOutputPath>obj\$(ASPNETCORE_ENVIRONMENT)\</BaseIntermediateOutputPath>
+  <PropertyGroup Condition="'$(SiteEnv)' != ''">
+    <BaseOutputPath>bin\$(SiteEnv)\</BaseOutputPath>
+    <BaseIntermediateOutputPath>obj\$(SiteEnv)\</BaseIntermediateOutputPath>
   </PropertyGroup>
 
 </Project>

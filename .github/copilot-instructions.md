@@ -12,16 +12,20 @@ Start each site from the repo root with its launch profile:
 
 ```bash
 # Traditional demo site (SITE_BASE_URL)
-dotnet run --project src/MyProject/MyProject.csproj --launch-profile Umbraco.Web.UI
+dotnet run --project src/MyProject/MyProject.csproj --launch-profile Umbraco.Web.UI -p:SiteEnv=Development
 
 # Conductor workflow site (CONDUCTOR_SITE_BASE_URL)
-dotnet run --project src/MyProject/MyProject.csproj --launch-profile Conductor
+dotnet run --project src/MyProject/MyProject.csproj --launch-profile Conductor -p:SiteEnv=Conductor
 ```
 
 Run them in two separate terminals to operate both sites concurrently. Each site
 uses its own LocalDB database and an isolated temp/Examine folder, so they do not
-conflict. Each site must be installed once and have the Umbraco API user created
-(see README).
+conflict. The `-p:SiteEnv=...` global property redirects each site's build output
+to `bin\<SiteEnv>\` / `obj\<SiteEnv>\` (see `src/MyProject/Directory.Build.props`),
+so the two builds never lock each other's `MyProject.exe`. It MUST be passed on the
+command line because launch-profile environment variables do not reach the build
+phase of `dotnet run`. Each site must be installed once and have the Umbraco API
+user created (see README).
 
 > **Note:** `SITE_BASE_URL` is wired through `.mcp.json` (`UMBRACO_BASE_URL`) and
 > the `Umbraco.Web.UI` profile in `src/MyProject/Properties/launchSettings.json`.

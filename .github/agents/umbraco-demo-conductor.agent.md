@@ -41,7 +41,7 @@ Closing it ruins the demo.
    Configuration in `copilot-instructions.md`). This is the dedicated Conductor
    environment site (separate database from the traditional demo site, so both
    can run at once). If it is not, start it with
-   `dotnet run --project src/MyProject/MyProject.csproj --launch-profile Conductor`
+   `dotnet run --project src/MyProject/MyProject.csproj --launch-profile Conductor -p:SiteEnv=Conductor`
    and wait for it to come up.
 3. Confirm the `conductor` CLI is available (`conductor --version`). If it is
    missing, install it per the Conductor skill's setup guide.
