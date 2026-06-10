@@ -31,8 +31,10 @@ user created (see README).
 > the `Umbraco.Web.UI` profile in `src/MyProject/Properties/launchSettings.json`.
 > `CONDUCTOR_SITE_BASE_URL` is wired through the conductor workflow
 > `.github/skills/umb-demo-conductor/umbraco-demo.yaml` (the `site_base_url` input
-> default and the `UMBRACO_BASE_URL` env mirror), the `Conductor` profile in
-> `launchSettings.json`, and `src/MyProject/appsettings.Conductor.json`. If you
+> default, the `UMBRACO_BASE_URL` env mirror, the `--umbraco-base-url` CLI flag, and
+> the literal URL in the shared `instructions:` preamble's "SITE URL" block), the
+> `Conductor` profile in `launchSettings.json`, and
+> `src/MyProject/appsettings.Conductor.json`. If you
 > change either URL/port, update the matching set of files.
 
 # Project Overview
