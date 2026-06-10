@@ -28,7 +28,20 @@ workflow:
     mcp_servers:
       umbraco-mcp:
         command: npx
-        args: ["@umbraco-cms/mcp-dev@latest"]
+        # The Copilot provider has a known bug (copilot-sdk#163) where the per-server
+        # `env:` block below is NOT forwarded to the MCP subprocess. The Copilot CLI
+        # also auto-discovers the workspace `.mcp.json` (pinned to the traditional
+        # site on :14737) and that leaks UMBRACO_BASE_URL=14737 into the environment.
+        # CLI flags ARE forwarded and take precedence over env vars in mcp-dev's config
+        # resolution, so we pass the Conductor site URL (and tool collections) as flags
+        # to guarantee this server targets :14738 regardless of the leaked env var.
+        # (Credentials have no CLI flag by design and continue to come from the env.)
+        args:
+          - "@umbraco-cms/mcp-dev@latest"
+          - "--umbraco-base-url"
+          - "http://localhost:14738"
+          - "--umbraco-include-tool-collections"
+          - "data-type,document-type,document,media,property-type,partial-view,static-file,stylesheet,temporary-file,imaging,template"
         env:
           NODE_TLS_REJECT_UNAUTHORIZED: "0"
           UMBRACO_CLIENT_ID: "umbraco-back-office-mcp"
