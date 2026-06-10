@@ -104,8 +104,12 @@ workflow:
         compact mapping. That script — and any fetch tool — is for IMAGE
         DISCOVERY ONLY. Umbraco access is always through umbraco-mcp.
       - All write operations (create, update, delete, move, publish, unpublish)
-        MUST be issued ONE AT A TIME — never in parallel (LocalDB uses
-        table-level locks). Read operations may be parallelised.
+        MUST be issued ONE AT A TIME — never in parallel (LocalDB serialises every
+        content write behind a single content-tree lock, so concurrent writes
+        DEADLOCK). This applies WITHIN a single agent too: never place two
+        umbraco-mcp write calls in the same tool batch/turn, and always wait for
+        one write (and its `publish-document`) to return before issuing the next.
+        Read operations (`get-*`, `search-*`, `find-*`) may be parallelised.
       - After creating or updating any document, immediately call
         `publish-document`. Unpublished drafts are invisible on the front-end.
 
@@ -311,8 +315,10 @@ agents:
 
       CRITICAL: issue every create/publish ONE AT A TIME (never in parallel) —
       Umbraco serialises content writes behind a single content-tree lock, so
-      parallel writes deadlock. After creating each document, immediately
-      `publish-document`.
+      parallel writes deadlock. Do the full create→`publish-document` cycle for
+      one post and WAIT for it to return before starting the next; never request
+      two posts (or a create and a publish for different posts) in the same tool
+      batch/turn.
 
       When all posts are published, validate in Playwright that the Blog List
       shows exactly 10 posts (each with a title, date, and excerpt; no
@@ -434,12 +440,19 @@ for_each:
     as: post
     key_by: post.slug
     # Posts authored concurrently per batch. Each item is an independent Copilot
-    # session, so keep this modest for a smooth live run; raise for more drama.
-    max_concurrent: 4
+    # session doing pure text generation (NO Umbraco, NO browser), so this is the
+    # cheapest thing to parallelise. 6 gives ~2 waves for a typical 9-post plan
+    # while staying light enough for a smooth live run; raise toward the post
+    # count for a single wave (and more on-stage drama).
+    max_concurrent: 6
     # One flaky post must not abort the demo; the join step backfills any gaps.
     failure_mode: continue_on_error
     agent:
       name: author_post
+      # Pure prose generation — a fast model keeps the headline parallel step
+      # snappy and cheap; the orchestration/persist steps stay on the default
+      # (Sonnet) for correctness.
+      model: claude-haiku-4.5
       description: "Author a single blog post body from its plan entry."
       system_prompt: |
         You are one of several agents authoring blog posts CONCURRENTLY for a live
@@ -449,6 +462,11 @@ for_each:
         - Do NOT call any Umbraco (umbraco-mcp) tool, any Playwright/browser tool,
           or git. Do NOT create, publish, or validate anything. Another agent
           persists your output afterwards.
+        - CRITICAL: several copies of you run AT THE SAME TIME. Umbraco's LocalDB
+          serialises every content write behind a single content-tree lock, so if
+          you call ANY umbraco-mcp write tool here it will DEADLOCK the demo and
+          stall the whole run. There is never a reason to touch Umbraco in this
+          step — you only return Markdown.
         - The shared per-step validation/commit rules in the preamble do NOT apply
           to you — you are a text-only sub-task that just returns Markdown.
         - Output ONLY the structured fields below.
