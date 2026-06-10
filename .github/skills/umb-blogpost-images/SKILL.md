@@ -26,7 +26,28 @@ mapping of blog post -> media item.
 
 * Use `update-document-properties` to set the `heroImage` property on each blog post.
 * The media picker value format is: `[{"key": "<uuid>", "mediaKey": "<media-id>", "mediaTypeAlias": "Image", "crops": [], "focalPoint": null}]`
+  * `key` is a NEW unique GUID for this picker entry (any GUID).
+  * `mediaKey` MUST be the real **key (GUID)** of the uploaded media item — read
+    it back from the media library; do not guess or reuse the post id.
+  * `mediaTypeAlias` MUST match the media item's ACTUAL type. The hero media must
+    be **Image** (see `umb-image-sourcing`). Declaring `"Image"` here while the
+    media is really a `File` makes publish drop the value.
 * After assigning, republish each blog post.
+
+### If a hero image won't appear after publishing (READ THIS before retrying)
+
+If the draft has `heroImage` set but `get-document-publish` shows
+`"heroImage","value":[]` (empty) on the published version, **do NOT keep
+republishing or switch to `update-document` — that wastes time and will not
+help.** The value is being stripped at publish because the referenced media is
+the wrong type. Fix the cause instead:
+
+1. Read the media item (`get-media-by-id`) and check its media/content type.
+2. If it is **File** (not **Image**), the MediaPicker rejects it on publish.
+   Re-create that media as an **Image** type (see `umb-image-sourcing`), then
+   re-assign using the new media key and republish once.
+
+This is a known Umbraco gotcha, not an MCP bug.
 
 ## Rendering in templates
 

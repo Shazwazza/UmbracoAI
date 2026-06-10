@@ -77,6 +77,14 @@ a stable Lorem Picsum image and `source` is `"picsum"`.
 Upload every `url` from the script output into the **Blog Hero Images** folder
 using `create-media-multiple`:
 
+* **CRITICAL — create each item as the `Image` media type, NOT `File`.** Pass the
+  Image media type explicitly (e.g. `mediaTypeAlias: "Image"`, or the Image media
+  type's id/key) on every create call. If you omit it, Umbraco creates a generic
+  **File** media item, and a File-type media assigned to the `heroImage`
+  MediaPicker is **silently stripped to an empty value when the post is
+  published** (the draft keeps it, but `get-document-publish` returns
+  `heroImage: []`). This is the #1 cause of "hero images won't show" — it is NOT
+  an MCP/publish bug, it is the wrong media type.
 * Use `sourceType: "url"` — `filePath` uploads are disabled by default.
 * Pass the URL exactly as returned (Umbraco downloads it server-side; both the
   `images.unsplash.com` and `picsum.photos` URLs are publicly fetchable).
@@ -86,6 +94,11 @@ using `create-media-multiple`:
 
 **Sequential writes only:** issue `create-media`/`create-media-multiple` calls
 one at a time — never in parallel (LocalDB uses table-level locks).
+
+**Verify the media type before finishing:** after uploading, read back one media
+item (e.g. `get-media-by-id`) and confirm its content/media type is **Image**
+(not File). If any item is a File, delete and recreate it as an Image — do not
+hand File-type media to the assign step.
 
 ## Fallback note
 

@@ -19,9 +19,14 @@ description: Generate sitemap.xml and validate all site links and navigation pat
 
 ## Validate page rendering
 
-* Crawl each link in the sitemap and validate it does not produce errors by using Playwright to browse to each URL.
-* If there are errors, there will be a `div` element with an id of `stackpage`.
-* If there is an error, read what is rendered and fix it in the Template.
+* Every page was already validated in its own build step, so you do NOT need to
+  re-crawl all URLs here. Spot-check a **representative sample** with Playwright:
+  the home page, the blog list page, two or three blog posts (including one with
+  a hero image), and `/sitemap.xml` itself. This keeps validation meaningful
+  without crawling the whole site again.
+* A page has an error if it renders a `div` element with an id of `stackpage`.
+* If there is an error, read what is rendered and fix it in the Template, then
+  re-check that page.
 
 ## Validate navigation
 
