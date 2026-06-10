@@ -1,0 +1,20 @@
+<Project>
+
+  <!--
+    Separate build output per environment so the two sites (Development and Conductor)
+    can build and run concurrently without locking each other's MyProject.exe.
+
+    ASPNETCORE_ENVIRONMENT is supplied by the launch profile (see Properties/launchSettings.json)
+    and is read here as an MSBuild property. These paths MUST be set in Directory.Build.props
+    (imported before Microsoft.Common.props) so that BaseIntermediateOutputPath takes effect;
+    setting it in the .csproj is too late and corrupts the intermediate (obj) output.
+
+    When ASPNETCORE_ENVIRONMENT is not set (e.g. plain `dotnet build`) the default
+    bin\/obj\ paths are used.
+  -->
+  <PropertyGroup Condition="'$(ASPNETCORE_ENVIRONMENT)' != ''">
+    <BaseOutputPath>bin\$(ASPNETCORE_ENVIRONMENT)\</BaseOutputPath>
+    <BaseIntermediateOutputPath>obj\$(ASPNETCORE_ENVIRONMENT)\</BaseIntermediateOutputPath>
+  </PropertyGroup>
+
+</Project>

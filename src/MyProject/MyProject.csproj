@@ -6,6 +6,13 @@
     <CompressionEnabled>false</CompressionEnabled> <!-- Disable compression. E.g. for umbraco backoffice files. These files should be precompressed by node and not let dotnet handle it -->
   </PropertyGroup>
 
+  <PropertyGroup>
+    <!-- Output (bin) and intermediate (obj) paths are redirected per environment in Directory.Build.props.
+         Exclude every bin\/obj\ subtree from the default item globs so generated .cs files from a
+         sibling environment's output folder are never compiled (which would cause duplicate-attribute errors). -->
+    <DefaultItemExcludes>$(DefaultItemExcludes);obj\**;bin\**</DefaultItemExcludes>
+  </PropertyGroup>
+
   <ItemGroup>
     <PackageReference Include="Umbraco.Cms" />
     <PackageReference Include="Umbraco.Cms.DevelopmentMode.Backoffice" />
