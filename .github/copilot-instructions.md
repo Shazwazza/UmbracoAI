@@ -1,10 +1,35 @@
 # Project Configuration
 
-| Variable | Value |
-|----------|-------|
-| `SITE_BASE_URL` | `http://localhost:14737` |
+There are two local Umbraco sites so the **traditional demo agent** and the
+**Conductor workflow** can run at the same time against separate databases.
 
-> **Note:** If `SITE_BASE_URL` changes, also update the `UMBRACO_BASE_URL` env var in `.mcp.json`, the `applicationUrl` entries in `src/MyProject/Properties/launchSettings.json`, and the conductor workflow `.github/skills/umb-demo-conductor/umbraco-demo.yaml` (the `site_base_url` input default and the `UMBRACO_BASE_URL` env mirror).
+| Variable | Value | Environment | Launch profile | Database (LocalDB) | Used by |
+|----------|-------|-------------|----------------|--------------------|---------|
+| `SITE_BASE_URL` | `http://localhost:14737` | `Development` | `Umbraco.Web.UI` | `Umbraco.mdf` | Traditional demo agent / Copilot CLI (`.mcp.json`) |
+| `CONDUCTOR_SITE_BASE_URL` | `http://localhost:14738` | `Conductor` | `Conductor` | `UmbracoConductor.mdf` | Conductor workflow (`umbraco-demo.yaml`) |
+
+Start each site from the repo root with its launch profile:
+
+```bash
+# Traditional demo site (SITE_BASE_URL)
+dotnet run --project src/MyProject/MyProject.csproj --launch-profile Umbraco.Web.UI
+
+# Conductor workflow site (CONDUCTOR_SITE_BASE_URL)
+dotnet run --project src/MyProject/MyProject.csproj --launch-profile Conductor
+```
+
+Run them in two separate terminals to operate both sites concurrently. Each site
+uses its own LocalDB database and an isolated temp/Examine folder, so they do not
+conflict. Each site must be installed once and have the Umbraco API user created
+(see README).
+
+> **Note:** `SITE_BASE_URL` is wired through `.mcp.json` (`UMBRACO_BASE_URL`) and
+> the `Umbraco.Web.UI` profile in `src/MyProject/Properties/launchSettings.json`.
+> `CONDUCTOR_SITE_BASE_URL` is wired through the conductor workflow
+> `.github/skills/umb-demo-conductor/umbraco-demo.yaml` (the `site_base_url` input
+> default and the `UMBRACO_BASE_URL` env mirror), the `Conductor` profile in
+> `launchSettings.json`, and `src/MyProject/appsettings.Conductor.json`. If you
+> change either URL/port, update the matching set of files.
 
 # Project Overview
 

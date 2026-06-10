@@ -65,6 +65,59 @@ copilot plugin install umbracoai-demo@umbracoai-marketplace
 1. Edit `/.mcp.json` to update your Umbraco settings.
 1. NOTE: ALL Umbraco MCP commands are marked as 'always allow', however there is this filter applied to the MCP server: "UMBRACO_INCLUDE_TOOL_COLLECTIONS": "document,media,document-type,data-type".
 
+### Running two sites at once
+
+For a live demo you may want to run the **traditional demo agent** and the
+**Conductor workflow** simultaneously. They each need their own Umbraco site and
+database, so the project ships with two environments / launch profiles:
+
+| Site | Env / launch profile | URL | LocalDB database | Driven by |
+|------|----------------------|-----|------------------|-----------|
+| Traditional demo | `Development` / `Umbraco.Web.UI` | `http://localhost:14737` | `Umbraco.mdf` | Copilot CLI (`/.mcp.json`) |
+| Conductor workflow | `Conductor` / `Conductor` | `http://localhost:14738` | `UmbracoConductor.mdf` | Workflow (`umbraco-demo.yaml`) |
+
+Start each one in its own terminal from the repo root:
+
+```bash
+# Terminal 1 — traditional demo site
+dotnet run --project src/MyProject/MyProject.csproj --launch-profile Umbraco.Web.UI
+
+# Terminal 2 — Conductor workflow site
+dotnet run --project src/MyProject/MyProject.csproj --launch-profile Conductor
+```
+
+How it works:
+
+* Each profile sets `ASPNETCORE_ENVIRONMENT`, so the second site loads
+  `src/MyProject/appsettings.Conductor.json`, which points `umbracoDbDSN` at a
+  separate LocalDB database (`UmbracoConductor.mdf`).
+* The second site uses `LocalTempStorageLocation: EnvironmentTemp` with a unique
+  `SiteName`, so its Examine indexes and content cache live in a separate temp
+  folder and do not clash with the default site.
+* The traditional flow uses `/.mcp.json` (`UMBRACO_BASE_URL=http://localhost:14737`);
+  the Conductor workflow uses the `umbraco-demo.yaml` MCP config
+  (`UMBRACO_BASE_URL=http://localhost:14738`).
+
+**One-time setup per site:** each database must be installed once (run the site and
+complete the Umbraco installer) and have the Umbraco API user created with the
+credentials in `/.mcp.json` (traditional) and `umbraco-demo.yaml` (Conductor).
+You only need the second site if you intend to run the Conductor workflow; running
+just the traditional demo only needs the default `Umbraco.Web.UI` profile.
+
+> **Two browser windows:** each flow uses its own Playwright MCP server so the
+> two demos show in **separate** visible browser windows running at the same time:
+> the traditional demo agent uses `http://localhost:8931/mcp` (from `/.mcp.json`)
+> and the Conductor workflow uses `http://localhost:8932/mcp` (from
+> `umbraco-demo.yaml`). Start one server per window (the browser profile is
+> per-port, so they don't clash):
+>
+> ```powershell
+> # Window 1 — traditional demo agent (port 8931, the default)
+> powershell -ExecutionPolicy Bypass -File scripts/start-playwright-mcp.ps1
+> # Window 2 — Conductor workflow (port 8932)
+> powershell -ExecutionPolicy Bypass -File scripts/start-playwright-mcp.ps1 -Port 8932
+> ```
+
 ### "YOLO mode"
 
 Part of the presentation was to showcase that an AI Agent can autonomously do all of the work without user interaction once the rules and skills are setup. As such, several MCP tools are pre-installed in `/.mcp.json` with 'always allow' configured.
@@ -103,16 +156,22 @@ The same end-to-end demo can also be run as a [Conductor](https://github.com/git
 Use the umbraco-demo-conductor agent to build the full Umbraco blogging site
 ```
 
-**Before running, start the shared Playwright browser server** so the main CLI session and the workflow drive the *same* visible window (otherwise later steps run in a hidden browser). From the repo root, in this order:
+The Conductor workflow runs against its **own** Umbraco site (the `Conductor` launch profile / environment at `http://localhost:14738`) so it can run at the same time as the traditional demo agent without sharing a database — see [Running two sites at once](#running-two-sites-at-once). Start it with:
 
-```powershell
-# 1. Start the shared, headed Playwright MCP server (detached, idempotent)
-powershell -ExecutionPolicy Bypass -File scripts/start-playwright-mcp.ps1
-# 2. Start your Copilot CLI session (it reads .mcp.json -> connects over HTTP)
-# 3. Run the workflow (connects to the SAME server)
+```
+dotnet run --project src/MyProject/MyProject.csproj --launch-profile Conductor
 ```
 
-Both `.mcp.json` and the workflow point their `playwright` MCP server at `http://localhost:8931/mcp`, a single headed `@playwright/mcp` instance launched with `--shared-browser-context`. The server is detached, so the browser stays open after the run.
+**Before running, start the Conductor's Playwright browser server (port 8932)** so the workflow drives its *own* visible window — separate from the traditional demo agent's port-8931 window, so both can run at once (otherwise later steps run in a hidden browser). From the repo root, in this order:
+
+```powershell
+# 1. Start the Conductor's headed Playwright MCP server on port 8932 (detached, idempotent)
+powershell -ExecutionPolicy Bypass -File scripts/start-playwright-mcp.ps1 -Port 8932
+# 2. Start your Copilot CLI session (it reads .mcp.json -> connects over HTTP)
+# 3. Run the workflow (connects to the port-8932 server)
+```
+
+The workflow points its `playwright` MCP server at `http://localhost:8932/mcp`, while `.mcp.json` (the traditional demo agent) points at `http://localhost:8931/mcp` — two separate headed `@playwright/mcp` instances launched with `--shared-browser-context` and per-port profiles. Each server is detached, so the browser stays open after the run.
 
 Or run the workflow directly from the repo root. Always pass `--web` so the live dashboard is visible; add `--skip-gates --no-interactive` for a hands-off run (auto-accepts the gate's first option — back up + reset — and avoids blocking on stdin in a non-interactive shell):
 
