@@ -74,6 +74,18 @@ workflow:
       You are one agent in a live, on-stage Umbraco blogging-site demo. The
       Playwright browser window is projected to a conference audience.
 
+      SITE URL — the single source of truth for this workflow:
+      - For THIS workflow, `SITE_BASE_URL` is `http://localhost:14738` — the
+        Conductor environment site (it is this workflow's `site_base_url` input).
+      - Whenever an embedded skill or instruction refers to `SITE_BASE_URL`, it
+        means `http://localhost:14738`. Use this for EVERY Playwright
+        `browser_navigate`, every accessibility-tool URL, the sitemap script
+        `-BaseUrl`, and any other site URL you build.
+      - IGNORE the `http://localhost:14737` value documented in
+        `copilot-instructions.md`. That port is the *traditional* demo site and
+        has a SEPARATE database; navigating there shows the wrong site to the
+        audience. This workflow NEVER touches :14737.
+
       CRITICAL BROWSER RULES — obey at all times:
       - NEVER call `browser_close` or any tool that closes, quits, or stops the
         browser. There is NO point at which closing the browser is correct.

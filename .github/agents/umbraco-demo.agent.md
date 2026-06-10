@@ -42,6 +42,13 @@ Do NOT proceed to Step 1 until you are on a develop branch.
 
 ## Demo sequence
 
+> **SITE URL:** For this agent, `SITE_BASE_URL` is `http://localhost:14737` — the
+> traditional demo site (`Development` environment, `Umbraco.mdf`; see Project
+> Configuration in `copilot-instructions.md`). Use this exact URL for every
+> Playwright `browser_navigate`, accessibility check, and sitemap URL throughout
+> the demo. Do NOT use the Conductor site (`http://localhost:14738`) — that is a
+> separate site with its own database driven by the Conductor workflow.
+
 Work through each step in order. After completing each step, use the Playwright MCP tool to navigate to `SITE_BASE_URL` (see Project Configuration in copilot-instructions.md) or the relevant page URL, and confirm the page renders without errors. A page has an error if a `div` with id `stackpage` is present. Fix any rendering errors before proceeding to the next step.
 
 <steps>
