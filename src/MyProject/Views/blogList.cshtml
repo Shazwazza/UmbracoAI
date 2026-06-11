@@ -1,0 +1,89 @@
+@inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage
+@using Umbraco.Cms.Core.Models.PublishedContent
+@{
+    Layout = "_Layout.cshtml";
+    var title = Model.Value<string>("title") ?? Model.Name;
+    var intro = Model.Value<string>("intro");
+    ViewData["Title"] = title;
+
+    var posts = Model.Children
+        .Where(c => c.ContentType.Alias == "blogPost")
+        .OrderByDescending(c => c.Value<DateTime?>("publishDate") ?? c.CreateDate)
+        .ToList();
+}
+
+<section class="page-hero">
+    <div class="container">
+        <span class="hero__eyebrow">◣ The Agent Diaries</span>
+        <h1 class="hero__title">@title</h1>
+        @if (!string.IsNullOrWhiteSpace(intro))
+        {
+            <p class="hero__subtitle">@intro</p>
+        }
+    </div>
+</section>
+
+<section class="container">
+    @if (!posts.Any())
+    {
+        <article class="content-card">
+            <p>No stories yet — the agent is still gathering its thoughts. Check back soon.</p>
+        </article>
+    }
+    else
+    {
+        <ul class="post-grid" role="list">
+            @foreach (var post in posts)
+            {
+                var pTitle = post.Value<string>("title") ?? post.Name;
+                var pSubtitle = post.Value<string>("subtitle");
+                var pExcerpt = post.Value<string>("excerpt");
+                var pDate = post.Value<DateTime?>("publishDate") ?? post.CreateDate;
+                var hero = post.Value<IPublishedContent>("heroImage");
+                var heroUrl = hero?.GetCropUrl(width: 640, height: 360);
+                var tags = post.Value<IEnumerable<string>>("tags");
+
+                <li class="post-card">
+                    <a class="post-card__link" href="@post.Url()">
+                        @if (!string.IsNullOrEmpty(heroUrl))
+                        {
+                            <div class="post-card__media">
+                                <img src="@heroUrl" alt="" loading="lazy" />
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="post-card__media post-card__media--placeholder" aria-hidden="true">
+                                <span>◣</span>
+                            </div>
+                        }
+                        <div class="post-card__body">
+                            <div class="post-card__meta">
+                                <time datetime="@pDate.ToString("yyyy-MM-dd")">@pDate.ToString("MMM d, yyyy")</time>
+                            </div>
+                            <h2 class="post-card__title">@pTitle</h2>
+                            @if (!string.IsNullOrWhiteSpace(pSubtitle))
+                            {
+                                <p class="post-card__subtitle">@pSubtitle</p>
+                            }
+                            @if (!string.IsNullOrWhiteSpace(pExcerpt))
+                            {
+                                <p class="post-card__excerpt">@pExcerpt</p>
+                            }
+                            @if (tags != null && tags.Any())
+                            {
+                                <ul class="tag-list" role="list">
+                                    @foreach (var tag in tags)
+                                    {
+                                        <li class="tag">#@tag</li>
+                                    }
+                                </ul>
+                            }
+                            <span class="post-card__readmore">Read the post &nbsp;→</span>
+                        </div>
+                    </a>
+                </li>
+            }
+        </ul>
+    }
+</section>

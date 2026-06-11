@@ -1,0 +1,64 @@
+@inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage
+@using Umbraco.Cms.Core.Models.PublishedContent
+@{
+    Layout = "_Layout.cshtml";
+    var title = Model.Value<string>("title") ?? Model.Name;
+    var subtitle = Model.Value<string>("subtitle");
+    var body = Model.Value<string>("body");
+    var date = Model.Value<DateTime?>("publishDate") ?? Model.CreateDate;
+    var hero = Model.Value<IPublishedContent>("heroImage");
+    var heroUrl = hero?.GetCropUrl(width: 1200, height: 500);
+    var tags = Model.Value<IEnumerable<string>>("tags");
+    var parent = Model.Parent;
+    ViewData["Title"] = title;
+}
+
+<article class="post">
+    <header class="post__header">
+        <div class="container post__header-inner">
+            @if (parent != null)
+            {
+                <a class="post__back" href="@parent.Url()">← Back to @parent.Name</a>
+            }
+            <div class="post__meta">
+                <time datetime="@date.ToString("yyyy-MM-dd")">@date.ToString("MMMM d, yyyy")</time>
+            </div>
+            <h1 class="post__title">@title</h1>
+            @if (!string.IsNullOrWhiteSpace(subtitle))
+            {
+                <p class="post__subtitle">@subtitle</p>
+            }
+            @if (tags != null && tags.Any())
+            {
+                <ul class="tag-list tag-list--post" role="list">
+                    @foreach (var tag in tags)
+                    {
+                        <li class="tag">#@tag</li>
+                    }
+                </ul>
+            }
+        </div>
+    </header>
+
+    @if (!string.IsNullOrEmpty(heroUrl))
+    {
+        <div class="container">
+            <figure class="post__hero">
+                <img src="@heroUrl" alt="@title" />
+            </figure>
+        </div>
+    }
+
+    <div class="container">
+        <div class="post__body">
+            @if (!string.IsNullOrWhiteSpace(body))
+            {
+                @Html.Raw(body)
+            }
+            else
+            {
+                <p><em>This post is still being written…</em></p>
+            }
+        </div>
+    </div>
+</article>

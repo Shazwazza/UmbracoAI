@@ -25,6 +25,13 @@
             </a>
             <nav class="site-nav" aria-label="Primary">
                 <a href="/">Home</a>
+                @{
+                    var blogList = root?.Children.FirstOrDefault(c => c.ContentType.Alias == "blogList");
+                    if (blogList != null)
+                    {
+                        <a href="@blogList.Url()">Blog</a>
+                    }
+                }
             </nav>
         </div>
     </header>
