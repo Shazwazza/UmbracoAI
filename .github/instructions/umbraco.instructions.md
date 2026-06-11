@@ -23,11 +23,6 @@ applyTo: '**'
 
 * The web application will normally already be running at `SITE_BASE_URL` (see Project Configuration in copilot-instructions.md). If its not, it can be started by running `dotnet run --project src/MyProject/MyProject.csproj --launch-profile Umbraco.Web.UI -p:SiteEnv=Development` from the root of this workspace. The `-p:SiteEnv=Development` global property redirects the build output to `bin\Development\` so it never locks the Conductor site's `MyProject.exe` when both run at once.
 
-## Database backup
-
-* Before performing any bulk or destructive operations via the Umbraco MCP tools (e.g., deleting content, resetting the site, creating many items), run the `/umb-backup` skill to back up the LocalDB database.
-* Backups are stored at `src/MyProject/umbraco/Data/backups/` and are git-ignored.
-
 ## Umbraco backoffice and schema
 
 <prohibited-actions>

@@ -13,6 +13,7 @@ Page design should be consistent between all pages.
 * Rendering Umbraco content in the cshtml files DO NOT require additional plugins.
   * Even for markdown editors, etc... Umbraco has all of the functionality built in to render this correctly using the standard syntax: `@Model.Value("propertyName")`.
   * DO NOT install Markdig or other libraries, they are not needed.
+* **Do NOT restart the site after editing a `.cshtml`** — Razor views compile at runtime, so a save + browser refresh is enough. Restarting the dotnet site repeatedly wastes minutes per run.
 
 ## Partial Views
 
