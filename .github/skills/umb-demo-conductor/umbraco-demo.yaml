@@ -69,6 +69,15 @@ workflow:
   # Shared orchestration preamble prepended to every agent. The full repository
   # rules (copilot-instructions.md + .github/instructions/**) are layered in at
   # run time via the `--workspace-instructions` flag (see SKILL.md).
+  #
+  # This preamble is the SINGLE source of the cross-cutting rules (SITE URL,
+  # browser persistence, Umbraco MCP write ordering, and per-step VALIDATION &
+  # COMMIT). Because it is prepended to every agent, the per-step `system_prompt`
+  # blocks deliberately do NOT restate validation/commit boilerplate, and each
+  # step's `!file` SKILL.md already carries its own step-specific Validation/
+  # Commit detail. Keep step `system_prompt`s limited to genuinely step-specific
+  # context (e.g. visual-identity continuity, the one-time browser open) to avoid
+  # re-sending the same instructions three times per step.
   instructions:
     - |
       You are one agent in a live, on-stage Umbraco blogging-site demo. The
@@ -207,18 +216,14 @@ agents:
   - name: step1_homepage
     description: "Step 1 — Home page."
     system_prompt: |
-      You are executing Step 1 (Home page) of the live Umbraco demo. The skill
-      instructions to perform are provided below.
+      You are executing Step 1 (Home page) of the live Umbraco demo; follow the
+      skill instructions below.
 
-      Before creating anything, FIRST open the browser with `browser_navigate`
-      to {{ workflow.input.site_base_url }} and show the audience that the site
-      is currently empty (the default/blank Umbraco state). This is the single
-      time the browser is opened — reuse this window for the rest of the demo.
-
-      Be creative and invent a brand-new visual identity (colour palette,
-      typography, layout) for this build; do not reuse a theme from a previous
-      run. After building, validate the home page renders (no `#stackpage`
-      error div) and commit this step.
+      Conductor-specific note: before creating anything, FIRST open the browser
+      with `browser_navigate` to {{ workflow.input.site_base_url }} and show the
+      audience that the site is currently empty (the default/blank Umbraco
+      state). This is the single time the browser is opened — reuse this window
+      for the rest of the demo.
     prompt: !file ../umb-homepage/SKILL.md
     routes:
       - to: step2_blog_pages
@@ -226,11 +231,10 @@ agents:
   - name: step2_blog_pages
     description: "Step 2 — Blog List and Blog Post pages."
     system_prompt: |
-      You are executing Step 2 (Blog pages) of the live Umbraco demo. Follow the
-      included skill instructions. Keep the visual identity established in
-      Step 1 consistent. IMPORTANT: create EXACTLY ONE starter blog post in this
-      step — do NOT create additional posts. Validate the Blog List page renders
-      and lists that one post (no `#stackpage` error div), then commit this step.
+      You are executing Step 2 (Blog pages) of the live Umbraco demo; follow the
+      skill instructions below. Keep the visual identity established in Step 1
+      consistent across these pages. (The skill already requires EXACTLY ONE
+      starter blog post — do NOT create additional posts here.)
     prompt: !file ../umb-blog-pages/SKILL.md
     routes:
       - to: step3_navigation
@@ -238,10 +242,9 @@ agents:
   - name: step3_navigation
     description: "Step 3 — Site-wide navigation."
     system_prompt: |
-      You are executing Step 3 (Navigation) of the live Umbraco demo. Follow the
-      included skill instructions to add shared navigation to all pages.
-      Validate by clicking through the navigation links in Playwright (no
-      `#stackpage` error div), then commit this step.
+      You are executing Step 3 (Navigation) of the live Umbraco demo; follow the
+      skill instructions below to add shared navigation to all pages, keeping the
+      Step 1 visual identity consistent.
     prompt: !file ../umb-navigation/SKILL.md
     routes:
       - to: step4_plan_posts
@@ -321,8 +324,8 @@ agents:
       batch/turn.
 
       When all posts are published, validate in Playwright that the Blog List
-      shows exactly 10 posts (each with a title, date, and excerpt; no
-      `#stackpage` error div), then commit this step.
+      shows exactly 10 posts (each with a title, date, and excerpt), then commit
+      this step.
     prompt: |
       Persist and publish every planned blog post to Umbraco now (sequentially),
       then validate the Blog List shows 10 posts and commit.
@@ -359,8 +362,8 @@ agents:
       (do not re-source images). Every hero image and list thumbnail MUST have
       meaningful `alt` text (use the post title) so the markup stays accessible —
       accessibility is validated in a later step, so do not introduce images
-      without alt text. Validate images render on the Blog List and a Blog Post
-      page, then commit this step.
+      without alt text. Validate that images render on the Blog List and a Blog
+      Post page.
     prompt: !file ../umb-blogpost-images/SKILL.md
     routes:
       - to: step6_tagcloud
@@ -373,8 +376,7 @@ agents:
       frequently each tag appears across posts. Keep the markup accessible —
       tags must be real, keyboard-focusable links with discernible text (do not
       rely on size/colour alone) — since accessibility is validated in a later
-      step. Validate the tag cloud renders on the Blog List page, then commit
-      this step.
+      step. Validate that the tag cloud renders on the Blog List page.
     prompt: !file ../umb-tagcloud/SKILL.md
     routes:
       - to: step7_sitemap
@@ -385,7 +387,7 @@ agents:
       You are executing Step 7 (Sitemap) of the live Umbraco demo. Follow the
       included skill instructions to generate sitemap.xml from all published
       content and crawl each URL in Playwright to confirm it renders without
-      errors. Then commit this step.
+      errors.
     prompt: !file ../umb-sitemap/SKILL.md
     routes:
       - to: step8_accessibility
