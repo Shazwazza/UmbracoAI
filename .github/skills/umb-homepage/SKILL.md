@@ -21,6 +21,22 @@ Create a single master Razor layout at `src/MyProject/Views/_Layout.cshtml` that
 
 The `_Layout.cshtml` is a plain Razor layout authored directly on the filesystem (not an Umbraco template created via MCP). It should still start with `@inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage` so Umbraco helpers (e.g. `Model.Root()`) work inside it.
 
+## Rendering images (READ THIS before adding any `<img>`)
+
+This site has **HMAC-signed media URLs** enabled. The moment you render *any*
+image that needs resizing/cropping (a home hero, a logo, anything), you MUST use
+`GetCropUrl` — **never** hand-build a query string. An unsigned
+`?width=...&height=...&mode=crop` URL returns **HTTP 400 Bad Request** and the
+image silently fails to load, which has repeatedly cost time on past runs.
+
+```csharp
+var heroImage = Model.Value<Umbraco.Cms.Core.Models.PublishedContent.IPublishedContent>("heroImage");
+var heroImageUrl = heroImage?.GetCropUrl(width: 1600, height: 600);
+```
+
+`GetCropUrl` generates the correctly signed URL automatically. This applies to
+every template in the site, so adopt it from the very first image you render.
+
 ## Validation
 
 Use Playwright to navigate to `SITE_BASE_URL`. Confirm:

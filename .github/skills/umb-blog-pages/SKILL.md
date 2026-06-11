@@ -22,6 +22,15 @@ description: Create Blog List and Blog page document types and templates, plus e
   * Produce the HTML, Razor and CSS to render the Blog page.
   * Create and publish **exactly one** Blog page (a single starter post). Do **not** create a second post.
 
+> **Rendering images:** If your blog template renders any image (e.g. a hero),
+> use `GetCropUrl` — never a hand-built `?width=...&mode=crop` query string. This
+> site uses HMAC-signed media URLs, so unsigned query strings return **HTTP 400**
+> and the image silently fails (a repeated time sink on past runs):
+> ```csharp
+> var heroImage = Model.Value<Umbraco.Cms.Core.Models.PublishedContent.IPublishedContent>("heroImage");
+> var heroImageUrl = heroImage?.GetCropUrl(width: 1200, height: 500);
+> ```
+
 ## Validation
 
 Use Playwright to:

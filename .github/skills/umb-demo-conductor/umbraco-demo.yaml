@@ -121,6 +121,13 @@ workflow:
         Read operations (`get-*`, `search-*`, `find-*`) may be parallelised.
       - After creating or updating any document, immediately call
         `publish-document`. Unpublished drafts are invisible on the front-end.
+      - After EACH successful `publish-document`, immediately re-navigate the
+        persistent browser with `browser_navigate` to the public front-end URL
+        of the page you just published (for a blog post, the Blog List page or
+        the post's own URL) so the audience sees the change appear live, BEFORE
+        issuing the next write. Only ever move with `browser_navigate` — never
+        close/reopen the browser. This per-publish refresh is IN ADDITION TO the
+        per-step validation navigation below, not a replacement for it.
 
       PER-STEP VALIDATION & COMMIT (mandatory):
       - After completing the work for your step, use Playwright to navigate to
@@ -326,6 +333,10 @@ agents:
       When all posts are published, validate in Playwright that the Blog List
       shows exactly 10 posts (each with a title, date, and excerpt), then commit
       this step.
+
+      LIVE-DEMO REFRESH: after EACH post's `publish-document` returns,
+      `browser_navigate` to the Blog List page so the audience watches each new
+      post appear, then start the next post.
     prompt: |
       Persist and publish every planned blog post to Umbraco now (sequentially),
       then validate the Blog List shows 10 posts and commit.

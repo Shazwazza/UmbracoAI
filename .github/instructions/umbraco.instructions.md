@@ -45,7 +45,7 @@ Defines the minimal Document Types that will need to be created with Templates:
 * Home page
 * Blog List page
 * Blog page
-  * Should support Markdown or Rich Text for content.
+  * Should use Markdown for content.
   * Should have all of the typical attributes that a Blog page has such as
     * Create/Update date
     * SLUG
