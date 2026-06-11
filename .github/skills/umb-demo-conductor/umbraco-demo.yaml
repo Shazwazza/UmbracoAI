@@ -22,7 +22,7 @@ workflow:
 
   runtime:
     provider: copilot
-    default_model: claude-opus-4.8
+    default_model: gpt-5.5
     # Each step performs many MCP tool round-trips, so allow a high ceiling.
     max_agent_iterations: 200
     mcp_servers:
