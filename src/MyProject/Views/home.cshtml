@@ -1,0 +1,18 @@
+﻿@inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage
+@{
+    Layout = null;
+    var title = Model.Value<string>("title");
+    var subtitle = Model.Value<string>("subtitle");
+    var body = Model.Value("body");
+}<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>@title</title>
+</head>
+<body>
+    <h1>@title</h1>
+    <p>@subtitle</p>
+    <div>@Html.Raw(body)</div>
+</body>
+</html>
