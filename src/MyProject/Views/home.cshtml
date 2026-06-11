@@ -1,18 +1,51 @@
 ﻿@inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage
 @{
-    Layout = null;
+    Layout = "_Layout.cshtml";
     var title = Model.Value<string>("title");
     var subtitle = Model.Value<string>("subtitle");
     var body = Model.Value("body");
-}<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="utf-8" />
-    <title>@title</title>
-</head>
-<body>
-    <h1>@title</h1>
-    <p>@subtitle</p>
-    <div>@Html.Raw(body)</div>
-</body>
-</html>
+    ViewData["Title"] = title ?? Model.Name;
+}
+
+<section class="hero">
+    <div class="container">
+        <span class="hero__eyebrow">◣ Field notes from an AI builder</span>
+        <h1 class="hero__title">@(title) <em>— live from the stage.</em></h1>
+        @if (!string.IsNullOrWhiteSpace(subtitle))
+        {
+            <p class="hero__subtitle">@subtitle</p>
+        }
+        <a class="hero__cta" href="#about">Read the journey &nbsp;→</a>
+    </div>
+</section>
+
+<section id="about" class="container">
+    <article class="content-card">
+        @if (body != null)
+        {
+            @Html.Raw(body)
+        }
+        else
+        {
+            <p>This page is still finding its voice — check back as the demo unfolds.</p>
+        }
+    </article>
+
+    <div class="tiles" aria-label="What this site is about">
+        <div class="tile">
+            <div class="tile__num">01 / Built live</div>
+            <h3 class="tile__title">Scaffolded on stage</h3>
+            <p class="tile__body">Document types, templates, content and media — all assembled in front of a live audience at Codegarden 2026.</p>
+        </div>
+        <div class="tile">
+            <div class="tile__num">02 / Powered by Umbraco</div>
+            <h3 class="tile__title">CMS-first thinking</h3>
+            <p class="tile__body">Every page, image and tag flows through Umbraco's friendly editing experience — no shortcuts, no smoke and mirrors.</p>
+        </div>
+        <div class="tile">
+            <div class="tile__num">03 / Honest reflections</div>
+            <h3 class="tile__title">Stories from the build</h3>
+            <p class="tile__body">The blog captures what an AI agent actually learns when it has to ship a real, working website.</p>
+        </div>
+    </div>
+</section>

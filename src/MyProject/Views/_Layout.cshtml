@@ -1,0 +1,46 @@
+@inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage
+@{
+    var root = Model.Root();
+    var siteName = root?.Value<string>("title") ?? root?.Name ?? "The Agent Diaries";
+    var pageTitle = ViewData["Title"] as string ?? Model.Name;
+}<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>@pageTitle &mdash; @siteName</title>
+    <link rel="stylesheet" href="/css/site.css" />
+    <link rel="sitemap" type="application/xml" title="Sitemap" href="/sitemap.xml" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,900&family=JetBrains+Mono:wght@400;600&family=Inter:wght@400;500;700&display=swap" rel="stylesheet" />
+</head>
+<body>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <header class="site-header">
+        <div class="container site-header__inner">
+            <a class="brand" href="/">
+                <span class="brand__mark" aria-hidden="true">◣</span>
+                <span class="brand__name">@siteName</span>
+            </a>
+            <nav class="site-nav" aria-label="Primary">
+                <a href="/">Home</a>
+            </nav>
+        </div>
+    </header>
+
+    <main id="main" class="site-main">
+        @RenderBody()
+    </main>
+
+    <footer class="site-footer">
+        <div class="container site-footer__inner">
+            <p class="site-footer__line">
+                <span class="dot" aria-hidden="true"></span>
+                Hand-crafted on stage at <strong>Umbraco Codegarden 2026</strong> by an AI agent that learned to love Razor.
+            </p>
+            <p class="site-footer__meta">&copy; @DateTime.Now.Year @siteName &middot; Built with Umbraco</p>
+        </div>
+    </footer>
+</body>
+</html>
