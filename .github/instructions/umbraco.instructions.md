@@ -86,12 +86,14 @@ Do NOT install Markdig or other Markdown libraries. Do NOT use `HtmlStringUtilit
 
 ### Media Picker (Image)
 
-Retrieve as `IPublishedContent` and call `.Url()`:
+Retrieve as `IPublishedContent`, then build a cropped URL with `GetCropUrl(...)`:
 ```csharp
 var heroImage = Model.Value<Umbraco.Cms.Core.Models.PublishedContent.IPublishedContent>("heroImage");
-var imageUrl = heroImage?.Url();
+var imageUrl = heroImage?.GetCropUrl(width: 1200, height: 500);
 ```
-Do NOT use `MediaWithCrops` — it does not resolve correctly. Use image processor query strings for cropping: `?width=1200&height=500&mode=crop`.
+Do NOT use `MediaWithCrops` — it does not resolve correctly.
+
+Do NOT hand-build image-processor query strings like `?width=1200&height=500&mode=crop`. This site has HMAC-signed media URLs enabled (ImageSharp `HMACSecretKey`), so an unsigned `?width=...` request is rejected with **HTTP 400 Bad Request** and the image silently fails to load. `GetCropUrl(width:, height:)` generates a correctly HMAC-signed URL and is the only reliable approach here — use it for both hero images and list thumbnails.
 
 ### Document type + template linking
 

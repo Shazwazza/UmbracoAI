@@ -19,7 +19,7 @@ description: Implement shared site navigation and validate rendering with Playwr
 
 ### Known-good Navigation partial (copy this — do NOT trial-and-error)
 
-Use this exact shape for `src/MyProject/Views/Partials/Navigation.cshtml`. It compiles first time. Re-style the markup/classes/labels to match your theme, but keep the data-access pattern identical:
+Use this exact shape for `src/MyProject/Views/Partials/Navigation.cshtml`. It compiles first time. Re-style the markup/classes/labels to match your theme, but keep the data-access pattern identical. **Do NOT replace it with your own "more dynamic" navigation** — past runs that rewrote the data-access logic from scratch threw a Razor compilation exception (HTTP 500) and burned several minutes recovering. Start from this partial and change only the presentation:
 
 ```razor
 @inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage
@@ -46,8 +46,8 @@ Use this exact shape for `src/MyProject/Views/Partials/Navigation.cshtml`. It co
 ## Testing
 
 * Once the navigation has been created or updated, test that it renders correctly using the Playwright MCP tool.
-* **Do NOT restart the site after editing a `.cshtml`** — Razor views compile at runtime, so a save + browser refresh is enough. Restarting the dotnet site repeatedly wastes minutes per run.
-* If a page returns HTTP 500 / shows `div#stackpage` after a nav change, it is almost always a Razor **compilation exception** in the partial. Read the actual error from the newest Umbraco log file at `src/MyProject/umbraco/Logs/UmbracoTraceLog.*.json` (look for the compilation error line + line number) instead of guessing-and-re-editing. The known-good partial above avoids the common causes.
+* **Do NOT restart the site after editing a `.cshtml`** — Razor views compile at runtime, so a save + browser refresh is enough. A 500 / `div#stackpage` immediately after a `.cshtml` edit is a Razor **compilation error in the view you just changed**, NOT a stale-process problem — restarting will NOT fix it and just wastes minutes. Never `Stop-Process` the dotnet site or run `dotnet run` to recover from a 500 here.
+* **Diagnose a 500 by reading the Umbraco trace log, NOT by guessing, restarting, or curling the site.** Open the newest `src/MyProject/umbraco/Logs/UmbracoTraceLog.*.json` and find the compilation error line + line number. Do NOT use `Invoke-WebRequest`/`curl` to probe the site or read the detached `dotnet run` console log — the compilation exception with its line number is in the Umbraco trace log. Fix the partial, then just refresh the browser.
 * Navigate to `SITE_BASE_URL` and verify:
   1. Navigation links are visible on all pages (Home, Blog List, Blog Post).
   2. Clicking each nav link loads the correct page without errors.

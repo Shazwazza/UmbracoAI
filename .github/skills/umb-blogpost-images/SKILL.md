@@ -51,13 +51,17 @@ This is a known Umbraco gotcha, not an MCP bug.
 
 ## Rendering in templates
 
-* In Razor templates, retrieve the hero image with:
+* In Razor templates, retrieve the hero image as `IPublishedContent` and build a
+  cropped URL with `GetCropUrl(...)`:
   ```csharp
   var heroImage = Model.Value<Umbraco.Cms.Core.Models.PublishedContent.IPublishedContent>("heroImage");
-  var heroImageUrl = heroImage?.Url();
+  var heroImageUrl = heroImage?.GetCropUrl(width: 1200, height: 500);   // hero
+  // for list cards: heroImage?.GetCropUrl(width: 600, height: 300)
   ```
-* Use `?width=1200&height=500&mode=crop` for blog post hero images.
-* Use `?width=600&height=300&mode=crop` for blog list card thumbnails.
+* Do NOT hand-build query strings like `?width=1200&height=500&mode=crop`. This
+  site has HMAC-signed media URLs enabled, so an unsigned `?width=...` request
+  returns **HTTP 400 Bad Request** and the image fails to load. `GetCropUrl`
+  produces a correctly signed URL — use it for hero images AND list thumbnails.
 * Every `<img>` (hero and thumbnail) MUST have a meaningful `alt` attribute —
   use the blog post title. Accessibility is validated later in the build, so
   do not introduce images without alt text (it would fail a11y).
