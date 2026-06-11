@@ -22,7 +22,7 @@ workflow:
 
   runtime:
     provider: copilot
-    default_model: claude-sonnet-4.5
+    default_model: claude-sonnet-4.6
     # Each step performs many MCP tool round-trips, so allow a high ceiling.
     max_agent_iterations: 200
     mcp_servers:
