@@ -14,7 +14,7 @@ applyTo: '**'
 - The Umbraco MCP tool may not work if the website is not running. If you determine the website is not running, start it and try again.
 - If the website is running and the MCP tool fails, notify the user. DO NOT attempt to complete ANY commands without it operating.
 - NEVER use `curl`, `Invoke-RestMethod`, `Invoke-WebRequest`, or any other direct HTTP/API calls to access Umbraco. All Umbraco operations MUST go through the Umbraco MCP tools exclusively. Do NOT attempt to work around MCP failures by calling the Umbraco API directly.
-- **Sequential writes only:** Umbraco MCP write operations (create, update, delete, move, publish, unpublish) MUST be called one at a time. Do NOT issue multiple write tool calls in the same parallel batch. Parallel writes cause SQL lock errors on the LocalDB backend. Read-only calls (`get-*`, `search-*`, `find-*`) may be parallelised freely.
+- **Parallel content writes are OK for distinct nodes:** Independent per-document content writes — `create-document`, `update-document` / `update-document-properties`, and `publish-document` on **different** nodes — MAY be issued together in one parallel tool batch. This is verified safe on the LocalDB backend (no deadlocks across parallel creates, updates, and publishes of separate documents) and speeds up bulk operations. Keep writes sequential only when they touch the **same** node or depend on each other. Structural/schema operations (document types, data types, `move`, tree restructuring) and `create-media` uploads remain unverified for concurrency — issue those one at a time. Read-only calls (`get-*`, `search-*`, `find-*`) may always be parallelised freely.
 
 ## Server process management
 

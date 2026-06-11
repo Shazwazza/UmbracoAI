@@ -7,7 +7,7 @@ workflow:
     accessibility — validating each step in Playwright and committing per step.
     The blog-posts step is parallelised to show Conductor's strengths: a
     deterministic plan agent, a for_each fan-out that authors every post body
-    concurrently, then a serial join that persists them to Umbraco one at a time.
+    concurrently, then a join that persists them to Umbraco in parallel batches.
     Designed to run as a live conference demonstration with a single, persistent
     Playwright browser window.
   version: "1.0.0"
@@ -112,22 +112,26 @@ workflow:
         (`.github/skills/umb-image-sourcing/source-blog-images.ps1`) which queries Unsplash and prints a
         compact mapping. That script — and any fetch tool — is for IMAGE
         DISCOVERY ONLY. Umbraco access is always through umbraco-mcp.
-      - All write operations (create, update, delete, move, publish, unpublish)
-        MUST be issued ONE AT A TIME — never in parallel (LocalDB serialises every
-        content write behind a single content-tree lock, so concurrent writes
-        DEADLOCK). This applies WITHIN a single agent too: never place two
-        umbraco-mcp write calls in the same tool batch/turn, and always wait for
-        one write (and its `publish-document`) to return before issuing the next.
-        Read operations (`get-*`, `search-*`, `find-*`) may be parallelised.
+      - Per-document content writes (create, update, publish, unpublish) to
+        DISTINCT nodes MAY be issued together in one parallel tool batch — this
+        is verified deadlock-free on LocalDB and is the preferred way to persist
+        many posts/images quickly. Keep writes sequential only when they target
+        the SAME node or depend on each other (e.g. create-then-publish, or
+        assign-heroImage-then-publish, for one post: do those in order). Tree
+        moves, deletes that reshape the tree, and document-type/data-type schema
+        changes should still be issued one at a time. Read operations (`get-*`,
+        `search-*`, `find-*`) may always be parallelised.
       - After creating or updating any document, immediately call
         `publish-document`. Unpublished drafts are invisible on the front-end.
-      - After EACH successful `publish-document`, immediately re-navigate the
-        persistent browser with `browser_navigate` to the public front-end URL
-        of the page you just published (for a blog post, the Blog List page or
-        the post's own URL) so the audience sees the change appear live, BEFORE
-        issuing the next write. Only ever move with `browser_navigate` — never
-        close/reopen the browser. This per-publish refresh is IN ADDITION TO the
-        per-step validation navigation below, not a replacement for it.
+      - After a `publish-document` (or a parallel BATCH of publishes) succeeds,
+        immediately re-navigate the persistent browser with `browser_navigate` to
+        the public front-end URL affected (for blog posts, the Blog List page) so
+        the audience sees the change appear live before you move on. When you
+        publish a batch in parallel, one refresh after the batch is enough — every
+        post lands on screen at once, which is great on-stage drama. Only ever
+        move with `browser_navigate` — never close/reopen the browser. This
+        refresh is IN ADDITION TO the per-step validation navigation below, not a
+        replacement for it.
 
       PER-STEP VALIDATION & COMMIT (mandatory):
       - After completing the work for your step, use Playwright to navigate to
@@ -332,9 +336,9 @@ agents:
   #   4)  a deterministic PLAN agent emits a typed JSON contract,
   #   4·) a for_each FAN-OUT authors every post body concurrently (pure text —
   #       no Umbraco writes, no browser, so it is safe to parallelise), then
-  #   4b) a serial JOIN agent persists them one-at-a-time (Umbraco serialises all
-  #       content writes behind a single content-tree write lock, so creation
-  #       MUST stay sequential — parallel writes deadlock).
+  #   4b) a JOIN agent persists them to Umbraco in parallel BATCHES (per-post
+  #       content writes to distinct nodes are verified deadlock-free on LocalDB,
+  #       so creates and publishes can each go out as one parallel wave).
   - name: step4_plan_posts
     description: "Step 4 — Plan the remaining blog posts (deterministic contract)."
     system_prompt: |
@@ -380,7 +384,7 @@ agents:
       - to: author_posts
 
   - name: step4b_persist_posts
-    description: "Step 4b — Persist the authored posts to Umbraco (serial join)."
+    description: "Step 4b — Persist the authored posts to Umbraco (parallel-batch join)."
     system_prompt: |
       You are executing Step 4b (Persist posts) of the live Umbraco demo. The post
       bodies were authored CONCURRENTLY in the previous fan-out step. The plan is
@@ -395,23 +399,25 @@ agents:
       `Umbraco.TextBox` for title/subtitle, `Umbraco.MarkdownEditor` for content,
       `Umbraco.TextArea` for excerpt, and `Umbraco.Tags` for tags.
 
-      CRITICAL: issue every create/publish ONE AT A TIME (never in parallel) —
-      Umbraco serialises content writes behind a single content-tree lock, so
-      parallel writes deadlock. Do the full create→`publish-document` cycle for
-      one post and WAIT for it to return before starting the next; never request
-      two posts (or a create and a publish for different posts) in the same tool
-      batch/turn.
+      GO FAST — PERSIST IN PARALLEL BATCHES: these posts are independent nodes, so
+      do NOT create them one at a time. Issue ALL the `create-document` calls in a
+      single parallel tool batch, wait for them to return, then issue ALL the
+      `publish-document` calls in a single parallel tool batch. Per-post content
+      writes to distinct nodes are verified deadlock-free on LocalDB. The only
+      ordering you must respect is create-before-publish for the SAME post, so
+      keep creates in the first wave and publishes in the second.
 
       When all posts are published, validate in Playwright that the Blog List
       shows exactly 10 posts (each with a title, date, and excerpt), then commit
       this step.
 
-      LIVE-DEMO REFRESH: after EACH post's `publish-document` returns,
-      `browser_navigate` to the Blog List page so the audience watches each new
-      post appear, then start the next post.
+      LIVE-DEMO REFRESH: after the publish batch returns, `browser_navigate` to
+      the Blog List page once so the audience watches all the new posts appear at
+      once — a nice on-stage moment.
     prompt: |
-      Persist and publish every planned blog post to Umbraco now (sequentially),
-      then validate the Blog List shows 10 posts and commit.
+      Persist and publish every planned blog post to Umbraco now (creates in one
+      parallel batch, then publishes in one parallel batch), then validate the
+      Blog List shows 10 posts and commit.
     routes:
       - to: step5a_image_sourcing
 
@@ -442,11 +448,13 @@ agents:
       hero images were already sourced and uploaded into the "Blog Hero Images"
       media folder in Step 5a. Follow the included skill instructions to ASSIGN a
       hero image to each blog post and RENDER thumbnails/heroes in the templates
-      (do not re-source images). Every hero image and list thumbnail MUST have
-      meaningful `alt` text (use the post title) so the markup stays accessible —
-      accessibility is validated in a later step, so do not introduce images
-      without alt text. Validate that images render on the Blog List and a Blog
-      Post page.
+      (do not re-source images). To save time, assign hero images in a parallel
+      batch and republish in a parallel batch — per-post content writes to
+      distinct nodes are verified deadlock-free on LocalDB (see the skill). Every
+      hero image and list thumbnail MUST have meaningful `alt` text (use the post
+      title) so the markup stays accessible — accessibility is validated in a
+      later step, so do not introduce images without alt text. Validate that
+      images render on the Blog List and a Blog Post page.
     prompt: !file ../umb-blogpost-images/SKILL.md
     routes:
       - to: step6_tagcloud
@@ -514,8 +522,8 @@ agents:
 # -----------------------------------------------------------------------------
 # Dynamic parallel fan-out: author every planned post body concurrently.
 # This is the headline parallelism — pure Markdown generation with NO Umbraco
-# writes and NO browser, so it is safe to run many at once. The serial
-# step4b_persist_posts join then writes them to Umbraco one at a time.
+# writes and NO browser, so it is safe to run many at once. The
+# step4b_persist_posts join then writes them to Umbraco in parallel batches.
 # -----------------------------------------------------------------------------
 for_each:
   - name: author_posts
@@ -547,11 +555,12 @@ for_each:
         - Do NOT call any Umbraco (umbraco-mcp) tool, any Playwright/browser tool,
           or git. Do NOT create, publish, or validate anything. Another agent
           persists your output afterwards.
-        - CRITICAL: several copies of you run AT THE SAME TIME. Umbraco's LocalDB
-          serialises every content write behind a single content-tree lock, so if
-          you call ANY umbraco-mcp write tool here it will DEADLOCK the demo and
-          stall the whole run. There is never a reason to touch Umbraco in this
-          step — you only return Markdown.
+        - CRITICAL: you author TEXT ONLY. Persisting to Umbraco is the dedicated
+          job of the later step4b join agent, which creates and publishes every
+          post. If you call any umbraco-mcp write tool here you would create
+          duplicate or uncoordinated content and break the join's bookkeeping.
+          There is never a reason to touch Umbraco in this step — you only return
+          Markdown.
         - The shared per-step validation/commit rules in the preamble do NOT apply
           to you — you are a text-only sub-task that just returns Markdown.
         - Output ONLY the structured fields below.

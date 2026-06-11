@@ -33,6 +33,7 @@ mapping of blog post -> media item.
     be **Image** (see `umb-image-sourcing`). Declaring `"Image"` here while the
     media is really a `File` makes publish drop the value.
 * After assigning, republish each blog post.
+* **Do this in parallel batches to save time:** each post is an independent node, so issue all the `update-document-properties` (heroImage assignment) calls together in one parallel tool batch, wait for them to return, then issue all the `publish-document` calls in one parallel batch. Parallel update + publish of distinct content nodes is verified safe on the LocalDB backend (no deadlocks). Keep the assign→publish order for any given post (assign first, then publish).
 
 ### If a hero image won't appear after publishing (READ THIS before retrying)
 

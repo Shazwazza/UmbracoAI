@@ -30,6 +30,7 @@ already exist, create none.
 * Use `create-document` with the Blog Post document type ID and the Blog List page as parent.
 * Publish each post immediately after creation.
 * Use `editorAlias` values: `Umbraco.TextBox` for title/subtitle, `Umbraco.MarkdownEditor` for content, `Umbraco.TextArea` for excerpt, `Umbraco.Tags` for tags.
+* **Persist in parallel batches to save time:** the posts are independent nodes, so you do NOT have to create them one at a time. Issue all `create-document` calls together in a single parallel tool batch, wait for them to return, then issue all `publish-document` calls in a single parallel batch. Parallel writes to distinct content nodes are verified safe on the LocalDB backend (no deadlocks). Only the create→publish *of the same post* are order-dependent (create first, then publish).
 
 ## Validation
 

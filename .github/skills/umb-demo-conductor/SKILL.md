@@ -14,8 +14,9 @@ workflow file lives next to this skill at
 `umb-sitemap`, `umb-accessibility`), plus an optional backup/reset and a branch
 setup step. The blog-posts step is purpose-built inline to showcase Conductor:
 a deterministic **plan** agent emits a typed post contract, a **`for_each`
-fan-out** authors every post body concurrently, then a serial **join** agent
-persists them to Umbraco one at a time (content writes must stay sequential).
+fan-out** authors every post body concurrently, then a **join** agent
+persists them to Umbraco in parallel batches (per-post content writes to
+distinct nodes are verified deadlock-free on LocalDB).
 
 ## ⚠️ Critical browser rule
 
