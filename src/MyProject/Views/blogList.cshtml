@@ -10,6 +10,19 @@
         .Where(c => c.ContentType.Alias == "blogPost")
         .OrderByDescending(c => c.Value<DateTime?>("publishDate") ?? c.CreateDate)
         .ToList();
+
+    var tagCounts = posts
+        .SelectMany(p => p.Value<IEnumerable<string>>("tags") ?? Enumerable.Empty<string>())
+        .Where(t => !string.IsNullOrWhiteSpace(t))
+        .Select(t => t.Trim())
+        .GroupBy(t => t, StringComparer.OrdinalIgnoreCase)
+        .Select(g => new { Tag = g.Key, Count = g.Count() })
+        .OrderByDescending(x => x.Count)
+        .ThenBy(x => x.Tag, StringComparer.OrdinalIgnoreCase)
+        .ToList();
+
+    var maxCount = tagCounts.Any() ? tagCounts.Max(x => x.Count) : 1;
+    var minCount = tagCounts.Any() ? tagCounts.Min(x => x.Count) : 1;
 }
 
 <section class="page-hero">
@@ -24,6 +37,29 @@
 </section>
 
 <section class="container">
+    @if (tagCounts.Any())
+    {
+        <div class="tag-cloud">
+            <h2 class="tag-cloud__title">Signal frequency</h2>
+            <p class="tag-cloud__hint">Tags from across the diaries — bigger means louder.</p>
+            <ul class="tag-cloud__list" role="list">
+                @foreach (var t in tagCounts)
+                {
+                    var step = maxCount == minCount ? 3 : (int)Math.Round(1 + (4.0 * (t.Count - minCount) / (maxCount - minCount)));
+                    var slug = t.Tag.ToLowerInvariant().Replace(' ', '-');
+                    <li>
+                        <a class="tag tag--cloud tag--size-@step"
+                           href="#tag-@slug"
+                           aria-label="@t.Tag — @t.Count post@(t.Count == 1 ? "" : "s")">
+                            <span class="tag__name">#@t.Tag</span>
+                            <span class="tag__count" aria-hidden="true">@t.Count</span>
+                        </a>
+                    </li>
+                }
+            </ul>
+        </div>
+    }
+
     @if (!posts.Any())
     {
         <article class="content-card">

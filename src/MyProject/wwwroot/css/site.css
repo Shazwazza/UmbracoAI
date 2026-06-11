@@ -397,6 +397,74 @@ a:hover { color: var(--coral); }
     font-size: 0.8rem;
 }
 
+/* Tag cloud */
+.tag-cloud {
+    margin: 0 0 40px;
+    padding: 24px;
+    background: var(--cream, #fff8ec);
+    border: 3px solid var(--ink);
+    border-radius: 18px;
+    box-shadow: 6px 6px 0 var(--ink);
+}
+
+.tag-cloud__title {
+    font-family: var(--font-mono);
+    font-size: 1.1rem;
+    margin: 0 0 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+}
+
+.tag-cloud__hint {
+    margin: 0 0 16px;
+    font-size: 0.9rem;
+    opacity: 0.75;
+}
+
+.tag-cloud__list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-items: center;
+}
+
+.tag--cloud {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 6px;
+    text-decoration: none;
+    line-height: 1.1;
+    transition: transform 0.15s ease, background 0.15s ease;
+}
+
+.tag--cloud:hover,
+.tag--cloud:focus-visible {
+    transform: translateY(-2px);
+    background: var(--coral, #ff7a59);
+    color: var(--ink);
+}
+
+.tag--cloud:focus-visible {
+    outline: 3px solid var(--ink);
+    outline-offset: 2px;
+}
+
+.tag__count {
+    font-size: 0.7em;
+    opacity: 0.7;
+    font-weight: 700;
+}
+
+/* Size steps — text stays legible at every step (min 0.85rem) */
+.tag--size-1 { font-size: 0.85rem; }
+.tag--size-2 { font-size: 1rem; }
+.tag--size-3 { font-size: 1.2rem; }
+.tag--size-4 { font-size: 1.5rem; }
+.tag--size-5 { font-size: 1.85rem; }
+
 /* Blog post */
 .post {
     padding-bottom: 80px;
