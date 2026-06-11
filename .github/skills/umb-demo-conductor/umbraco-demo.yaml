@@ -454,10 +454,10 @@ for_each:
     key_by: post.slug
     # Posts authored concurrently per batch. Each item is an independent Copilot
     # session doing pure text generation (NO Umbraco, NO browser), so this is the
-    # cheapest thing to parallelise. 6 gives ~2 waves for a typical 9-post plan
-    # while staying light enough for a smooth live run; raise toward the post
-    # count for a single wave (and more on-stage drama).
-    max_concurrent: 6
+    # cheapest thing to parallelise. A typical plan is ~9 posts; running them in a
+    # single wave (no Umbraco, no browser, pure text on a fast model) is the
+    # snappiest option and adds on-stage drama with every post landing at once.
+    max_concurrent: 9
     # One flaky post must not abort the demo; the join step backfills any gaps.
     failure_mode: continue_on_error
     agent:
