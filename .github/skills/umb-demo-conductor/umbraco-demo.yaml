@@ -215,22 +215,94 @@ agents:
 
       Report the branch you ended up on. Do not proceed to build anything here.
     routes:
-      - to: step1_homepage
+      - to: step1a_homepage_structure
 
   # ---------------------------------------------------------------------------
   # The 8 demo steps — each embeds its existing skill via !file
   # ---------------------------------------------------------------------------
-  - name: step1_homepage
-    description: "Step 1 — Home page."
+  # Step 1 is split into two nodes for a stronger live-demo narrative:
+  #   1a) build the Home structure + an UNSTYLED template and publish, so the
+  #       audience sees raw, theme-less content appear, then
+  #   1b) invent the visual theme — master layout + CSS — and refactor the
+  #       template, so the audience watches the page transform on refresh.
+  - name: step1a_homepage_structure
+    description: "Step 1a — Home page structure (unstyled, published)."
     system_prompt: |
-      You are executing Step 1 (Home page) of the live Umbraco demo; follow the
-      skill instructions below.
+      You are executing Step 1a (Home page structure) of the live Umbraco demo.
+      This step deliberately produces a PLAIN, UNSTYLED page — the visual theme
+      and CSS come in the NEXT step (1b), so the audience can watch the page
+      transform. Do NOT write any CSS, do NOT create `_Layout.cshtml`, and do
+      NOT invent a colour palette or theme here.
 
       Conductor-specific note: before creating anything, FIRST open the browser
       with `browser_navigate` to {{ workflow.input.site_base_url }} and show the
       audience that the site is currently empty (the default/blank Umbraco
       state). This is the single time the browser is opened — reuse this window
       for the rest of the demo.
+
+      Do the following, using the umbraco-mcp tools for all Umbraco operations:
+      1. Create a `Home` Document Type at the root with a few sensible
+         properties for a landing page (e.g. a heading/title text field, a
+         subtitle/tagline, and a body rich-text or markdown field). Use only
+         built-in property editors.
+      2. Create a `Home` Template via the template MCP tool, then link it to the
+         Home Document Type (set it as an allowed template AND the default
+         template — creating a template does not auto-link it).
+      3. Edit `src/MyProject/Views/home.cshtml` on the filesystem so it renders
+         the Home content fields with MINIMAL, unstyled markup. Use
+         `@inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage` and
+         `Layout = null;` with a bare `<html><body>` that just outputs the
+         heading/subtitle/body values. No CSS, no classes, no `/css/site.css`
+         link — raw HTML only. (Step 1b will introduce the shared layout.)
+      4. Create a `Home` content node at the root of the content tree, fill in
+         the fields, and PUBLISH it (`publish-document` — drafts are invisible).
+      5. Validate with Playwright in the SAME browser window: navigate to
+         {{ workflow.input.site_base_url }} and confirm the page loads with no
+         `div#stackpage` error and shows the raw, unstyled content.
+      6. Commit: `git add -A` then
+         `git commit -m "Step 1a: Home page structure (unstyled) — doc type, template, published content"`.
+         The commit is mandatory; the step is not done until it exists.
+
+      A 500 error / `div#stackpage` right after editing the `.cshtml` is a Razor
+      compile error in that view (views compile at runtime) — fix the view and
+      refresh; never restart the site.
+    prompt: |
+      Build the Home page structure now: Home document type + linked template,
+      a minimal UNSTYLED `home.cshtml`, and a published Home root node. No CSS or
+      theme in this step. Validate the raw page renders, then commit as Step 1a.
+    routes:
+      - to: step1b_homepage_style
+
+  - name: step1b_homepage_style
+    description: "Step 1b — Home page visual theme (CSS + master layout)."
+    system_prompt: |
+      You are executing Step 1b (Home page styling) of the live Umbraco demo.
+      The Home Document Type, template, and a PUBLISHED Home node already exist
+      from Step 1a, rendering as plain unstyled HTML in the browser window that
+      is already open. Your job is to bring the page to life with a brand-new
+      visual identity, so the audience sees it transform on the next refresh.
+      Do NOT recreate the document type or content — only add styling and the
+      shared layout, then update the template.
+
+      Follow the included skill instructions for the design, the shared
+      `_Layout.cshtml` master layout, the `/css/site.css`, and the HMAC image
+      rule. Concretely:
+      - Invent an ORIGINAL theme for THIS run (unique colour palette, typography
+        feel, layout style) — do not reuse themes from previous builds.
+      - Create the shared master layout `src/MyProject/Views/_Layout.cshtml`
+        (the `<!DOCTYPE>`, `<head>`, `/css/site.css` link, header/footer,
+        `@RenderBody()`) as described in the skill, and create `/css/site.css`.
+      - Refactor `src/MyProject/Views/home.cshtml` to set
+        `Layout = "_Layout.cshtml";` and contain only its unique, now-styled
+        content (remove the bare `<html>/<body>` shell added in Step 1a).
+      - Do NOT restart the site after editing `.cshtml`/CSS — Razor and static
+        files are picked up at runtime; just refresh the browser.
+      - Validate in the SAME browser window by refreshing
+        {{ workflow.input.site_base_url }}: the page now renders with the full
+        theme (no `div#stackpage` error), confirming the visual transition.
+      - Commit: `git add -A` then
+        `git commit -m "Step 1b: Home page theme — <brief summary of the visual identity>"`.
+        Ignore the skill's own "Step 1" commit wording; use the Step 1b message.
     prompt: !file ../umb-homepage/SKILL.md
     routes:
       - to: step2_blog_pages
