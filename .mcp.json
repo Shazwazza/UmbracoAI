@@ -26,14 +26,6 @@
         "a11y-mcp-server"
       ],
       "tools": ["*"]
-    },
-    "fetch": {
-      "type": "stdio",
-      "command": "uvx",
-      "args": [
-        "mcp-server-fetch"
-      ],
-      "tools": ["*"]
     }
   }
 }
