@@ -141,10 +141,10 @@ a:hover { color: var(--coral); }
 .hero__cta {
     display: inline-flex; align-items: center; gap: .6rem;
     background: var(--coral);
-    color: var(--cream);
+    color: var(--ink);
     text-decoration: none;
     font-family: var(--font-mono);
-    font-weight: 600;
+    font-weight: 700;
     text-transform: uppercase;
     letter-spacing: .08em;
     font-size: .9rem;
@@ -157,7 +157,7 @@ a:hover { color: var(--coral); }
 .hero__cta:hover {
     transform: translate(-2px, -2px);
     box-shadow: 10px 10px 0 var(--ink);
-    color: var(--cream);
+    color: var(--ink);
 }
 
 /* ---------- Generic content card ---------- */
@@ -339,7 +339,8 @@ a:hover { color: var(--coral); }
     font-size: 0.78rem;
     text-transform: uppercase;
     letter-spacing: 0.08em;
-    color: var(--coral);
+    color: var(--ink);
+    font-weight: 700;
 }
 
 .post-card__title {
@@ -367,8 +368,11 @@ a:hover { color: var(--coral); }
     margin-top: auto;
     padding-top: 8px;
     font-family: var(--font-mono);
-    font-weight: 600;
-    color: var(--coral);
+    font-weight: 700;
+    color: var(--ink);
+    text-decoration: underline;
+    text-decoration-thickness: 2px;
+    text-underline-offset: 3px;
 }
 
 /* Tags */
