@@ -7,7 +7,7 @@ description: Run accessibility checks and fix issues until passing. Use when ask
 
 ## Testing
 
-Use the `a11y-accessibility-test_accessibility` MCP tool to test each page. Pass the full URL (e.g., `SITE_BASE_URL/`, see Project Configuration in copilot-instructions.md) as the `url` parameter.
+Use the `a11y-accessibility-test_accessibility` MCP tool to test each page type. Pass the full URL (e.g., `SITE_BASE_URL/`, see Project Configuration in copilot-instructions.md) as the `url` parameter.
 
 Pages to test (based on sitemap or content tree):
 1. Home page — `SITE_BASE_URL` (see Project Configuration in copilot-instructions.md)
@@ -23,7 +23,7 @@ Pages to test (based on sitemap or content tree):
 
 ## Verification
 
-* Re-run `a11y-accessibility-test_accessibility` on each page after fixes.
+* Re-run `a11y-accessibility-test_accessibility` on each page type after fixes.
 * After re-testing, navigate/refresh the page in Playwright again so the audience sees the corrected, passing page.
 * Repeat until all pages report zero violations.
 

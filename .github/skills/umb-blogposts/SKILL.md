@@ -31,16 +31,12 @@ already exist, create none.
 * Publish each post immediately after creation.
 * Use `editorAlias` values: `Umbraco.TextBox` for title/subtitle, `Umbraco.MarkdownEditor` for content, `Umbraco.TextArea` for excerpt, `Umbraco.Tags` for tags.
 
-## After creating posts
-
-* Update `src/MyProject/wwwroot/sitemap.xml` to include all new blog post URLs.
-* Get URLs for new posts using `get-document-urls`.
-
 ## Validation
 
 Use Playwright to navigate to the Blog List page. Confirm:
 1. 10 blog post cards are visible (no more, no fewer).
 2. Each card shows a title, date, and excerpt.
+3. Each blog post should be able to be navigated from a hyperlink on the Blog List page to its own Blog Post page, which should render without errors.
 
 ## Commit
 
