@@ -1,0 +1,23 @@
+@inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage
+@{
+    var home = Model.Root();
+    var siteName = home?.Value<string>("title") ?? home?.Name ?? "The Agent Diaries";
+    var blogList = home?.Children().FirstOrDefault(x => x.ContentType.Alias == "blogList");
+    var isHome = home != null && Model.Id == home.Id;
+    var isBlog = blogList != null && (Model.Id == blogList.Id || Model.Parent?.Id == blogList.Id);
+}
+<header class="site-header">
+    <div class="container site-header__inner">
+        <a class="brand" href="@(home?.Url() ?? "/")">
+            <span class="brand__mark" aria-hidden="true">◣</span>
+            <span class="brand__name">@siteName</span>
+        </a>
+        <nav class="site-nav" aria-label="Primary">
+            <a href="@(home?.Url() ?? "/")" class="@(isHome ? "active" : "")">Home</a>
+            @if (blogList != null)
+            {
+                <a href="@blogList.Url()" class="@(isBlog ? "active" : "")">Blog</a>
+            }
+        </nav>
+    </div>
+</header>

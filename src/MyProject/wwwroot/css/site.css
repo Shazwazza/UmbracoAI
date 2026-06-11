@@ -98,6 +98,7 @@ a:hover { color: var(--coral); }
     border-radius: 6px;
 }
 .site-nav a:hover { background: var(--amber); border-color: var(--ink); }
+.site-nav a.active { background: var(--ink); color: var(--paper); border-color: var(--ink); }
 
 /* ---------- Main / sections ---------- */
 .site-main { padding-block: 0 4rem; }
