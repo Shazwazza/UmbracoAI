@@ -8,14 +8,14 @@
         "NODE_TLS_REJECT_UNAUTHORIZED": "0",
         "UMBRACO_CLIENT_ID": "umbraco-back-office-mcp",
         "UMBRACO_CLIENT_SECRET": "1234567890",
-        "UMBRACO_BASE_URL": "http://localhost:14737",
+        "UMBRACO_BASE_URL": "http://localhost:14738",
         "UMBRACO_INCLUDE_TOOL_COLLECTIONS": "data-type,document-type,document,media,property-type,partial-view,static-file,stylesheet,temporary-file,imaging,template"
       },
       "tools": ["*"]
     },
     "playwright": {
       "type": "http",
-      "url": "http://localhost:8931/mcp",
+      "url": "http://localhost:8932/mcp",
       "tools": ["*"]
     },
     "a11y-accessibility": {
