@@ -1,82 +1,118 @@
 # Umbraco and Copilot CLI
 
-Prompting, rules and instructions for facilitating Umbraco management via Copilot CLI, MCP, and AI Agents.
+Prompting, rules, skills and agents for building and evolving Umbraco sites with AI agents — packaged so they live in a git repository and can be re-used.
+
+The premise: point an autonomous agent at an empty Umbraco install and have it design, scaffold, style, populate, validate and commit a complete blogging website — without anyone opening the back office or writing a line of code.
 
 ## Umbraco Codegarden 2026
 
-This project was put together as a presentation for the Umbraco Codegarden 2026 conference to showcase how custom rules and commands can be stored in a git repository so they can be re-used for Umbraco management.
+This repo is the live-demo material for **"Automate All the Things: Building & Evolving Umbraco Sites with AI Agents"** by Shannon Deminick (Thompson).
 
-In this demo, the premise is to have an AI Agent automatically create an Umbraco Blogging website from scratch.
+* ▶️ **[Watch the recording](https://www.youtube.com/watch?v=A_EUvX8naHQ)** (Umbraco HQ)
+* 📊 **Slides:** [`Umbraco Codegarden 2026 Slides Template.pptx`](./Umbraco%20Codegarden%202026%20Slides%20Template.pptx)
+
+The talk and slides cover the *why* — Conductor, agent loops, model comparisons, cost, and where this is all heading. **This README covers the *how*: getting the demo running yourself.**
 
 ## Quick Start
 
-`TLDR;`
+1. Clone/fork this repo and open it in your Copilot-enabled editor.
+1. Install Playwright browsers as admin: `npx playwright install`
+1. Start the Umbraco site (see [Running the site](#running-the-site)) and let it install.
+1. [Create an Umbraco API User](https://docs.umbraco.com/umbraco-cms/fundamentals/data/users/api-users) whose credentials match `/.mcp.json`.
+1. Start the Playwright MCP server: `powershell -ExecutionPolicy Bypass -File scripts/start-playwright-mcp.ps1`
+1. Check `/.mcp.json` points at the site you want to drive — see [Ports and MCP configuration](#ports-and-mcp-configuration).
+1. Start Copilot CLI and run one of:
+   * `Use the umbraco-demo agent` — end-to-end, single agent
+   * `Use the umbraco-demo-conductor agent` — end-to-end, Conductor workflow
+   * an individual skill, e.g. `/umb-homepage`
 
-1. Install Playwright as admin with `npx playwright install`
-1. Clone/Fork this repo and open in your Copilot-enabled editor.
-1. The Umbraco website needs to be running/installed: `dotnet run --project src/MyProject/MyProject.csproj --launch-profile Umbraco.Web.UI -p:SiteEnv=Development`
-1. Configure MCP servers in `/.mcp.json`
-1. [Create an Umbraco API User](https://docs.umbraco.com/umbraco-cms/fundamentals/data/users/api-users), with credentials matching `/.mcp.json`
-1. Start Copilot CLI and run the end-to-end demo with `Use the umbraco-demo agent`
-1. Or run individual skills such as `/umb-homepage`, `/umb-blog-pages`, and `/umb-navigation`
+## What's already in `main`
 
-![Demo](Step01.gif)
+`main` is not an empty starting point — it contains a **completed example site** from a real demo run:
 
-👇👇👇👇👇👇
+| Area | What's there |
+|------|--------------|
+| Document types | `home`, `bloglist`, `blogpost` (`src/MyProject/uSync/v17/ContentTypes`) |
+| Templates | `home.cshtml`, `blogList.cshtml`, `blogPost.cshtml` (`src/MyProject/Views`) |
+| Layout & partials | `_Layout.cshtml`, `Partials/Navigation.cshtml` |
+| Styling | One site-wide stylesheet, `src/MyProject/wwwroot/css/site.css` |
+| Content | Home, Blog List, and 10 authored blog posts (`uSync/v17/Content`) |
+| Media | A "Blog Hero Images" folder with 10 hero images (`uSync/v17/Media`) |
+| SEO | A generated `wwwroot/sitemap.xml` |
 
-![alt text](image-2.png)
+Each demo step is its own commit (`Step 1a`, `Step 1b`, `Step 2`, …), so you can walk the build one step at a time. The theme is regenerated every run — the agent is instructed to invent a new visual identity each time.
 
-## Using this repo
+To build your own, run `/umb-reset` (optionally `/umb-backup` first), then the demo agent or Conductor workflow.
 
-### Copilot CLI
+> ℹ️ **If you restore the uSync snapshot into a fresh database,** make sure the export is complete. Two things are easy to lose: the Markdown *Data Type* (Umbraco ships the `Umbraco.MarkdownEditor` property editor but no Markdown data type, so the agent creates one during the build), and the `_layout` template that the page templates inherit from. Missing either shows up as `Cannot find underling DataType …` with empty post bodies, or pages that fail to route. Both are committed under `uSync/v17/`. Everything else the site references is an Umbraco built-in.
 
-This repository is configured for **Copilot CLI**:
+## Repo layout
 
-* Shared instructions: `/.github/copilot-instructions.md`
-* Modular instructions: `/.github/instructions/*.instructions.md`
-* Reusable skills: `/.github/skills/*/SKILL.md`
-* Agents: `/.github/agents/*.agent.md`
-* MCP servers: `/.mcp.json`
+| Path | Purpose |
+|------|---------|
+| `/.github/copilot-instructions.md` | Project config, site URLs, goal, minimum requirements |
+| `/.github/instructions/*.instructions.md` | Content, front-end, git, tools and Umbraco rules |
+| `/.github/skills/*/SKILL.md` | Reusable skills |
+| `/.github/agents/*.agent.md` | Custom agents |
+| `/.github/plugin/` | Copilot CLI plugin + marketplace manifests |
+| `/.mcp.json` | MCP servers |
+| `/scripts/start-playwright-mcp.ps1` | Starts the shared headed Playwright MCP server |
 
-### Copilot CLI plugin + marketplace
-
-This repo now includes a first-class Copilot CLI plugin and marketplace manifests:
-
-* Plugin manifest: `/.github/plugin/plugin.json`
-* Marketplace manifest: `/.github/plugin/marketplace.json`
-
-Install the plugin directly from this repository:
+### Install as a Copilot CLI plugin
 
 ```bash
 copilot plugin install Shazwazza/UmbracoAI
 ```
 
-Or register this repository as a marketplace, then install the `umbracoai-demo` plugin from the `umbracoai-marketplace` marketplace:
+Or register this repo as a marketplace first:
 
 ```bash
 copilot plugin marketplace add Shazwazza/UmbracoAI
 copilot plugin install umbracoai-demo@umbracoai-marketplace
 ```
 
-### Umbraco website & Umbraco MCP
+## Running the site
 
-1. The Umbraco website will need to be run/installed first: `dotnet run --project src/MyProject/MyProject.csproj --launch-profile Umbraco.Web.UI -p:SiteEnv=Development`
-1. Read and configure Umbraco MCP: https://github.com/umbraco/Umbraco-CMS-MCP-Dev including the user information.
-1. Edit `/.mcp.json` to update your Umbraco settings.
-1. NOTE: ALL Umbraco MCP commands are marked as 'always allow', however there is this filter applied to the MCP server: "UMBRACO_INCLUDE_TOOL_COLLECTIONS": "document,media,document-type,data-type".
+```bash
+dotnet run --project src/MyProject/MyProject.csproj --launch-profile Umbraco.Web.UI -p:SiteEnv=Development
+```
+
+`-p:SiteEnv=Development` redirects build output to `bin\Development\` / `obj\Development\` (see `src/MyProject/Directory.Build.props`) so this site never locks the Conductor site's `MyProject.exe` when both run at once. It **must** be on the command line — launch-profile environment variables don't reach the build phase of `dotnet run`.
+
+The site installs unattended on first boot. You then need an [Umbraco API user](https://docs.umbraco.com/umbraco-cms/fundamentals/data/users/api-users) matching the credentials in `/.mcp.json`.
+
+### Umbraco MCP
+
+Configure the [Umbraco MCP server](https://github.com/umbraco/Umbraco-CMS-MCP-Dev), then edit `/.mcp.json` to match your settings. All its commands are *always allow*, but the server is filtered to these tool collections:
+
+```
+data-type, document-type, document, media, property-type,
+partial-view, static-file, stylesheet, temporary-file, imaging, template
+```
+
+The agents never touch Umbraco over raw HTTP — every back-office operation goes through MCP.
+
+### Ports and MCP configuration
+
+There are two Umbraco sites so the demo agent and the Conductor workflow can run simultaneously against separate databases:
+
+| Site | Env / launch profile | URL | LocalDB database | Playwright MCP |
+|------|----------------------|-----|------------------|----------------|
+| Traditional demo | `Development` / `Umbraco.Web.UI` | `http://localhost:14737` | `Umbraco.mdf` | `http://localhost:8931/mcp` |
+| Conductor workflow | `Conductor` / `Conductor` | `http://localhost:14738` | `UmbracoConductor.mdf` | `http://localhost:8932/mcp` |
+
+> ⚠️ **Check `/.mcp.json` before you run.** It can only point at one site at a time, and it is currently checked in pointing at the **Conductor** site (`UMBRACO_BASE_URL=http://localhost:14738`, Playwright `8932`). To drive the traditional site with the `umbraco-demo` agent, switch those to `14737` and `8931`.
+>
+> The Conductor workflow ignores `/.mcp.json` — it declares its own MCP servers in `umbraco-demo.yaml` and passes `--umbraco-base-url http://localhost:14738` as a CLI flag, precisely because `.mcp.json` would otherwise leak its `UMBRACO_BASE_URL` into the workflow.
+
+If you change a URL/port, update the matching set of files:
+
+* `14737` → `/.mcp.json`, the `Umbraco.Web.UI` profile in `src/MyProject/Properties/launchSettings.json`, `/.github/copilot-instructions.md`, `/.github/agents/umbraco-demo.agent.md`
+* `14738` → `/.github/skills/umb-demo-conductor/umbraco-demo.yaml` (input default, `UMBRACO_BASE_URL`, the `--umbraco-base-url` flag, and the shared `instructions:` preamble), the `Conductor` profile in `launchSettings.json`, `src/MyProject/appsettings.Conductor.json`
 
 ### Running two sites at once
 
-For a live demo you may want to run the **traditional demo agent** and the
-**Conductor workflow** simultaneously. They each need their own Umbraco site and
-database, so the project ships with two environments / launch profiles:
-
-| Site | Env / launch profile | URL | LocalDB database | Driven by |
-|------|----------------------|-----|------------------|-----------|
-| Traditional demo | `Development` / `Umbraco.Web.UI` | `http://localhost:14737` | `Umbraco.mdf` | Copilot CLI (`/.mcp.json`) |
-| Conductor workflow | `Conductor` / `Conductor` | `http://localhost:14738` | `UmbracoConductor.mdf` | Workflow (`umbraco-demo.yaml`) |
-
-Start each one in its own terminal from the repo root:
+Start each in its own terminal from the repo root:
 
 ```bash
 # Terminal 1 — traditional demo site
@@ -86,151 +122,97 @@ dotnet run --project src/MyProject/MyProject.csproj --launch-profile Umbraco.Web
 dotnet run --project src/MyProject/MyProject.csproj --launch-profile Conductor -p:SiteEnv=Conductor
 ```
 
-How it works:
+Each profile sets `ASPNETCORE_ENVIRONMENT`, so the second site loads `appsettings.Conductor.json` (separate LocalDB database, unique `SiteName`, and `LocalTempStorageLocation: EnvironmentTemp` so Examine indexes and content cache don't clash). Each database must be installed once and have its own API user.
 
-* Each profile sets `ASPNETCORE_ENVIRONMENT`, so the second site loads
-  `src/MyProject/appsettings.Conductor.json`, which points `umbracoDbDSN` at a
-  separate LocalDB database (`UmbracoConductor.mdf`).
-* The `-p:SiteEnv=...` global property redirects each site's build output to
-  `bin\<SiteEnv>\` / `obj\<SiteEnv>\` (see `src/MyProject/Directory.Build.props`),
-  so the two builds never lock each other's `MyProject.exe`. It MUST be passed on
-  the command line because launch-profile environment variables do not reach the
-  build phase of `dotnet run`.
-* The second site uses `LocalTempStorageLocation: EnvironmentTemp` with a unique
-  `SiteName`, so its Examine indexes and content cache live in a separate temp
-  folder and do not clash with the default site.
-* The traditional flow uses `/.mcp.json` (`UMBRACO_BASE_URL=http://localhost:14737`);
-  the Conductor workflow uses the `umbraco-demo.yaml` MCP config
-  (`UMBRACO_BASE_URL=http://localhost:14738`).
-
-**One-time setup per site:** each database must be installed once (run the site and
-complete the Umbraco installer) and have the Umbraco API user created with the
-credentials in `/.mcp.json` (traditional) and `umbraco-demo.yaml` (Conductor).
-You only need the second site if you intend to run the Conductor workflow; running
-just the traditional demo only needs the default `Umbraco.Web.UI` profile.
-
-> **Two browser windows:** each flow uses its own Playwright MCP server so the
-> two demos show in **separate** visible browser windows running at the same time:
-> the traditional demo agent uses `http://localhost:8931/mcp` (from `/.mcp.json`)
-> and the Conductor workflow uses `http://localhost:8932/mcp` (from
-> `umbraco-demo.yaml`). Start one server per window (the browser profile is
-> per-port, so they don't clash):
->
-> ```powershell
-> # Window 1 — traditional demo agent (port 8931, the default)
-> powershell -ExecutionPolicy Bypass -File scripts/start-playwright-mcp.ps1
-> # Window 2 — Conductor workflow (port 8932)
-> powershell -ExecutionPolicy Bypass -File scripts/start-playwright-mcp.ps1 -Port 8932
-> ```
-
-### "YOLO mode"
-
-Part of the presentation was to showcase that an AI Agent can autonomously do all of the work without user interaction once the rules and skills are setup. As such, several MCP tools are pre-installed in `/.mcp.json` with 'always allow' configured.
-
-![YOLO Tools](image-3.png)
-
-For this demo, other cmd line tools have been auto-allowed:
-
-![YOLO cmd line](image.png)
-
-### USync
-
-USync has been installed to this website in order to track schema and content changes in Git. This allows you to rollback/forward any changes that the Agent makes.
-
-## End-to-end demo agent
-
-For a single-command, fully automated demo run the `umbraco-demo` agent:
-
-```
-Use the umbraco-demo agent to build the full Umbraco blogging site
-```
-
-The agent will:
-1. Ask whether to reset the site first
-2. Run each skill below in sequence
-3. Validate each step with Playwright before moving on
-4. Summarise what was built when complete
-
-The `umbraco-demo` agent profile lives at `/.github/agents/umbraco-demo.agent.md` and is auto-discovered by Copilot CLI.
-
-### Conductor workflow variant
-
-The same end-to-end demo can also be run as a [Conductor](https://github.com/github/conductor) multi-agent workflow. The `umbraco-demo-conductor` agent calls the `/umb-demo-conductor` skill, which runs the workflow defined at `/.github/skills/umb-demo-conductor/umbraco-demo.yaml`. That workflow embeds each demo step by including its existing `SKILL.md`, with a human gate for the optional reset, a branch-setup step, and a final summary:
-
-```
-Use the umbraco-demo-conductor agent to build the full Umbraco blogging site
-```
-
-The Conductor workflow runs against its **own** Umbraco site (the `Conductor` launch profile / environment at `http://localhost:14738`) so it can run at the same time as the traditional demo agent without sharing a database — see [Running two sites at once](#running-two-sites-at-once). Start it with:
-
-```
-dotnet run --project src/MyProject/MyProject.csproj --launch-profile Conductor -p:SiteEnv=Conductor
-```
-
-**Before running, start the Conductor's Playwright browser server (port 8932)** so the workflow drives its *own* visible window — separate from the traditional demo agent's port-8931 window, so both can run at once (otherwise later steps run in a hidden browser). From the repo root, in this order:
+Each flow also needs its own Playwright MCP server so the two demos appear in **separate** visible browser windows (the browser profile is per-port, so they don't clash):
 
 ```powershell
-# 1. Start the Conductor's headed Playwright MCP server on port 8932 (detached, idempotent)
+# Window 1 — traditional demo agent (port 8931, the default)
+powershell -ExecutionPolicy Bypass -File scripts/start-playwright-mcp.ps1
+# Window 2 — Conductor workflow (port 8932)
 powershell -ExecutionPolicy Bypass -File scripts/start-playwright-mcp.ps1 -Port 8932
-# 2. Start your Copilot CLI session (it reads .mcp.json -> connects over HTTP)
-# 3. Run the workflow (connects to the port-8932 server)
 ```
 
-The workflow points its `playwright` MCP server at `http://localhost:8932/mcp`, while `.mcp.json` (the traditional demo agent) points at `http://localhost:8931/mcp` — two separate headed `@playwright/mcp` instances launched with `--shared-browser-context` and per-port profiles. Each server is detached, so the browser stays open after the run.
-
-Or run the workflow directly from the repo root. Always pass `--web` so the live dashboard is visible; add `--skip-gates --no-interactive` for a hands-off run (auto-accepts the gate's first option — back up + reset — and avoids blocking on stdin in a non-interactive shell):
-
-```
-conductor run .github/skills/umb-demo-conductor/umbraco-demo.yaml --workspace-instructions --web --skip-gates --no-interactive
-```
-
-The original `umbraco-demo` agent (inline orchestration) and the Conductor variant produce the same site; pick whichever orchestration style you prefer.
+Both are launched headed, detached and with `--shared-browser-context`, so the browser survives the run — the agents are explicitly instructed never to close it mid-demo.
 
 ## Skills
 
-Reusable skills are found in `/.github/skills` and are auto-discovered by Copilot CLI.
+Skills live in `/.github/skills` and are auto-discovered by Copilot CLI. Run `/skills list` to see them, or call one explicitly with `/skill-name`.
 
-To see available skills, run `/skills list`. Copilot can invoke these automatically, or you can call them explicitly with `/skill-name`.
+**Optional pre-step:** `/umb-backup` (backs up the LocalDB database) and `/umb-reset` (wipes generated templates, content, media, document types and CSS).
 
-Demo build order:
+**Build order** — the exact sequence run by both the `umbraco-demo` agent and the Conductor workflow:
 
-1. `/umb-homepage`
-1. `/umb-blog-pages`
-1. `/umb-navigation`
-1. `/umb-sitemap`
-1. `/umb-accessibility`
-1. `/umb-blogposts`
-1. `/umb-tagcloud`
-1. `/umb-blogpost-images`
+| # | Skill | What it does |
+|---|-------|--------------|
+| 1 | `/umb-homepage` | Home page document type, template, styling and published root content |
+| 2 | `/umb-blog-pages` | Blog List + Blog Post document types and templates, plus one starter post |
+| 3 | `/umb-navigation` | Shared navigation partial with active state |
+| 4 | `/umb-blogposts` | Tops the site up to 10 authored blog posts |
+| 5 | `/umb-image-sourcing` | Sources topical photos from Unsplash and uploads them to Umbraco media |
+| 6 | `/umb-blogpost-images` | Assigns hero images and renders them on list and detail pages |
+| 7 | `/umb-tagcloud` | Frequency-sized, keyboard-accessible tag cloud on the Blog List page |
+| 8 | `/umb-sitemap` | Generates `sitemap.xml` and crawls every URL to verify it renders |
+| 9 | `/umb-accessibility` | Runs a11y checks via MCP and fixes issues until they pass |
 
-There's also a reset skill to wipe everything back to defaults: `/umb-reset`
+Every step is validated in Playwright and committed before the next one starts.
 
-There's also a Conductor workflow skill that runs the whole demo end-to-end as a multi-agent workflow: `/umb-demo-conductor` (see "Conductor workflow variant" above).
+Notes:
 
-## Custom agents
+* Accessibility runs **last** deliberately — by then all content, images and the tag cloud exist, so the check covers the finished site.
+* The tag cloud renders sized, accessible links but doesn't filter — there's no core Umbraco API for tag-based content queries.
 
-All agents are in `/.github/agents` and are auto-discovered by Copilot CLI:
+`/umb-demo-conductor` runs the whole thing end-to-end as a Conductor workflow (below).
+
+## Agents
+
+In `/.github/agents`, auto-discovered by Copilot CLI:
 
 * `umbraco-demo.agent.md` — end-to-end demo orchestrator
-* `umbraco-demo-conductor.agent.md` — end-to-end demo orchestrator, run as a Conductor multi-agent workflow (via the `/umb-demo-conductor` skill)
+* `umbraco-demo-conductor.agent.md` — the same demo as a Conductor multi-agent workflow
 * `umbraco-site-builder.agent.md` — Umbraco implementation specialist
 * `umbraco-site-validator.agent.md` — site quality and accessibility specialist
 
-## Instructions
+## Conductor workflow variant
 
-Instructions are found in:
+The workflow at `/.github/skills/umb-demo-conductor/umbraco-demo.yaml` runs the same build as a [Conductor](https://github.com/microsoft/conductor) multi-agent workflow — this is what was demonstrated live. Each step includes its existing `SKILL.md`, so both orchestration styles share the same instructions and produce the same site. It adds a human-in-the-loop gate before the reset, parallel fan-out for authoring blog posts, and a git commit per step.
 
-* `/.github/copilot-instructions.md`
-* `/.github/instructions/*.instructions.md`
+It targets its **own** Umbraco site (`Conductor` profile, `http://localhost:14738`) so it can run alongside the traditional agent:
 
-These are the instructions to help keep the AI Agent doing what it is supposed to. These are currently in their infancy and although they work most of the time when running the above skills, sometimes an Agent will get something wrong. In that case, the instructions need to be adjusted.
+```bash
+dotnet run --project src/MyProject/MyProject.csproj --launch-profile Conductor -p:SiteEnv=Conductor
+```
 
-Pro tip: You can always ask the AI Agent to update the rules in a way that it won't get something wrong again :)
+Start the Conductor's Playwright server **first** (port 8932), or later steps run in a hidden browser:
 
+```powershell
+# 1. Start the headed Playwright MCP server on port 8932 (detached, idempotent)
+powershell -ExecutionPolicy Bypass -File scripts/start-playwright-mcp.ps1 -Port 8932
+# 2. Start your Copilot CLI session
+# 3. Run the workflow
+```
+
+Then either `Use the umbraco-demo-conductor agent`, or run it directly. Always pass `--web` for the live dashboard; add `--skip-gates --no-interactive` for a hands-off run (auto-accepts the gate's first option — back up + reset — and avoids blocking on stdin):
+
+```bash
+conductor run .github/skills/umb-demo-conductor/umbraco-demo.yaml --workspace-instructions --web --skip-gates --no-interactive
+```
+
+`--workspace-instructions` passes this repo's `copilot-instructions.md` and `instructions/` files into every step's context. It's optional.
+
+## Autopilot / "YOLO mode"
+
+The demo runs unattended. In Copilot CLI, `Shift+Tab` switches to **plan mode**; approving a plan lets you continue in **autopilot** (auto-approve everything) and optionally **fleet** mode (parallel work). To support that, MCP servers in `/.mcp.json` are registered with `"tools": ["*"]`, and command-line tools like `dotnet`, `git`, `npx` and `powershell` are auto-approved.
+
+## uSync
+
+uSync is installed so schema and content changes are written to disk as the agent works. You can watch back-office changes appear as files live during a demo, and everything is tracked in git alongside the code — so any change can be rolled forward or back.
+
+The committed snapshot lives in `src/MyProject/uSync/v17/` (`DataTypes`, `ContentTypes`, `Templates`, `Content`, `Media`). Only Data Types the agent creates need to be exported; the built-in ones ship with Umbraco and are resolved by their well-known keys.
 ## Next steps
 
-* Maybe this could be changed to a GitHub Template Repository?
-* Wonder if we can as a community come up with some great shared rulesets for Umbraco that can be confidently re-used?
-* Perhaps there can be some common Umbraco slash commands that can be re-used for majority of Umbraco tasks? Slash commands for many AI tools also support command parameters which could be leveraged for added flexibility.
-* Convert this to a SDD (Spec Driven Development) toolset?
-* Setup a single npx command to both configure everything and potentially execute commands?
+* Maybe this becomes a GitHub Template Repository?
+* Could the community converge on shared, re-usable Umbraco rulesets?
+* Common Umbraco slash commands, with parameters, for the majority of Umbraco tasks?
+* Convert this to an SDD (Spec Driven Development) toolset?
+* A single `npx` command that configures everything and can execute the commands?
